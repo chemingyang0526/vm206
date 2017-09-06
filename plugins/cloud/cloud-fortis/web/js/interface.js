@@ -1,5 +1,13 @@
 $(document).ready(function(){
 
+if (typeof(dashflag) !='undefined' && dashflag == true) {
+	changedashboard();
+}
+
+if (typeof(repflag) !='undefined' && repflag == true) {
+	changereporte();
+}
+
 
 
 var remid = '';
@@ -76,8 +84,6 @@ function refreshalerts(num) {
 		$('.table-alerts').hide();
 		$('.noalerts').show();
 	}
-
-	
 }
 
 $('.alertpricedit').click(function(){
@@ -351,49 +357,152 @@ if ( ( typeof(budgetpage) != 'undefined' ) && ( budgetpage == true) ) {
 	var url = '/cloud-fortis/user/index.php?budget=yes';
 	var dataval = 'getbudgets=1';
 	var bds = '';
-			$.ajax({
-				url : url,
-				type: "POST",
-				data: dataval,
-				cache: false,
-				async: false,
-				dataType: "html",
-				success : function (data) {
-					$('.lead').hide();
-					if (data != 'none') {
-						$('.lead').hide();
-						console.log(data);
-						bds = JSON.parse(data);
-					} else {
-						alert('Have not got any data of this period');
-					}
-				}
-			});
 
-
-	var servers = '<li class="carstart">'; 
-	var i = 0;
-	$.each(bds, function(key, serv) {
-		console.log(serv);
-		i = i + 1;
-		servers = servers + '<div class="panel panel-primary panel-colorful budgservn" num="'+i+'" remname="'+serv.name+'" remid="'+serv.id+'"><div class="panel-body text-center"><p class="text-uppercase mar-btm text-sm">'+serv.name+'</p><i class="fa fa-credit-card fa-3x"></i><hr><p class="h2 text-thin"><a class="budgremove"><i class="fa fa-close"></i> Remove</a></p></div></div>';
-		
-		if (i == 9) {
-			i = 0;
-			servers = servers + '</li>';
-		}		
+	$.ajax({
+		url : url,
+		type: "POST",
+		data: dataval,
+		cache: false,
+		async: false,
+		dataType: "html",
+		success : function (data) {
+			$('.lead').hide();
+			if (data != 'none') {
+				$('.lead').hide();
+				//console.log(data);
+				bds = JSON.parse(data);
+			} else {
+				alert('Have not got any data of this period');
+			}
+		}
 	});
 
+	//var servers = '<li class="carstart">'; 
+	var i = 0;
+	var budgets = [];
 
-		
-	if (i > 0) {
-		$('.carbudgbtn').show();
+	$.each(bds, function(key, serv) {
+		//if (i == 0) {
+			$('#budgets').append('<option value="' + key +  '" ' + (i == 0 ? 'selected' : '') + '>&nbsp;<strong>' + serv.name + '</strong>&nbsp;(' + serv.date_start + '~' + serv.date_end + ')&nbsp;</option>');
+		//}
+
+		var html =	'<table id="resources-' +  key + '" class="table table-hover table-stripped budget-resources"' + (i > 0 ? ' style="display:none;" ' : '') + '><tbody>';
+		html	+=		'<tr><td style="width: 40%"><strong>' + "CPU:" + 			'</strong></td><td>' + serv.cpu + 		'</td></tr>';
+		html	+=		'<tr><td style="width: 40%"><strong>' + "Storage:" + 		'</strong></td><td>' + serv.storage + 	'</td></tr>';
+		html	+=		'<tr><td style="width: 40%"><strong>' + "Memory:" + 		'</strong></td><td>' + serv.memory + 	'</td></tr>';
+		html	+=		'<tr><td style="width: 40%"><strong>' + "Virtualization:" +	'</strong></td><td>' + serv.vm + 		'</td></tr>';
+		html	+=		'<tr><td style="width: 40%"><strong>' + "Network:" +		'</strong></td><td>' + serv.network + 	'</td></tr>';
+		html	+=	'</tbody></table>';
+
+		$("#budgets-setting").append(html);
+
+		var html_alerts = '';
+
+		if (serv.havealerts) {
+			html_alerts =	'<table id="alerts-' +  key + '" class="table table-hover table-stripped budget-alerts"' + (i > 0 ? ' style="display:none;" ' : '') + '>';
+			html_alerts +=		'<tbody><tr><td style="width: 50%"><strong>' + "% of Budget" + '</strong></td><td><strong>' + "Action" + '</strong></td></tr>';
+
+			for (j = 0; j < serv.alerts.length; j++) {
+				html_alerts +=	'<tr><td style="width: 50%">' + serv.alerts[j] + '</td><td><a href="#"><i class="fa fa-minus-circle" style="color:red"></i>&nbsp;Remove</a></td></tr>';
+			}
+			html_alerts	+=	'</tbody></table>';
+		} else {
+			html_alerts = 	'<label id="alerts-' + key + '" ' + (i > 0 ? ' style="display:none;" ' : '') + ' class="budget-alerts"><strong>There is no alert set up for this budget.</strong></label>';
+		}
+
+		$("#budgets-alert").append(html_alerts);
+
+		i++;
+	});
+
+	$("#budgets").on("change", function () {
+		var id = $(this).val();
+
+		$(".budget-resources").hide();
+		$(".budget-alerts").hide();
+		$("#resources-"+id).show();
+		$("#alerts-"+id).show();
+	
+		plot_budget_total(bds[id]);
+
+	});
+
+	function plot_budget_total(serv) {
+		//console.log(serv);
+
+		var total_budget = parseInt(serv.cpu) + parseInt(serv.storage) + parseInt(serv.memory) + parseInt(serv.vm) + parseInt(serv.network);
+		var column_x = ['x'];
+		var total_y = ['total budgeted'];
+
+		var date_loop	= new Date(serv.date_start);
+		var date_end	= new Date(serv.date_end);
+
+		while (date_loop <= date_end) {
+
+			//console.log("looping");
+			//console.log(date_loop);
+			//console.log(date_end);
+
+			column_x.push(parseDate(date_loop, "Y-M-D"));
+			total_y.push(total_budget);
+			date_loop.setDate(date_loop.getDate() + 15);
+		}
+		time_series_chart("#budget-vs-spent-chart", [column_x, total_y]);
 	}
 
-	$('#namespaces').html(servers);
-	$('.carbudget').show();
-	$('.jcarousel').jcarousel();
-	
+	function time_series_chart(bindto, data) {
+
+	//console.log("data");
+	console.log(data);
+
+    /* data = [
+        ['x', '2017-01-01', '2017-02-01', '2017-03-01', '2017-04-01', '2017-05-01', '2017-06-01', '2017-07-01', '2017-08-01'],
+        ['total',             2300, 2100, 2250, 2140, 2260, 2150, 2000, 2400],
+    ]; */
+
+        var chart = c3.generate({
+            bindto: bindto,
+            data: {
+                x: 'x',
+                columns: data,
+                type: 'spline',
+                color: function (color, d) {
+                    return seriesColors[d.index];
+                },
+            },
+            axis: {
+                x:  {
+                    type: 'timeseries',
+                    tick: {
+                        format: '%Y-%m-%d'
+                    }
+                },
+                y:  {
+                    label: {
+                        text: 'total cost ($)'
+                    }
+                }
+            },
+            grid: {
+                y: {
+                    show: true
+                }
+            },
+            legend: {
+                show: false
+            }  
+        });
+    }
+	// if (i > 0) {
+	//	$('.carbudgbtn').show();
+	// }
+
+	//$('#namespaces').html(servers);
+	//$('.carbudget').show();
+
+	// if ($('.jcarousel').length > 0) {
+	//		$('.jcarousel').jcarousel();
+	// }
 }
 
 
@@ -630,45 +739,53 @@ if (typeof(datepickeryep) != 'undefined' && datepickeryep == true) {
 
 
 
-if ( (typeof(explorer) != 'undefined') && (explorer == true) ) {
-
+if ((typeof(explorer) != 'undefined') && (explorer == true)) {
 	var url = '/cloud-fortis/user/index.php?report=yes';
 	var dataval = 'explorer=1&explorerajax=getservers';
 	var vms = '';
-			$.ajax({
-				url : url,
-				type: "POST",
-				data: dataval,
-				cache: false,
-				async: false,
-				dataType: "html",
-				success : function (data) {
-					$('.lead').hide();
-					if (data != 'none') {
-						$('.lead').hide();
-						
-						vms = JSON.parse(data);
-					} else {
-						alert('Have not got any data of this period');
-					}
-				}
-			});
-	var servers = '<li class="carstart">'; 
+	$.ajax({
+		url : url,
+		type: "POST",
+		data: dataval,
+		cache: false,
+		async: false,
+		dataType: "html",
+		success : function (data) {
+			$('.lead').hide();
+			if (data != 'none') {
+				$('.lead').hide();
+				vms = JSON.parse(data);
+			} else {
+				alert('Have not got any data of this period');
+			}
+		}
+	});
+	//var servers = '<li class="carstart">'; 
+	var servers = '<table class="table table-hover nowrap dataTable dtr-inline" id="score_cloud_appliances_table" role="grid" style="width: 100%;"><thead><tr>';
+	var servers = servers + '<tr><th>VM Name</th><th>VM IP</th><th>CPU</th><th>Memory</th><th>Storage</th><th>Status</th><th>Creation time</th><th>Working time</th><th>Cost</th>';
+	var servers = servers + '</tr></thead><tbody>';
 	var i = 0;
 	$.each(vms, function(key, serv){
 		i = i + 1;
-		servers = servers + '<div class="panel panel-primary panel-colorful servn" num="'+i+'"><div class="panel-body text-center"><p class="text-uppercase mar-btm text-sm">'+serv.name+'</p><i class="fa fa-desktop fa-3x"></i><hr><p class="h2 text-thin">'+serv.price+'</p></div></div>';
-			
+		//servers = servers + '<div class="panel panel-primary panel-colorful servn" num="'+i+'"><div class="panel-body text-center"><p class="text-uppercase mar-btm text-sm">'+serv.name+'</p><i class="fa fa-desktop fa-3x"></i><hr><p class="h2 text-thin">'+serv.price+'</p></div></div>';
+		servers = servers + '<tr><td>'+serv.name+'</td>';
+		servers = servers + '<td>'+serv.ip+'</td>';
+		servers = servers + '<td>'+serv.cpu+'</td>';
+		servers = servers + '<td>'+serv.ram+'</td>';
+		servers = servers + '<td>'+serv.storage+'</td>';
+		servers = servers + '<td>'+serv.status+'</td>';
+		servers = servers + '<td>'+serv.created+'</td>';
+		servers = servers + '<td>'+serv.worked+'</td>';
+		servers = servers + '<td>'+serv.price+'</td></tr>';
 		if (i == 9) {
 			i = 0;
-			servers = servers + '</li>';
+			//servers = servers + '</li>';
 		}
-			
 	});
-		
-	
+	var servers = servers + '</tbody></table>';
 	$('#namespaces').html(servers);
-	$('.jcarousel').jcarousel();
+	//$('.jcarousel').jcarousel();
+	$("#server-cost-table-data").html(servers);
 }
 
 $('#cpubd').click(function() {
@@ -760,6 +877,8 @@ $('.buttoncarouselback').click(function(){
 });
 
 
+
+
 function changedashboard() {
 	var monthd = $('#reportmonthdash').val();
 	var yeard = $('#reportyeardash').val();
@@ -804,6 +923,7 @@ $('.printbill').click(function(){
 	$('#cloud-content').css('width', '100%');
 
 	$('.reportbtnbill').hide();
+	$('#chart-row').hide();
 	$('.printlogo').show();
 	$('.hideslider').show();
 	$('#home_container').css('position', 'relative');
@@ -844,8 +964,11 @@ $('.gobackprint').click(function(){
 });
 
 $('.shortselect').change(function() {
+	changereporte();
+});
 
- if (typeof(diagramshow) == 'undefined') {
+function changereporte() {
+	 if (typeof(diagramshow) == 'undefined') {
 	var month = $('#reportmonth').val();
 	var year = $('#reportyear').val();
 	var user = $('#hiddenname').val();
@@ -886,11 +1009,14 @@ $('.shortselect').change(function() {
 				}
 			});
 	}
-});
-
+}
 
 $('#report').click(function(){
-	$('#reportdropdown').show();
+	if($("#reportdropdown").is(':visible') == true){
+		$('#reportdropdown').hide();
+	} else {
+		$('#reportdropdown').show();
+	}
 });
 
 $('#reportdropdown').focusout(function(){
@@ -899,10 +1025,6 @@ $('#reportdropdown').focusout(function(){
 
 
 $('.slideractive').click(function() {
-
-	
-	
-
 	if ($('.hideslider').is(':visible') == true) {
 		$('.hideslider').hide();
 	} else {
@@ -1020,7 +1142,7 @@ document.execCommand('ClearAuthenticationCache', 'false');
 var height = $(window).height();
 height = (height - 100)/2;
 height = height + 'px';
-$('#loginwindow').css('top', height);
+//$('#loginwindow').css('top', height);
 	
 
 // Create Base64 Object
@@ -1033,36 +1155,58 @@ var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456
 		  return "Basic " + hash;
 		}
 
-	$('#btnlogin').click(function(){
-		var username = $("input#userlogin").val();
-		var password = $("input#userpassword").val();  
-		
-		$.ajax
-		({
-		  type: "GET",
-		  url: "/cloud-fortis/user/",
-		  headers: {
-		    "Authorization": "Basic " + btoa(username + ":" + password)
-		  },
-		  beforeSend: function (xhr){ 
-        	xhr.setRequestHeader('Authorization', make_base_auth(username, password)); 
-    	 },
+// == Login ==
+function cloudScoreLogin(){
+	var username = $("input#userlogin").val();
+	var password = $("input#userpassword").val();
+	if(username == ""){
+		var errmsg = "Username can not be empty";
+	}
+	if(password == ""){
+		var errmsg = "Password can not be empty";
+	}
+	if(username == "" && password == ""){
+		var errmsg = "Username and Password can not be empty";
+	}
+	var full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
+	var domainpart = location.hostname+(location.port ? ':'+location.port: '');
+	var ajaxurl = full + "/cloud-fortis/user/";	
 
-	      success: function(){
-	      	var domain = document.domain;
-			location.href = 'http://'+username+':'+password+'@'+domain+'/cloud-fortis/user/';
-	        //setTimeout(function() { window.location = '/cloud-fortis/user/'; }, 2000);
-	      },
-
-	      error: function(){
-	      	alert('wrong password');
-	      }
-		});
-
-		
+	$.ajax({
+		type: "GET",
+		url: ajaxurl,
+		headers: {"Authorization": "Basic " + btoa(username + ":" + password)},
+		beforeSend: function (xhr){xhr.setRequestHeader('Authorization', make_base_auth(username, password));},
+		success: function(){
+			var domain = domainpart;
+			location.href = 'http://'+domain+'/cloud-fortis/user/';
+			//location.href = 'http://'+username+':'+password+'@'+domain+'/cloud-fortis/user/';
+			//setTimeout(function() { window.location = '/cloud-fortis/user/'; }, 2000);
+		},
+		error: function(){
+			if(errmsg){
+				alert(errmsg);
+			} else {
+				alert('Credentials provided is not valid');
+			}
+		}
 	});
-		
-	// --- end authorisation works ---
+}
+$('#btnlogin').click(function(){
+	cloudScoreLogin();
+});
+$("#userpassword").keypress(function(e){
+	if(e.which == 13){
+		cloudScoreLogin();
+	}
+});
+$("#userlogin").keypress(function(e){
+	if(e.which == 13){
+		cloudScoreLogin();
+	}
+});
+
+// --- end authorisation works ---
 
 
 
@@ -1773,8 +1917,9 @@ var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456
 
 		var startSlider = document.getElementById('sliderrr');
 
+		if ($("#sliderrr").length > 0) {
 
-		$("#sliderrr").noUiSlider({
+			$("#sliderrr").noUiSlider({
 				start: [ 20 ],
 				connect : 'lower',
 				snap: true,
@@ -1782,24 +1927,22 @@ var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456
 				direction: 'rtl',
 				range: ranger
 			}).Link('lower').to($("#valll"));
-		/*$(".demo-pips").noUiSlider_pips({
-			mode: 'range',
-			density: 5000
-		});*/
+			/*$(".demo-pips").noUiSlider_pips({
+				mode: 'range',
+				density: 5000
+			});*/
 
-		$("#sliderrr").on('slide', function(){
-			var texto = $("#valll").text();
-		    texto = parseInt(texto);
-		    var labelo = diskvalues[texto];
-		    $("#valllgb").text(labelo);
-		    $('#cloud_disk_select_box').val(texto);
-		    $('#cloud_disk_select').val(texto);
-		    cloud_cost_calculator();
-		});
-
+			$("#sliderrr").on('slide', function(){
+				var texto = $("#valll").text();
+			    texto = parseInt(texto);
+			    var labelo = diskvalues[texto];
+			    $("#valllgb").text(labelo);
+			    $('#cloud_disk_select_box').val(texto);
+			    $('#cloud_disk_select').val(texto);
+			    cloud_cost_calculator();
+			});
+		}
 		// --- end disk ---
-
-
 
 		// memory:
 		    
@@ -1844,33 +1987,33 @@ var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456
 		
 		var startSlider1 = document.getElementById('sliderrr1');
 
+		if ($("#sliderrr1").length > 0) {
 
-		$("#sliderrr1").noUiSlider({
-				start: [ 0 ],
-				connect : 'lower',
-				snap: true,
-				orientation: 'vertical',
-				direction: 'rtl',
-				range: ranger1
-			}).Link('lower').to($("#valll1"));
-		/*$(".demo-pips1").noUiSlider_pips({
-			mode: 'range',
-			density: 1000
-		});*/
+			$("#sliderrr1").noUiSlider({
+					start: [ 0 ],
+					connect : 'lower',
+					snap: true,
+					orientation: 'vertical',
+					direction: 'rtl',
+					range: ranger1
+				}).Link('lower').to($("#valll1"));
+			/*$(".demo-pips1").noUiSlider_pips({
+				mode: 'range',
+				density: 1000
+			});*/
 
-		$("#sliderrr1").on('slide', function(){
-			var texto = $("#valll1").text();
-		    texto = parseInt(texto);
-		    var labelo = diskvalues1[texto];
-		    $("#valllgb1").text(labelo);
-		    $('#cloud_memory_select_box').val(texto);
-		     $('#cloud_memory_select').val(texto);
-		    cloud_cost_calculator();
-		});
-
+			$("#sliderrr1").on('slide', function(){
+				var texto = $("#valll1").text();
+			    texto = parseInt(texto);
+			    var labelo = diskvalues1[texto];
+			    $("#valllgb1").text(labelo);
+			    $('#cloud_memory_select_box').val(texto);
+			     $('#cloud_memory_select').val(texto);
+			    cloud_cost_calculator();
+			});
+		}
 		// --- end memory ---
 
-		
 		// cpu:
 		    
 		var diskvalues2 = [];
@@ -1911,33 +2054,34 @@ var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456
 
 		var startSlider2 = document.getElementById('sliderrr2');
 
+		if ($("#sliderrr2").length > 0) {
 
-		$("#sliderrr2").noUiSlider({
-				start: [ 1 ],
-				connect : 'lower',
-				orientation: 'vertical',
-				direction: 'rtl',
-				snap: true,
-				range: ranger2,
-			}).Link('lower').to($("#valll2"));
-		/*$(".demo-pips2").noUiSlider_pips({
-			mode: 'range',
-			density: 1000
-		});*/
+			$("#sliderrr2").noUiSlider({
+					start: [ 1 ],
+					connect : 'lower',
+					orientation: 'vertical',
+					direction: 'rtl',
+					snap: true,
+					range: ranger2,
+				}).Link('lower').to($("#valll2"));
+			/*$(".demo-pips2").noUiSlider_pips({
+				mode: 'range',
+				density: 1000
+			});*/
 
-		$("#sliderrr2").on('slide', function(){
-			var texto = $("#valll2").text();
-		    texto = parseInt(texto);
-		    var labelo = diskvalues2[texto];
-		    $("#valllgb2").text(labelo);
-		    $('#cloud_cpu_select_box').val(texto);
-		    $('#cloud_cpu_select').val(texto);
-		    cloud_cost_calculator();
-		});
+			$("#sliderrr2").on('slide', function(){
+				var texto = $("#valll2").text();
+			    texto = parseInt(texto);
+			    var labelo = diskvalues2[texto];
+			    $("#valllgb2").text(labelo);
+			    $('#cloud_cpu_select_box').val(texto);
+			    $('#cloud_cpu_select').val(texto);
+			    cloud_cost_calculator();
+			});
+		}	
+
 
 		// --- end cpu ---
-
-
 
 // --- end range sliders ---
 	 

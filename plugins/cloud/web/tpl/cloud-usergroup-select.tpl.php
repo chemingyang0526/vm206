@@ -16,7 +16,9 @@
 -->
 <h2>{title} </h2>
 
+<div class="usertblero">
 {table}
+</div>
 
 
 <div id="volumepopup" class="modal-dialog">

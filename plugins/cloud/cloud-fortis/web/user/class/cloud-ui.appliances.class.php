@@ -1,4 +1,8 @@
 <?php
+
+/*ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);*/
 /**
  * Cloud Users Appliance Actions
  *
@@ -104,6 +108,35 @@ var $cloud_id;
 	 */
 	//--------------------------------------------
 	function select() {
+
+		if ( isset($_GET['action']) == true && $_GET['action'] == 'volumedata') {
+			$hostname = $_GET['hostname'];
+
+				$appliance = new appliance();
+				$ap = $appliance->get_instance_by_name($hostname);
+				
+				$resource = new resource();
+				$l = $resource->get_instance_id_by_hostname($hostname);
+				$resource->get_instance_by_id($l->id);
+				$resource->get_instance_by_id($ap->virtualization);
+
+				$resource->get_instance_by_id($resource->vhostid);
+				
+				$resip = $resource->ip;
+
+				$command = '/usr/share/htvcenter/plugins/kvm/bin/volumesdata.sh getlist '.$hostname;
+							
+				$resource->send_command($resip, $command);
+				$localip = $_SERVER['HTTP_HOST'];
+				$filesen = 'http://'.$resip.'/'.$hostname.'_volume_data';
+				
+				sleep(5);
+				$data = file_get_contents($filesen);
+				echo $data;
+			
+			die();
+		}
+		
 
 		if ( isset($_GET['action']) == true && $_GET['action'] == 'volumedatadel') {
 			$num = $_GET['num'];
@@ -237,39 +270,7 @@ var $cloud_id;
 			
 			die();
 		}
-		
-		if ( isset($_GET['action']) == true && $_GET['action'] == 'volumedata') {
-			$hostname = $_GET['hostname'];
-
-				$appliance = new appliance();
-				$ap = $appliance->get_instance_by_name($hostname);
-				
-				$resource = new resource();
-				$l = $resource->get_instance_id_by_hostname($hostname);
-				$resource->get_instance_by_id($l->id);
-				$resource->get_instance_by_id($ap->virtualization);
-
-				$resource->get_instance_by_id($resource->vhostid);
-				
-				$resip = $resource->ip;
-
-
-		
-				
-				$command = '/usr/share/htvcenter/plugins/kvm/bin/volumesdata.sh getlist '.$hostname;
-			
-				
-				$resource->send_command($resip, $command);
-				$localip = $_SERVER['HTTP_HOST'];
-				$filesen = 'http://'.$resip.'/'.$hostname.'_volume_data';
-				
-				sleep(5);
-				$data = file_get_contents($filesen);
-				echo $data;
-			
-			die();
-		}
-		
+	
 		if ( ( isset($_GET['action']) == true) && ($_GET['action'] == 'cdrom') ) {
 
 			$hostname = $_GET['hostname'];
@@ -390,6 +391,8 @@ var $cloud_id;
 
 		$cloudreq_array = $this->cloudrequest->get_all_ids_per_user($this->clouduser->id);
 		$user_requests = array();
+
+
 		// build an array of our appliance id's
 		foreach ($cloudreq_array as $cr) {
 			$user_requests[] = $cr['cr_id'];
@@ -421,6 +424,7 @@ var $cloud_id;
 		// now we go over all our appliances from the users request list
 		$app_count = 0;
 		$ta = array();
+
 		foreach ($user_requests as $reqid) {
 			$appliance = null;
 			$this->cloudrequest->get_instance_by_id($reqid);
@@ -495,6 +499,7 @@ var $cloud_id;
 				// state
 				$state = $this->cloudrequest->getstatus($this->cloudrequest->id);
 				$this->cloudappliance->get_instance_by_appliance_id($appliance->id);
+				
 				switch ($this->cloudappliance->state) {
 					case 0:
 						if($state === 'starting' || $resource->state === 'transition') {
@@ -610,14 +615,18 @@ var $cloud_id;
 				}
 				if ($collectd_graph_enabled) {
 					// system stats
-					$data = $this->htvcenter->get('basedir').'/plugins/collectd/data/'.$appliance->name;
-					if (file_exists($data)) {
-						$a = $this->response->html->a();
-						$a->label   = '<span title="system stats" class="editvolumesm" ><i class="fa fa-bar-chart"></i></span>';
-						$a->handler = "";
-						$a->css     = '';
-						$a->href    = $this->response->get_url($this->actions_name, 'statistics').'&appliance_id='.$appliance->id;
-						$plugin_action .= $a->get_string();
+					if(!empty($appliance->id)){
+						$data = $this->htvcenter->get('basedir').'/plugins/collectd/data/'.$appliance->name;
+						if (file_exists($data)) {
+							$a = $this->response->html->a();
+							$a->label   = '<span title="system stats" class="editvolumesm" ><i class="fa fa-bar-chart"></i></span>';
+							$a->handler = "";
+							$a->css     = '';
+							$a->href    = $this->response->get_url($this->actions_name, 'statistics').'&appliance_id='.$appliance->id;
+							$plugin_action .= $a->get_string();
+						}
+					} else {
+						$plugin_action .= "<p>Can not find appliance ID. Delete this instance and create a new one.</p> <hr>";
 					}
 				}
 				// private images
@@ -689,10 +698,12 @@ var $cloud_id;
 				$config_column .= '<b>IP2</b> '.$appliance_resources_str;
 
 				$comment = $appliance->comment.'<hr>'.$plugin_action;
+				
 				if($cloudappliance_state === 'busy') {
 					$comment = $this->lang['appliances']['error_command_running'];
 					$comment = $appliance->comment.'<hr><div class="busy_appliance">&#160;</div>';
 				}
+				
 				if($cloudappliance_state === 'active') {
 					$cdrom = '<a class="plugin cdrom">Insert CD</a>';
 					$cdrom .= '<a class="plugin cdromeject" style="display:none">Eject CD</a>';
@@ -780,28 +791,73 @@ var $cloud_id;
 			}
 		}
 
-		// redirect if $ta is empty
-		if(count($ta) > 0) {
-			$table = $this->response->html->tablebuilder( 'cloud_table', $this->response->get_array($this->actions_name, 'appliances'));
-			$table->css          = 'htmlobject_table';
-			$table->limit        = 10;
-			$table->id           = 'cloud_appliances';
-			$table->head         = $h;
-			$table->sort         = 'state';
-			$table->autosort     = true;
-			$table->sort_link    = false;
-			$table->actions_name = $this->actions_name;
-			$table->form_action  = $this->response->html->thisfile;
-			$table->form_method  = 'GET';
-			$table->max          = $app_count;
-			$table->body         = $ta;
+		$row_headers = array(
+			'ID',
+			'VM Name',
+			'VM Type',
+			 /*'VM IP', disable IP for now for no res VM */ 
+			'Image',
+			'Memory',
+			/* 'Memory Used', for no res VM */
+			'CPU',
+			'Disk',
+			'Kernel',
+			/* 'CPU Used', */
+			'Status',
+			'Details'
+		);
+		// disable redirect if $ta is empty
+		// if(count($ta) > 0) {
+			/* NEW CODE for the table */
+
+			$table = '<table class="table table-hover nowrap dataTable dtr-inline" id="cloud_appliances" role="grid" style="width: 100%;"><thead><tr>';
+
+			foreach ($row_headers as $head) {
+				$table .= '<th>'.$head.'</th>';
+			}
+			$table .= '</tr></thead><tbody>';
+
+			for ($i = 0; $i < count($ta); $i++) {
+				// echo ($i % 2 == 1 ? 'even ' : '');
+				$table .= '<tr id="' . $ta[$i]["id"] . '">';
+				$table .= '<td>' . $ta[$i]["id"] . '</td>';
+				$table .= '<td>' . $ta[$i]["name"] . '</td>';
+				$table .= '<td>' . $ta[$i]["type"] . '</td>';
+				$table .= '<td>' . $ta[$i]["image"] . '</td>';
+				$table .= '<td>' . $ta[$i]["ram"] . '</td>';
+				$table .= '<td>' . $ta[$i]["cpu"] . '</td>';
+				$table .= '<td>' . $ta[$i]["disk"] . '</td>';
+				$table .= '<td>' . $ta[$i]["kernel"] . '</td>';
+				$table .= '<td class="status">' . $ta[$i]["state"] . '</td>';
+				/* $table .= '<td>' . $ta[$i]["state"]. '</td>'; */
+				/*
+				for ($j = 0; $j < count($ta[$i]); $j++) {
+					if ($j == 7) { // the 8th column is for the active or inactive status
+						$table .=	'<td class="status ' . $ta[$i][$j] .'">' . $ta[$i][$j] . '</td>';
+					} else {
+						$table .=	'<td>' .  $ta[$i][$j] . '</td>';
+					}
+					
+				}*/
+
+				// $table .= '<td>' . $i . '</td>';
+				$table .=	'<td class="toggle-graph" row-id="' . $i . '">
+								<a data-toggle="popover" data-trigger="focus" href="#">
+									<i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+								</a>
+							</td>';
+				$table .= '</tr>'; 
+			}
+			$table .=	'</tbody></table>';
+			/* END NEW CODE for the table */
 
 			return $table;
-		} else {
-			$this->response->redirect(
-				$this->response->get_url($this->actions_name, 'create', $this->message_param, $this->lang['appliances']['msg_no_appliances_to_manage'])
-			);
-		}
+		//} else {
+
+		//	$this->response->redirect(
+		//		$this->response->get_url($this->actions_name, 'create', $this->message_param, $this->lang['appliances']['msg_no_appliances_to_manage'])
+		//	);
+		// }
 	}
 
 	//--------------------------------------------

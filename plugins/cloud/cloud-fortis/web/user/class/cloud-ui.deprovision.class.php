@@ -100,7 +100,6 @@ var $actions_name = 'cloud-ui';
 
 		if($this->response->submit()) {
 			$request = $form->get_request($this->identifier_name);
-
 			if(isset($request) && is_array($request)) {
 				$errors  = array();
 				$message = array();
@@ -116,6 +115,17 @@ var $actions_name = 'cloud-ui';
 					if (($this->cloudrequest->status != 3) && ($this->cloudrequest->status != 7)) {
 						$errors[] = sprintf($this->lang['error_command_running'],$this->cloudrequest->appliance_hostname);
 					}
+					
+					
+					/* Deleting entry from DHCPD Conf file */
+					$hostname_dhcpd_conf = $this->cloudrequest->appliance_hostname;
+					$dhcpd_conf_file = "/usr/share/htvcenter/plugins/dhcpd/etc/dhcpd.conf";
+					$dhcpd_conf_content = file_get_contents($dhcpd_conf_file);
+					$beginning_point = "#".$hostname_dhcpd_conf."_start";
+					$end_point = "#".$hostname_dhcpd_conf."_end";
+					$striped_dhcpd_content = $this->delete_content_between($beginning_point, $end_point, $dhcpd_conf_content);
+					file_put_contents($dhcpd_conf_file, $striped_dhcpd_content.PHP_EOL);
+					
 					if(count($errors) === 0) {
 						// mail user before deprovisioning
 						$start = date("d-m-Y H-i", $this->cloudrequest->start);
@@ -152,6 +162,8 @@ var $actions_name = 'cloud-ui';
 					$i = 0;
 					for ($i=0; $i<10; $i++) {
 						$cmd = 'rm -rf /usr/share/htvcenter/storage/'.$instaname.'vol'.$i;
+						exec($cmd);
+						$cmd = 'rm -rf  /var/lib/kvm/htvcenter/'.$instaname;
 						exec($cmd);
 					}
 					
@@ -193,6 +205,16 @@ var $actions_name = 'cloud-ui';
 		$form->add($d);
 		$response->form = $form;
 		return $response;
+	}
+	
+	function delete_content_between($beginning, $end, $string) {
+	  $beginningPos = strpos($string, $beginning);
+	  $endPos = strpos($string, $end);
+	  if ($beginningPos === false || $endPos === false) {
+	    return $string;
+	  }
+	  $textToDelete = substr($string, $beginningPos, ($endPos + strlen($end)) - $beginningPos);
+	  return str_replace($textToDelete, '', $string);
 	}
 
 }

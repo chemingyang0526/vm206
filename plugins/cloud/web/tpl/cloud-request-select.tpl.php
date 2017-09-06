@@ -101,14 +101,16 @@ function cloudget_info_box(cr_id) {
 
 {form}
 <div id="form" class="thetableee">
-	<div style="width:500px;float:left;">
+	<div class="filter-left">
 		{filter}
 	</div>
-	<div style="width:200px;float:right;">
+	<div class="cleanup-right">
 		<div>{clean_up}</div>
 	</div>
 	<div style="clear:both;" class="floatbreaker" >&#160;</div>
-	{table}
+	<div class="cloud-table-class">
+		{table}
+	</div>
 </div>
 
 

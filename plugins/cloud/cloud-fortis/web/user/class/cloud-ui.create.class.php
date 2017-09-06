@@ -97,6 +97,8 @@ var $use_api = true;
 	//--------------------------------------------
 	function action() {
 		$response = $this->form();
+		$form     = $response->form;
+		
 		if(isset($response->error)) {
 			$_REQUEST[$this->message_param] = $response->error;
 		}
@@ -209,7 +211,7 @@ var $use_api = true;
 		// api switch
 		$this->use_api === true ? $use_api = 'true' : $use_api = 'false'; 
 		$t->add('var use_api = '.$use_api.';','js_use_api');
-
+		
 		return $t;
 	}
 
@@ -227,8 +229,7 @@ var $use_api = true;
 		$response = $this->get_response();
 		
 		$form     = $response->form;
-
-
+		
 		if(!$form->get_errors() && $response->submit()) {
 			$data = $form->get_request();
 

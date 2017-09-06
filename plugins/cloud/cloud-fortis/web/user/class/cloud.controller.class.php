@@ -28,7 +28,6 @@ class cloud_controller
 	function __construct() {
 
 		
-
 		// handle timezone needed since php 5.3
 		if(function_exists('ini_get')) {
 			if(ini_get('date.timezone') === '') {
@@ -391,14 +390,9 @@ class cloud_controller
 			
 			if (isset($_POST)) {
 				$user = $_POST['userdash'];
-
-
 				if ($user == '') {
 					$user = $this->htvcenter->user()->name;
 				}
-
-
-
 				$month = $_POST['month'];
 				$year = $_POST['year'];
 				$priceonly = $_POST['priceonly'];
@@ -407,8 +401,15 @@ class cloud_controller
 				$forcsv = $_POST['forcsv'];
 			}
 
+			if ( isset($_GET['forbill']) && $_GET['forbill']=='true') {
+				$forbill = true;
+			}
 
-
+			if (empty($month) || empty($user)) {
+				$month = $_GET['month'];
+				$user = $_GET['user'];
+				$year = date('Y');
+			}
 
 			if (!empty($month) && !empty($year)) {
 				
@@ -437,20 +438,23 @@ class cloud_controller
 
 				while ($rez = mysql_fetch_assoc($res)) {
 
-
+					//var_dump($rez); die();
 
 					$timestamp=$rez['ct_time'];
 					
 					$yeardb = gmdate("Y", $timestamp);
 					$monthdb = gmdate("M", $timestamp);
 
+
 					if ( ($year == $yeardb) && ($month == $monthdb) ) {
 
 						$ccu = $ccu + $rez['ct_ccu_charge'];
 						$tabledate = gmdate("Y-m-d h:i", $timestamp);
 						$detailtable .= '<tr class="headertr"><td>'.$tabledate.'</td><td>'.$rez['ct_ccu_charge'].'</td><td>'.$rez['ct_comment'].'</td></tr>';
-
+						
+						
 						if ($detailcategory == true || $forbill == true) {
+
 							$ccu = (int) $rez['ct_ccu_charge'];
 							$done = 0;
 							if ( preg_match('@CPU@',$rez['ct_comment']) && ($done == 0) ) {
@@ -490,8 +494,7 @@ class cloud_controller
 				$jsonarr['storage'] = $storagepoints;
 				$jsonarr['cpu'] = $cpupoints;
 				$jsonarr['sum'] = $rampoints + $netpoints + $vmpoints + $storagepoints + $cpupoints;
-
-				//var_dump($jsonarr);
+				
 
 				$detailtable .= '</table>';
 				} else {
@@ -582,8 +585,6 @@ class cloud_controller
 							}
 							
 
-				//var_dump($jsonarr);
-
 						$detailtable .= '</table>';
 
 					}
@@ -606,6 +607,7 @@ class cloud_controller
 				
 				$price = $rez[0];
 
+
 				if ($forbill == true) {
 					$ccu = $cpupoints + $storagepoints + $rampoints + $vmpoints + $netpoints;
 				}
@@ -621,7 +623,6 @@ class cloud_controller
 				} else {
 					$cost = $cost.'.00';
 				}
-
 
 
 				if ( $forbill == true ) {
@@ -640,6 +641,11 @@ class cloud_controller
 					$billjson['networking'] = '$'.$billjson['networking'];
 					$billjson['all'] = '$'.$cost;
 
+					if (isset($_GET['chatbot']) && $_GET['chatbot'] == 'true') {
+						$result = json_encode($billjson);
+						echo $result;
+						die();
+					}
 					$billresult = json_encode($billjson);
 				}
 
@@ -714,13 +720,24 @@ class cloud_controller
 		$this->file    = $file;
 		$this->baseurl = '/cloud-fortis/';
 
-		// templating default or custom
-		$tpl = $this->portaldir."/user/tpl/index.default.tpl.php";
-		if($this->file->exists($this->portaldir."/user/tpl/index.tpl.php")) {
-			$tpl = $this->portaldir."/user/tpl/index.tpl.php";
+		$ar = $this->response->html->request()->get('register_action');
+		// templating default if logged in; otherwise templating login
+		if (isset($_SERVER['PHP_AUTH_USER'])) {
+			if (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest' && $_GET['cloud_ui'] == "create_modal") {
+				$tpl = $this->portaldir."/user/tpl/index.empty.tpl.php";
+			} else {
+				$tpl = $this->portaldir."/user/tpl/index.default.tpl.php";
+			}
+		} else {
+			$tpl = $this->portaldir."/user/tpl/index.login.tpl.php";
 		}
 
-		
+		// die($tpl);
+
+
+		// if($this->file->exists($this->portaldir."/user/tpl/index.tpl.php")) {
+		// 	$tpl = $this->portaldir."/user/tpl/index.tpl.php";
+		// }
 
 		$this->tpl = $tpl;
 	}
@@ -734,6 +751,7 @@ class cloud_controller
 	 */
 	//--------------------------------------------
 	function register() {
+
 		// add langselect to remember lang in register forms
 		$this->response->add('langselect', $this->response->html->request()->get('langselect'));
 		require_once($this->portaldir.'/user/class/cloud-register.controller.class.php');
@@ -748,8 +766,6 @@ class cloud_controller
 		$t->add($this->baseurl, 'baseurl');
 		$t->add($controller->action(), 'content');
 		$t->add($this->__lang($controller->actions_name, $controller->action, $controller->lang['account']['user_lang']), 'langbox');
-
-		
 
 		return $t;
 	}
@@ -796,6 +812,7 @@ class cloud_controller
 		$hidenuser = $this->htvcenter->user()->name;
 		$hide = '<input type="hidden" id="hiddenname" value="'.$hidenuser.'" />';
 		$t->add($yearz, 'reportyear');
+		$t->add($year, 'currentyear');
 		$t->add($hide, 'hidenuser');
 
 		$query = "SELECT `cc_value` FROM `cloud_config` WHERE `cc_key` = 'cloud_billing_enabled'";

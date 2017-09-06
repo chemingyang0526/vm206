@@ -17,7 +17,7 @@
 <h2>{title}</h2>
 {table}
 
-<div id="volumepopup" class="modal-dialog">
+<div id="volumepopup" class="modal-dialog cloud-private-image-popup">
 <div class="panel">
                     
                                 <!-- Classic Form Wizard -->

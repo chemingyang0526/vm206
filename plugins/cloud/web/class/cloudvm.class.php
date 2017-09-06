@@ -415,6 +415,15 @@ class cloudvm {
 		$htvcenter->send_command("htvcenter_server_add_resource $new_resource_id $mac $vm_resource_ip");
 		// let the new resource commands settle
 		sleep(10);
+		
+		$dhcpd_data = "\n#" .$name. "_start\n";
+		$dhcpd_data .= "host " . $name . "{ \n";
+		$dhcpd_data .= "hardware ethernet " . $mac . "; \n";
+		$dhcpd_data .= "option host-name \"" . $name . "\"; \n";
+		$dhcpd_data .= "fixed-address " . $vm_resource_ip . "; \n} \n";
+		$dhcpd_data .= "#" .$name. "_end\n";
+		#file_put_contents("/usr/share/htvcenter/plugins/dhcpd/etc/dhcpd.conf", $dhcpd_data .PHP_EOL, FILE_APPEND);
+		
 		// plug in the virtualization cloud hook
 		$virtualization_cloud_hook = "$RootDir/plugins/$virtualization_plugin_name/htvcenter-$virtualization_plugin_name-cloud-hook.php";
 		if (file_exists($virtualization_cloud_hook)) {
