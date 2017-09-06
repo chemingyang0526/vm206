@@ -1,0 +1,11 @@
+.htmlobject_td.edit {
+	text-align:center;
+	width:80px;
+}
+.htmlobject_td.details {
+	text-align:center;
+}
+
+#details .htmlobject_table {
+	width: 100%;
+}

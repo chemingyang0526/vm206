@@ -1,0 +1,9 @@
+*.tar.gz
+*.rrd
+*.tgz
+logs/*
+plugins/chatbot/*
+plugins/collectd/*
+plugins/dhcpd/*
+plugins/dns/*
+plugins/local-server/*
