@@ -477,58 +477,32 @@ $(document).ready(function() {
 
 				$("li.list-group-item").on("click", function () { 
 
-					console.log("clicked");
-
 					var title = $(this).find("span").text();
 					var url = $(this).attr("rel");
 
 					$("#confirm-appliance-actions").modal('show');
-					
-					// $("#confirm-appliance-actions").on('shown.bs.modal', function() {
 
-						console.log('123');
-						console.log(url);
+					$.ajax({
+						url : url,
+						type: "GET",
+						cache: false,
+						async: true,
+						dataType: "html",
+						success : function (data) {
 
-						$.ajax({
-							url : url,
-							type: "GET",
-							cache: false,
-							async: true,
-							dataType: "html",
-							success : function (data) {
+							console.log(data);
+							console.log(title);
 
-								console.log(data);
-								console.log(title);
- 
-								$("#confirm-appliance-actions h3").text(title);
+							$("#confirm-appliance-actions h3").text(title);
 
-								$("#confirm-appliance-actions .modal-body").empty().append(data);
+							$("#confirm-appliance-actions .modal-body").empty().append(data);
 
-								
-							}
-						});
-					// });
+							
+						}
+					});
 					return false; // to prevent two click events
-					
 				});
 			});
-
-
-			/*
-			$(".popover a").on("click", function () {
-				console.log($(this).attr("href"));
-				return false;
-			});
-
-			document.onclick = function (e) {
-			  e = e ||  window.event;
-			  var element = e.target || e.srcElement;
-
-			  if (element.tagName == 'A') {
-			    someFunction(element.href);
-			    return false; // prevent default action and stop event propagation
-			  }
-			}; */
 		}
 	} );
 
