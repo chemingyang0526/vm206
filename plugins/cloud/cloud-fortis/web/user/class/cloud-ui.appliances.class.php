@@ -587,31 +587,42 @@ var $cloud_id;
 				// regular actions
 				if ($show_pause_button) {
 					// pause
+					/*
 					$a = $this->response->html->a();
 					$a->title   = $this->lang['appliances']['action_pause'];
 					$a->label   = '<span title="Pause" class="editvolumesm" ><i class="fa fa-pause"></i></span>';
 					$a->handler = "";
 					$a->css     = '';
+					$a->onclick  = 'wait();';
 					$a->href    = $this->response->get_url($this->actions_name, 'pause').'&'.$this->identifier_name.'[]='.$this->cloudappliance->id;
-					$cloudappliance_action .= $a->get_string();
-					// restart
+					*/
+					$cloudappliance_action .= '<li rel="' . $this->response->get_url($this->actions_name, 'pause').'&'.$this->identifier_name.'[]='.$this->cloudappliance->id . '" class="list-group-item"><span><i class="fa fa-pause"></i>&nbsp;' .  $this->lang['appliances']['action_pause'] . '</span></a>';
+					
+					// restart"
+					/*
 					$a = $this->response->html->a();
 					$a->title   = $this->lang['appliances']['action_restart'];
 					$a->label   = '<span title="Restart" class="editvolumesm" ><i class="fa fa-refresh"></i></span>';
 					$a->handler = "";
+					$a->onClick  = 'wait();';
 					$a->css     = '';
 					$a->href    = $this->response->get_url($this->actions_name, 'restart').'&'.$this->identifier_name.'[]='.$this->cloudappliance->id;
-					$cloudappliance_action .= $a->get_string();
+					*/
+					$cloudappliance_action .= '<li rel="' . $this->response->get_url($this->actions_name, 'restart').'&'.$this->identifier_name.'[]='.$this->cloudappliance->id . '" class="list-group-item"><span><i class="fa fa-refresh"></i>&nbsp;' . $this->lang['appliances']['action_restart'] . '</span></li>';
 				}
 				if ($show_unpause_button) {
-					// pause
+					// unpause
+					/*
 					$a = $this->response->html->a();
 					$a->title   = $this->lang['appliances']['action_unpause'];
 					$a->label   = '<span title="Start" class="editvolumesm" ><i class="fa fa-play"></i></span>';
 					$a->handler = "";
+					$a->click  = 'wait();';
 					$a->css     = '';
 					$a->href    = $this->response->get_url($this->actions_name, 'unpause').'&'.$this->identifier_name.'[]='.$this->cloudappliance->id;
-					$cloudappliance_action .= $a->get_string();
+					*/
+					
+					$cloudappliance_action .= '<li rel="' . $this->response->get_url($this->actions_name, 'unpause').'&'.$this->identifier_name.'[]='.$this->cloudappliance->id . '" class="list-group-item"><span><i class="fa fa-play"></i>&nbsp;Play</span></li>';
 				}
 				if ($collectd_graph_enabled) {
 					// system stats
@@ -652,21 +663,25 @@ var $cloud_id;
 
 				if($cloudappliance_state === 'active' || $cloudappliance_state === 'paused') {
 					// appliance update
+					/*
 					$a = $this->response->html->a();
 					$a->title   = $this->lang['appliances']['action_update'];
 					$a->label   = '<span title="Edit volumes" class="editvolumesm" ><i class="fa fa-pencil"></i></span>';
 					$a->handler = "";
 					$a->css     = '';
 					$a->href    = $this->response->get_url($this->actions_name, 'appliance_update').'&'.$this->identifier_name.'='.$this->cloudappliance->id;
-					$cloudappliance_action .= $a->get_string();
+					$cloudappliance_action .= $a->get_string(); */
+					$cloudappliance_action .= '<li rel="' . $this->response->get_url($this->actions_name, 'appliance_update').'&'.$this->identifier_name.'[]='.$this->cloudappliance->id . '" class="list-group-item"><span><i class="fa fa-pencil"></i>&nbsp;' . $this->lang['appliances']['action_update'] .'</span></li>';
 					// deprovision
+					/*
 					$a = $this->response->html->a();
 					$a->title   = $this->lang['appliances']['action_deprovision'];
 					$a->label   = '<span title="Remove" class="editvolumesm" ><i class="fa fa-close"></i></span>';
 					$a->handler = "";
 					$a->css     = '';
 					$a->href    = $this->response->get_url($this->actions_name, 'deprovision').'&'.$this->identifier_name.'[]='.$this->cloudappliance->id;
-					$cloudappliance_action .= $a->get_string();
+					$cloudappliance_action .= $a->get_string();*/
+					$cloudappliance_action .= '<li rel="' . $this->response->get_url($this->actions_name, 'deprovision').'&'.$this->identifier_name.'[]='.$this->cloudappliance->id . '" class="list-group-item"><span><i class="fa fa-close"></i>&nbsp;' . $this->lang['appliances']['action_deprovision'] .'</span></li>';
 				}
 
 				$disk = intval($image_size);
@@ -709,9 +724,10 @@ var $cloud_id;
 					$cdrom .= '<a class="plugin cdromeject" style="display:none">Eject CD</a>';
 				}
 				#$comment .= '<textarea id="'.$this->cloudrequest->id.'" style="height:60px;width:95%;font-size:10px;"></textarea><script>get_state("'.$this->cloudrequest->id.'");</script>';
-				if($cloudappliance_state === 'active') {
-					$cloudappliance_action .= '<span title="Edit volumes" class="editvolumesm editvolumesmpopup" ><i class="fa fa-hdd-o"></i></span>';
-				}
+				
+				// if($cloudappliance_state === 'active') {
+				//	$cloudappliance_action .= '<span title="Edit volumes" class="editvolumesm editvolumesmpopup" ><i class="fa fa-hdd-o"></i></span>';
+				// }
 				
 				$ta[] = array(
 					'id' => $this->cloudappliance->id,
@@ -841,11 +857,12 @@ var $cloud_id;
 				}*/
 
 				// $table .= '<td>' . $i . '</td>';
+
 				$table .=	'<td class="toggle-graph" row-id="' . $i . '">
-								<a data-toggle="popover" data-trigger="focus" href="#">
+								<a data-toggle="popover"  data-trigger="focus" data-content="' . htmlspecialchars($ta[$i]["action"]) . '" href="#"> 
 									<i class="fa fa-ellipsis-h" aria-hidden="true"></i>
 								</a>
-							</td>';
+							</td>'; 
 				$table .= '</tr>'; 
 			}
 			$table .=	'</tbody></table>';

@@ -134,6 +134,14 @@
 		display: none;
 	}
 
+	.popover li.list-group-item {
+		cursor: pointer;
+	}
+
+	.popover li.list-group-item:hover {
+		color: #0190fe;
+	}
+
 	/*
 	select, textarea, input {
 		background-color: #fff;
@@ -459,16 +467,70 @@ $(document).ready(function() {
 		"fnDrawCallback": function( oSettings ) {
 			$(".toggle-graph a").popover({
 				html: true,
-				placement: "bottom",
+				placement: "bottom", /*
 				content: function() {
 					return $('#popover-content').html();
-				}
+				} */
 			});
+
+			$(".toggle-graph a").on("shown.bs.popover", function() {
+
+				$("li.list-group-item").on("click", function () { 
+
+					console.log("clicked");
+
+					var title = $(this).find("span").text();
+					var url = $(this).attr("rel");
+
+					$("#confirm-appliance-actions").modal('show');
+					
+					// $("#confirm-appliance-actions").on('shown.bs.modal', function() {
+
+						console.log('123');
+						console.log(url);
+
+						$.ajax({
+							url : url,
+							type: "GET",
+							cache: false,
+							async: true,
+							dataType: "html",
+							success : function (data) {
+
+								console.log(data);
+								console.log(title);
+ 
+								$("#confirm-appliance-actions h3").text(title);
+
+								$("#confirm-appliance-actions .modal-body").empty().append(data);
+
+								
+							}
+						});
+					// });
+					return false; // to prevent two click events
+					
+				});
+			});
+
+
+			/*
+			$(".popover a").on("click", function () {
+				console.log($(this).attr("href"));
+				return false;
+			});
+
+			document.onclick = function (e) {
+			  e = e ||  window.event;
+			  var element = e.target || e.srcElement;
+
+			  if (element.tagName == 'A') {
+			    someFunction(element.href);
+			    return false; // prevent default action and stop event propagation
+			  }
+			}; */
 		}
 	} );
-
-
-	
 
 
 	/* This and function format is for adding an expanded row by clicking on the ... button  
@@ -549,8 +611,6 @@ $(document).ready(function() {
 	});
 	*/
 });
-
-
 
 
 function get_state( id ) {
@@ -698,13 +758,27 @@ function get_state( id ) {
 	</div>
 </div>
 
+<div id="confirm-appliance-actions" class="modal" data-backdrop="static">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="text-black"></h3>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+		</div>
+	</div>
+</div>
+
+<!--
 <ul id="popover-content" class="list-group" style="display: none">
 	<a href="#" class="list-group-item">Start</a>
 	<a href="#" class="list-group-item">Stop</a>
 	<a href="#" class="list-group-item">Pause</a>
 	<a href="#" class="list-group-item">Delete</a>
 </ul>
-
+-->
 
 <!--
 <div class="function-box" style="display: none" id="filepicker">
