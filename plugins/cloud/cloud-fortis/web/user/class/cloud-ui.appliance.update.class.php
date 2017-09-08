@@ -113,8 +113,8 @@ var $actions_name = 'cloud-ui';
 	//--------------------------------------------
 	function update() {
 		$this->ca_id = $this->response->html->request()->get($this->identifier_name);
-		$this->response->add($this->identifier_name, $this->ca_id);
-		$this->cloudappliance->get_instance_by_id($this->ca_id);
+		$this->response->add($this->identifier_name, $this->ca_id[0]);
+		$this->cloudappliance->get_instance_by_id($this->ca_id[0]);
 		$this->appliance->get_instance_by_id($this->cloudappliance->appliance_id);
 		$this->cloudrequest->get_instance_by_id($this->cloudappliance->cr_id);
 
