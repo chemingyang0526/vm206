@@ -739,7 +739,7 @@ var $cloud_id;
 					'id' => $this->cloudappliance->id,
 					'state' => '<span class="pill '.$cloudappliance_state.'">'.$cloudappliance_state.'</span>',
 					'name' => $appliance->name,
-					'type' => $virtualization->name,
+					'type' => $virtio,
 					'cpu' => $this->cloudrequest->cpu_req,
 					'ram' => $this->cloudrequest->ram_req,
 					'disk' => $image_size,
@@ -792,8 +792,8 @@ var $cloud_id;
 					if(isset($this->lang['appliances']['info_'.$state])) {
 						$comment = $this->lang['appliances']['info_'.$state];
 					}
-					$vitrio = str_replace('KVM', 'OCH', $virtualization->name);
-				$vitrio = str_replace('(localboot)', '', $virtio);
+					// $vitrio = str_replace('KVM', 'OCH', $virtualization->name);
+					// $vitrio = str_replace('(localboot)', '', $virtio);
 					$ta[] = array(
 						'id' => $this->cloudrequest->id,
 						'state' => '<span class="pill '.$state.'">'.$state.'</span>',
@@ -831,7 +831,6 @@ var $cloud_id;
 		// disable redirect if $ta is empty
 		// if(count($ta) > 0) {
 			/* NEW CODE for the table */
-
 			$table = '<table class="table table-hover nowrap dataTable dtr-inline" id="cloud_appliances" role="grid" style="width: 100%;"><thead><tr>';
 
 			foreach ($row_headers as $head) {

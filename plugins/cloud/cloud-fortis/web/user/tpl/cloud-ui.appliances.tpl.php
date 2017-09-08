@@ -442,7 +442,7 @@ $(document).ready(function() {
 				'</section>';
 
 	}
-*/
+*/	var hostname = '';
 	var dt = $("#cloud_appliances").DataTable( {
 
 		"columns": [
@@ -478,42 +478,28 @@ $(document).ready(function() {
 				$("li.list-group-item").on("click", function () { 
 
 					var title = $(this).find("span").text();
-					var hostname = $(this).attr("rel");
-					var hostname2 = $(this).parents('tr').eq(0).find('.hostnamee').text();
+					var rel = $(this).attr("rel");
 					var isVolumesmpopup = $(this).hasClass('editvolumesmpopup');
 
-					
-
-					console.log(hostname2);
-					console.log(hostname);
-
-					if (url) {
+					if (rel && !isVolumesmpopup) {
 						$("#confirm-appliance-actions").modal('show');
 
 						$.ajax({
-							url : url,
+							url : rel,
 							type: "GET",
 							cache: false,
 							async: true,
 							dataType: "html",
 							success : function (data) {
-
 								$("#confirm-appliance-actions h3").text(title);
-
 								$("#confirm-appliance-actions .modal-body").empty().append(data);
-
-								
 							}
 						});
 						return false; // to prevent two click events
 					} else {
-						// $('#moredisktbl').find('.content').remove();
-						// wait();
 						if (isVolumesmpopup) {
-
-							$("#confirm-appliance-actions").modal('show');
-
-							
+							hostname = rel;
+							$("#modal-volume").modal('show');
 
 							var url = "/cloud-fortis/user/index.php?cloud_ui=appliances&action=volumedata&hostname=" + hostname;
 							
@@ -524,17 +510,44 @@ $(document).ready(function() {
 								async: true,
 								dataType: "html",
 								success : function (data) {
-									
-									console.log(data);
+									$("#modal-volume h3").text("Edit Volumes");
+									$("#modal-volume .modal-body table tbody").empty().append(data);
+								
+									var num = '';
+									var linktext = '';
 
-									$("#confirm-appliance-actions h3").text("Edit Volumes");
-									$("#confirm-appliance-actions .modal-body").empty().append(data);
+									$('.voladd').on('click', function() {
+										num = $(this).closest('tr').attr('num');
+										linktext = $(this).text();
+										$('#modal-volumeadd').modal();
+									});
 
-									//$('#moredisktbl').find('.content').remove();
-									//$('#moredisktbl').append(data);
-									//$('.lead').hide();
-									//$('.modal-overlay').hide();
-									//$('#modal-volume').modal();
+									console.log(rel);
+
+									$('#addvolumebtnvv').click(function(){
+										$('#modal-volumeadd').modal('hide');
+										var sizevol = $('#volumeselect').val();
+										var url = "/cloud-fortis/user/index.php?cloud_ui=appliances&action=volumedataadd&hostname="+hostname+"&num="+num+"&sizevol="+sizevol;
+										
+										$.ajax({
+											url : url,
+											type: "GET",
+											cache: false,
+											async: true,
+											dataType: "html",
+											success : function (data) {
+												if (data == 'no disk space') {
+													alert('You have not got free space for this volume creation');
+													$('#modal-volume').modal('hide');
+													return;
+												}
+												$("#modal-volume .modal-body table tbody").empty().append(data);
+												
+												alert('Volume created succesful');
+											}
+										}); 
+										//setInterval(updatevolumes(linktext), 20000);
+									});
 								}
 							});
 
@@ -781,13 +794,72 @@ function get_state( id ) {
 		<div class="modal-header">
 			<h3 class="text-black"></h3>
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			<span aria-hidden="true">&times;</span>
+				<span aria-hidden="true">&times;</span>
 			</button>
 		</div>
 		<div class="modal-body">
 		</div>
+		<div class="modal-footer">
+			<button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+		</div>
 	</div>
 </div>
+
+<div id="modal-volume" class="modal" data-backdrop="static">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="text-black">Loading...</h3>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<table class="table table-striped table-hover" id="moredisktbl"><tbody>
+				<!--
+				<tr class="warning">
+					<td>Type</td><td>Name</td><td>Size</td><td class="text-center">Action</td>
+				</tr>
+				-->
+			</tbody></table>
+		</div>
+		</div>
+		<div class="modal-footer">
+			<button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+		</div>
+	</div><!-- /.modal-content -->
+</div>
+
+<div id="modal-volumeadd" class="modal" data-backdrop="static">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="text-black">Add one more volume</h3>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<p style="display:none"> You can add few volumes here. Available space for it is <span id="freembsp">{freemb}</span> </p>
+			<div class="moredisk">
+				<span>Input volume information:</span><br/>
+				<input  type="text" id="namevolumeinput"/><br/>
+				<div class="selecto">
+					<select id="typevolumeselect">
+						<option value="raw">raw</option>
+					</select>
+				</div>
+				<div class="selecto">
+					<label>Size:</label> 	{volumeselect}
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+			<button class="btn btn-primary" type="button" id="addvolumebtnvv">Add</button>
+		</div>
+	</div>
+</div>
+
+
 
 <!--
 <ul id="popover-content" class="list-group" style="display: none">
@@ -815,32 +887,7 @@ function get_state( id ) {
 </div>
 -->
 
-
-<div id="modal-volume" class="modal fade">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
-        <h4 class="modal-title">Disk Management</h4>
-      </div>
-      <div class="modal-body">
-				 	<table class="table table-striped table-hover" id="moredisktbl">
-				 	<tr class="warning">
-				 		<td style="display:none">Type</td><td style="display:none">Name</td><td>Size</td><td class="text-center">Action</td>
-				 	
-				 	</tr>
-				 	
-				 	</table>
-      </div>
-      <div class="modal-footer">
-        <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div>
-
-
-
+<!--
 <div id="modal-volumeadd" class="modal fade">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -855,7 +902,6 @@ function get_state( id ) {
 				 		<input  type="text" id="namevolumeinput"/><br/>
 				 		<div class="selecto">
 				 		<select id="typevolumeselect">
-				 			<!--<option value="qcow2">qcow2</option> -->
 				 			<option value="raw">raw</option>
 				 		</select></div><br/>
 				 		<div class="selecto">
@@ -868,10 +914,10 @@ function get_state( id ) {
         <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
         <button data-dismiss="modal" class="btn btn-success" type="button" id="addvolumebtnvv">Add</button>
       </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
+    </div>
+  </div>
 </div>
-
+-->
 
 <div id="volumepopup" class="modal-dialog">
 <div class="panel">
