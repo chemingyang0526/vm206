@@ -478,33 +478,77 @@ $(document).ready(function() {
 				$("li.list-group-item").on("click", function () { 
 
 					var title = $(this).find("span").text();
-					var url = $(this).attr("rel");
+					var hostname = $(this).attr("rel");
+					var hostname2 = $(this).parents('tr').eq(0).find('.hostnamee').text();
+					var isVolumesmpopup = $(this).hasClass('editvolumesmpopup');
 
-					$("#confirm-appliance-actions").modal('show');
+					
 
-					$.ajax({
-						url : url,
-						type: "GET",
-						cache: false,
-						async: true,
-						dataType: "html",
-						success : function (data) {
+					console.log(hostname2);
+					console.log(hostname);
 
-							console.log(data);
-							console.log(title);
+					if (url) {
+						$("#confirm-appliance-actions").modal('show');
 
-							$("#confirm-appliance-actions h3").text(title);
+						$.ajax({
+							url : url,
+							type: "GET",
+							cache: false,
+							async: true,
+							dataType: "html",
+							success : function (data) {
 
-							$("#confirm-appliance-actions .modal-body").empty().append(data);
+								$("#confirm-appliance-actions h3").text(title);
+
+								$("#confirm-appliance-actions .modal-body").empty().append(data);
+
+								
+							}
+						});
+						return false; // to prevent two click events
+					} else {
+						// $('#moredisktbl').find('.content').remove();
+						// wait();
+						if (isVolumesmpopup) {
+
+							$("#confirm-appliance-actions").modal('show');
 
 							
+
+							var url = "/cloud-fortis/user/index.php?cloud_ui=appliances&action=volumedata&hostname=" + hostname;
+							
+							$.ajax({
+								url : url,
+								type: "GET",
+								cache: false,
+								async: true,
+								dataType: "html",
+								success : function (data) {
+									
+									console.log(data);
+
+									$("#confirm-appliance-actions h3").text("Edit Volumes");
+									$("#confirm-appliance-actions .modal-body").empty().append(data);
+
+									//$('#moredisktbl').find('.content').remove();
+									//$('#moredisktbl').append(data);
+									//$('.lead').hide();
+									//$('.modal-overlay').hide();
+									//$('#modal-volume').modal();
+								}
+							});
+
 						}
-					});
-					return false; // to prevent two click events
+					}
 				});
 			});
 		}
 	} );
+
+	// reload the table every 5 seconds
+	//setInterval( function () {
+	//	dt.ajax.reload();
+	// }, 5000 );
 
 
 	/* This and function format is for adding an expanded row by clicking on the ... button  

@@ -110,7 +110,10 @@ var $cloud_id;
 	function select() {
 
 		if ( isset($_GET['action']) == true && $_GET['action'] == 'volumedata') {
+
 			$hostname = $_GET['hostname'];
+
+			// die("here is ".$hostname);
 
 				$appliance = new appliance();
 				$ap = $appliance->get_instance_by_name($hostname);
@@ -128,7 +131,7 @@ var $cloud_id;
 							
 				$resource->send_command($resip, $command);
 				$localip = $_SERVER['HTTP_HOST'];
-				$filesen = 'http://'.$resip.'/'.$hostname.'_volume_data';
+				$filesen = 'http://'.$resip.'/html/'.$hostname.'_volume_data';
 				
 				sleep(5);
 				$data = file_get_contents($filesen);
@@ -256,7 +259,7 @@ var $cloud_id;
 
 
 				$command = '/usr/share/htvcenter/plugins/kvm/bin/volumesdata.sh getlist '.$hostname;
-				
+
 				
 				$resource->send_command($resip, $command);
 				$localip = $_SERVER['HTTP_HOST'];
@@ -725,9 +728,12 @@ var $cloud_id;
 				}
 				#$comment .= '<textarea id="'.$this->cloudrequest->id.'" style="height:60px;width:95%;font-size:10px;"></textarea><script>get_state("'.$this->cloudrequest->id.'");</script>';
 				
-				// if($cloudappliance_state === 'active') {
-				//	$cloudappliance_action .= '<span title="Edit volumes" class="editvolumesm editvolumesmpopup" ><i class="fa fa-hdd-o"></i></span>';
-				// }
+				if($cloudappliance_state === 'active') {
+					// $cloudappliance_action .= '<span title="Edit volumes" class="editvolumesm editvolumesmpopup" ><i class="fa fa-hdd-o"></i></span>';
+
+					$cloudappliance_action .= '<li class="list-group-item editvolumesmpopup" rel="' . $this->cloudrequest->appliance_hostname .'"><span><i class="fa fa-hdd-o"></i>&nbsp;' . $this->lang['appliances']['action_edit_volumes'] .'</span></li>';
+
+				}
 				
 				$ta[] = array(
 					'id' => $this->cloudappliance->id,
@@ -837,7 +843,7 @@ var $cloud_id;
 				// echo ($i % 2 == 1 ? 'even ' : '');
 				$table .= '<tr id="' . $ta[$i]["id"] . '">';
 				$table .= '<td>' . $ta[$i]["id"] . '</td>';
-				$table .= '<td>' . $ta[$i]["name"] . '</td>';
+				$table .= '<td class="hostnamee">' . $ta[$i]["name"] . '</td>';
 				$table .= '<td>' . $ta[$i]["type"] . '</td>';
 				$table .= '<td>' . $ta[$i]["image"] . '</td>';
 				$table .= '<td>' . $ta[$i]["ram"] . '</td>';

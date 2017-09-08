@@ -87,19 +87,24 @@ var $actions_name = 'cloud-ui';
 			if(isset($response->msg)) {
 				$this->response->redirect($this->response->get_url($this->actions_name, 'appliances', $this->message_param, $response->msg));
 			}
-			$t = $this->response->html->template($this->tpldir."/cloud-ui.appliance-update.tpl.php");
-			$t->add($response->form->get_elements());
-			$t->add($response->html->thisfile, "thisfile");
-		 	$t->add($this->lang['appliances']['label_update_notice'],  "label_update_notice");
-			$t->add($this->lang['appliances']['update_cpu_notice'],  "update_cpu_notice");
-			if(isset($response->disk_resize))  {
-				$t->add($this->lang['appliances']['update_disk_notice'],  "update_disk_notice");
-			}  else  {
-				$t->add('',  "update_disk_notice");
+
+			if ($response->appliance_state == 1) {
+				return '<span>To update this instance, please pause it first.</span>';
+			} else {
+				$t = $this->response->html->template($this->tpldir."/cloud-ui.appliance-update.tpl.php");
+				$t->add($response->form->get_elements());
+				$t->add($response->html->thisfile, "thisfile");
+			 	$t->add($this->lang['appliances']['label_update_notice'],  "label_update_notice");
+				$t->add($this->lang['appliances']['update_cpu_notice'],  "update_cpu_notice");
+				if(isset($response->disk_resize))  {
+					$t->add($this->lang['appliances']['update_disk_notice'],  "update_disk_notice");
+				}  else  {
+					$t->add('',  "update_disk_notice");
+				}
+				$t->add(sprintf($this->lang['appliances']['label_update'],$response->appliance), 'label');
+				$t->group_elements(array('param_' => 'form'));
+				return $t;
 			}
-			$t->add(sprintf($this->lang['appliances']['label_update'],$response->appliance), 'label');
-			$t->group_elements(array('param_' => 'form'));
-			return $t;
 		}
 	}
 
@@ -203,6 +208,7 @@ var $actions_name = 'cloud-ui';
 				$response->msg = sprintf($this->lang['appliances']['msg_updated_appliance'], $this->appliance->name);
 			}
 			$response->appliance = $this->appliance->name;
+			$response->appliance_state = $this->cloudappliance->state;
 		}
 		return $response;
 	}

@@ -31,8 +31,8 @@
 <link type="text/css" href="{baseurl}/css/nifty.css" rel="stylesheet">
 -->
 <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amp;subset=latin" rel="stylesheet">
-<!--<link rel="icon" href="{baseurl}/img/favicon.ico?v=9" type="image/x-icon"> -->
-<link rel="shortcut icon" href="{baseurl}/img/score-icon.png?v=2" type="image/png">
+<link rel="icon" href="{baseurl}/img/favicon.ico?v=2" type="image/x-icon">
+<!--<link rel="shortcut icon" href="{baseurl}/img/favicon.ico?v=3" type="image/x"> -->
 
 	<!--Morris.js [ OPTIONAL ]
 	<link href="{baseurl}designplugins/morris-js/morris.min.css" rel="stylesheet"> -->

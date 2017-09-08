@@ -132,7 +132,7 @@ var datepickeryep = true;
                                 <div class="col-sm-2 col-md-2 col-lg-2 col-xs-2 selectype">
                                     <div class="panel plan">
                                         <div class="panel-body">
-                                            <span class="plan-title">VM</span>
+                                            <span class="plan-title">Virtualization</span>
                                            
                                             <div class="plan-icon">
                                                 <i class="fa fa-cloud"></i>

@@ -29,6 +29,7 @@
     }
     .plan .plan-icon {
         padding: 0.5em 0;
+        opacity: 0.4;
     }
 </style>
 <link href="/cloud-fortis/css/jquery.steps.css" rel="stylesheet" type="text/css">
@@ -180,7 +181,8 @@ $(document).ready(function() {
                                     <div class="panel-body">
                                         <span class="plan-title">CPU</span>
                                         <div class="plan-icon">
-                                            <i class="fa fa-desktop"></i>
+                                            <!-- <i class="fa fa-desktop"></i> -->
+                                            <img src="/cloud-fortis/img/cpu_s.png" style="max-width: 72px; height: auto;" /> 
                                         </div>
                                         <p class="text-muted pad-btm">
                                             <label for="budgetcpu">Monthly Price Limit in $: </label>
@@ -195,7 +197,8 @@ $(document).ready(function() {
                                     <div class="panel-body">
                                         <span class="plan-title">Memory</span>
                                         <div class="plan-icon">
-                                            <i class="fa fa-database"></i>
+                                        <img src="/cloud-fortis/img/memory_s.png" style="max-width: 72px; height: auto;" /> 
+                                            <!-- <i class="fa fa-database"></i>  -->
                                         </div>
                                         <p class="text-muted pad-btm">
                                             <label for="budgetmemory">Monthly Price Limit in $: </label>
@@ -225,7 +228,8 @@ $(document).ready(function() {
                                     <div class="panel-body">
                                         <span class="plan-title">Networking</span>
                                         <div class="plan-icon">
-                                            <i class="fa fa-globe"></i>
+                                            <!-- <i class="fa fa-globe"></i> -->
+                                            <img src="/cloud-fortis/img/network_s.png" style="max-width: 72px; height: auto;" />
                                         </div>
                                         <p class="text-muted pad-btm">
                                             <label for="budgetnetwork">Monthly Price Limit in $: </label>
@@ -239,7 +243,8 @@ $(document).ready(function() {
                                     <div class="panel-body">
                                         <span class="plan-title">Virtualization</span>
                                         <div class="plan-icon">
-                                            <i class="fa fa-cloud"></i>
+                                            <!-- <i class="fa fa-cloud"></i> -->
+                                            <img src="/cloud-fortis/img/virtualization_s.png" style="max-width: 72px; height: auto;" />
                                         </div>
                                         <p class="text-muted pad-btm">
                                             <label for="budgetvm">Monthly Price Limit in $: </label>
