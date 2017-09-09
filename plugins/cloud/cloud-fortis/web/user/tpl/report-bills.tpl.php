@@ -79,7 +79,7 @@ function get_last_12_months_report(month, year) {
 
         }
         column_x_yearly.push(parseDate(curr_month,'Y-M-D'));
-        deferred.push(get_monthly_data(parseDate(curr_month,'Y'), parseDate(curr_month,'m')));
+        deferred.push(get_monthly_data(parseDate(curr_month,'Y'), parseDate(curr_month,'mon')));
     }
 
     $("#current-year-monthly-title").text($("#current-monthly-title").text() + " ~ " + parseDate(curr_month, "mon") + " " + parseDate(curr_month, "Y"));
@@ -146,7 +146,7 @@ $(document).ready(function() {
 </div>
     <h2 class="redh2">Report Bills</h2>
 
-    {hidenuser}
+    
                                                         <label class="shortlabel">Month:</label> <select id="reportmonth" class="shortselect">
                                                             <option value="Jan">January</option>
                                                             <option value="Feb">February</option>
@@ -213,6 +213,7 @@ $(document).ready(function() {
 -->
 
 <div class="cat__content">
+    {hidenuser}
     <cat-page>
     <div class="row" id="chart-row">
         <div class="col-sm-12">
@@ -221,24 +222,24 @@ $(document).ready(function() {
                     <span class="cat__core__title d-inline-block">
                         <strong>Service Usage Report</strong>
                     </span>
-                    <div class="d-inline-block">
+                    <div class="d-inline-block" style="min-width: 172px;">
                         <label class="col-form-label col-sm-4">Month:</label> 
                         <select id="reportmonth" class="form-control col-sm-7 d-inline-block">
-                            <option value="Jan" data-val="0">January</option>
-                            <option value="Feb" data-val="1">February</option>
-                            <option value="Mar" data-val="2">March</option>
-                            <option value="Apr" data-val="3">April</option>
-                            <option value="May" data-val="4">May</option>
-                            <option value="Jun" data-val="5">June</option>
-                            <option value="Jul" data-val="6">July</option>
-                            <option value="Aug" data-val="7">August</option>
-                            <option value="Sep" data-val="8">September</option>
-                            <option value="Oct" data-val="9">October</option>
-                            <option value="Nov" data-val="10">November</option>
-                            <option value="Dec" data-val="11">December</option>
+                            <option value="Jan" data-val="0">January&nbsp;</option>
+                            <option value="Feb" data-val="1">February&nbsp;</option>
+                            <option value="Mar" data-val="2">March&nbsp;</option>
+                            <option value="Apr" data-val="3">April&nbsp;</option>
+                            <option value="May" data-val="4">May&nbsp;</option>
+                            <option value="Jun" data-val="5">June&nbsp;</option>
+                            <option value="Jul" data-val="6">July&nbsp;</option>
+                            <option value="Aug" data-val="7">August&nbsp;</option>
+                            <option value="Sep" data-val="8">September&nbsp;</option>
+                            <option value="Oct" data-val="9">October&nbsp;</option>
+                            <option value="Nov" data-val="10">November&nbsp;</option>
+                            <option value="Dec" data-val="11">December&nbsp;</option>
                         </select>
                     </div>
-                    <div class="d-inline-block">
+                    <div class="d-inline-block" style="min-width: 135px;">
                         <label class="col-form-label col-sm-4">Year:</label> 
                         <select id="reportyear" class="form-control col-sm-7 d-inline-block">
                             <option value="2017">2017</option>

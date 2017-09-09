@@ -891,7 +891,7 @@ $('.billcsvdownload').click(function(){
 		
 		var year = $('#reportyear').val();
 		var month = $('#reportmonth').val();
-		var user = $('#reportuser').val();
+		var user = $('#hiddenname').val();
 		var url = '/cloud-fortis/user/index.php?report=yes';
 		var dataval = 'year='+year+'&month='+month+'&forbill=1&forcsv=1&userdash='+user;
 	
