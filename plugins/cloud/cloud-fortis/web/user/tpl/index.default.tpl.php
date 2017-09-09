@@ -154,12 +154,14 @@
                             <i class="fa fa-search"></i><span>Explorer</span>
                         </a>
                     </li>
+                    <!--
                     <li>
                         <a class="dropdown-item" href="{baseurl}user/index.php?report=report_budget">
                             <i class="fa fa-credit-card"></i><span>Budget</span>
                         </a>
                     </li>
-                </ul>              
+                    -->
+                </ul>
             </div>
 
             <div class="cat__top-bar__item hidden-sm-down pull-right dropdown">
