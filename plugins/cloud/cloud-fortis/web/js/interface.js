@@ -773,7 +773,7 @@ if ((typeof(explorer) != 'undefined') && (explorer == true)) {
 		servers = servers + '<td>'+serv.cpu+'</td>';
 		servers = servers + '<td>'+serv.ram+'</td>';
 		servers = servers + '<td>'+serv.storage+'</td>';
-		servers = servers + '<td>'+serv.status+'</td>';
+		servers = servers + '<td><span class="pill '+serv.status+'">'+serv.status+'</td>';
 		servers = servers + '<td>'+serv.created+'</td>';
 		servers = servers + '<td>'+serv.worked+'</td>';
 		servers = servers + '<td>'+serv.price+'</td></tr>';

@@ -7,7 +7,7 @@
         }
 
         #lifetime-spent-gauge span {
-            margin: table-cell;
+            display: table-cell;
             text-align: center;
             vertical-align: middle
         }
@@ -558,7 +558,7 @@ $(document).ready(function () {
 
 
 
-        $("#yearly-spending h2").text("$" + yearly_sum);
+        $("#yearly-spending h2").text("$" + yearly_sum.toFixed(2));
     });
 });
 </script>

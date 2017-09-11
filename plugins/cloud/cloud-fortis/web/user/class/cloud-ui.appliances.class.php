@@ -159,9 +159,9 @@ var $cloud_id;
 				$command = 'sudo /usr/share/htvcenter/plugins/kvm/bin/volumesdata.sh remove '.$hostname.' '.$num;
 				$resource->send_command($resip, $command);
 
-				$numeo = $num - 2;
-				$volname = $instname.'vol'.$numeo;
-
+				// $numeo = $num - 2;
+				// $volname = $instname.'vol'.$numeo;
+				$volname = $instname.'vol'.$num;
 
 
 				$query = "DELETE FROM `cloud_volumes` WHERE `volume_name` = '$volname' AND `instance_name` = '$instname' ";
@@ -225,8 +225,8 @@ var $cloud_id;
 				
 				$resource->send_command($resip, $command);
 				
-				$numeo = $num - 2;
-				$name = $hostname.'vol'.$numeo;
+				// $numeo = $num - 2;
+				$name = $hostname.'vol'.$num;
 				
 				//$command = 'sudo ';
 				$command = $this->htvcenter->get('basedir').'/plugins/kvm/bin/htvcenter-kvm add';
@@ -873,11 +873,9 @@ var $cloud_id;
 					}
 					
 				}*/
-
 				// $table .= '<td>' . $i . '</td>';
-
 				$table .=	'<td class="toggle-graph" row-id="' . $i . '">
-								<a data-toggle="popover"  data-trigger="focus" data-content="' . htmlspecialchars($ta[$i]["action"]) . '" href="#"> 
+								<a data-toggle="popover" data-hostname="' . $ta[$i]["name"] . '" data-trigger="focus" data-content="' . htmlspecialchars($ta[$i]["action"]) . '" href="#"> 
 									<i class="fa fa-ellipsis-h" aria-hidden="true"></i>
 								</a>
 							</td>'; 

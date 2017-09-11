@@ -174,7 +174,6 @@ $(document).ready(function() {
 			success : function (data) {
 				$('.popover').popover('hide');
 				$("#table-appliances").empty().append(data);
-				// $("#cloud_appliances").load(function () {
 
 					var dt = $("#cloud_appliances").DataTable( {
 						"columns": [
@@ -199,16 +198,12 @@ $(document).ready(function() {
 						"fnDrawCallback": function( oSettings ) {
 							$(".toggle-graph a").popover({
 								html: true,
-								placement: "bottom", /*
-								content: function() {
-									return $('#popover-content').html();
-								} */
+								placement: "bottom", 
 							});
 
 							$(".toggle-graph a").on("shown.bs.popover", function() {
 
 								hostname = $(this).data('hostname');
-								console.log("212 hostname: "+hostname);
 
 								$('.cdrom').click(function(){
 
@@ -272,7 +267,9 @@ $(document).ready(function() {
 										return false; // to prevent two click events
 									} else {
 										if (isVolumesmpopup) {
-											// hostname = rel;
+											$("#modal-volume .modal-body table tbody").empty();
+											$("#modal-volume h3").text("Loading...");
+											$("#msgBox h1").text("Please wait while we load storage disks information...");
 											$("#modal-volume").modal('show');
 
 											var url = "/cloud-fortis/user/index.php?cloud_ui=appliances&action=volumedata&hostname=" + hostname;
@@ -284,24 +281,16 @@ $(document).ready(function() {
 												async: true,
 												dataType: "html",
 												success : function (data) {
-
+													$("#msgBox h1").text("");
 													$("#modal-volume h3").text("Edit Volumes");
 													$("#modal-volume .modal-body table tbody").empty().append(data);
-												
 													var num = '';
-													var linktext = '';
 
-													$('.voladd').on('click', function() {
+													$('.voldel').on('click', function () {
+														$("#modal-volume h3").text("Process Deleting Volume...");
 														num = $(this).closest('tr').attr('num');
-														linktext = $(this).text();
-														$('#modal-volumeadd').modal();
-													});
+														var url = "/cloud-fortis/user/index.php?cloud_ui=appliances&action=volumedatadel&hostname=" + hostname +"&num="+num;
 
-													$('#addvolumebtnvv').click(function(){
-														$('#modal-volumeadd').modal('hide');
-														var sizevol = $('#volumeselect').val();
-														var url = "/cloud-fortis/user/index.php?cloud_ui=appliances&action=volumedataadd&hostname="+hostname+"&num="+num+"&sizevol="+sizevol;
-														
 														$.ajax({
 															url : url,
 															type: "GET",
@@ -309,14 +298,42 @@ $(document).ready(function() {
 															async: true,
 															dataType: "html",
 															success : function (data) {
+																$("#modal-volume .modal-body table tbody").empty().append(data);
+																alert('Volume removed successfully.');
+																$('#modal-volume').modal('hide');
+															}
+														});
+													});
+
+													$('.voladd').on('click', function() {
+														$("#modal-volume h3").text("Process Adding Volume...");
+														num = $(this).closest('tr').attr('num');
+														$('#modal-volumeadd').modal();
+													});
+
+													$('#addvolumebtnvv').click(function(){
+														$("#modal-volume h3").text("Processing... Please wait...");
+														var sizevol = $('#volumeselect').val();
+														var url = "/cloud-fortis/user/index.php?cloud_ui=appliances&action=volumedataadd&hostname="+hostname+"&num="+num+"&sizevol="+sizevol;
+														
+														$.ajax({
+															url : url,
+															type: "GET",
+															cache: false,
+															async: false,
+															dataType: "html",
+															success : function (data) {
 																if (data == 'no disk space') {
 																	alert('You have not got free space for this volume creation');
+																	$('#modal-volumeadd').modal('hide');
 																	$('#modal-volume').modal('hide');
-																	return;
+																	return false;
 																}
-																$("#modal-volume .modal-body table tbody").empty().append(data);
-																
-																alert('Volume created succesful');
+																$("#modal-volume .modal-body table tbody").empty();
+																alert('Volume created successfully.');
+																$('#modal-volumeadd').modal('hide');
+																$('#modal-volume').modal('hide');
+																return false;
 															}
 														}); 
 														//setInterval(updatevolumes(linktext), 20000);
@@ -899,6 +916,7 @@ function get_state( id ) {
 			</section>
 		</div>
 	</div>
+	<p id="msgBox"><h1 class="text-danger"></h1></p>
 	</cat-page>
 </div>
 

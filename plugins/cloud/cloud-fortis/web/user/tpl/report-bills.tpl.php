@@ -89,6 +89,16 @@ function get_last_12_months_report(month, year) {
 
         for (var j = 0; j < objects.length; j++) {
             var json = JSON.parse(objects[j][0]);
+
+            if (j == 0) {
+                $('#cpu-usage, .amount-cpu').empty().append("<span>"+json.cpu+"</span>");
+                $('#storage-usage, .amount-storage').empty().append("<span>"+json.storage+"</span>");
+                $('#memory-usage, .amount-memory').empty().append("<span>"+json.memory+"</span>");
+                $('#virtualization-usage, .amount-virtualization').empty().append("<span>"+json.virtualization+"</span>");
+                $('#networking-usage, .amount-networking').empty().append("<span>"+json.networking+"</span>");
+                $('#total-usage, .amount-total').empty().append("<span>"+json.all+"</span>");
+            }
+
             total_monthly.push(to_num(json.all));
             cpu_monthly.push(to_num(json.cpu));
             storage_monthly.push(to_num(json.storage));
@@ -96,13 +106,6 @@ function get_last_12_months_report(month, year) {
             virtual_monthly.push(to_num(json.virtualization));
             network_monthly.push(to_num(json.networking));
         }
-
-        $('#cpu-usage, .amount-cpu').empty().append("<span>$"+cpu_monthly[1]+"</span>");
-        $('#storage-usage, .amount-storage').empty().append("<span>$"+storage_monthly[1]+"</span>");
-        $('#memory-usage, .amount-memory').empty().append("<span>$"+memory_monthly[1]+"</span>");
-        $('#virtualization-usage, .amount-virtualization').empty().append("<span>$"+virtual_monthly[1]+"</span>");
-        $('#networking-usage, .amount-networking').empty().append("<span>$"+network_monthly[1]+"</span>");
-        $('#total-usage, .amount-total').empty().append("<span>$"+total_monthly[1]+"</span>");
 
         if (chart) {
             chart.load({

@@ -318,7 +318,8 @@ class cloud_controller
 					$serverblocks[$i]['status'] = $state;
 
 					$aplid = $rez['cr_appliance_id'];
-					$query = 'SELECT * FROM `cloud_transaction`';
+					$query = 'SELECT * FROM `cloud_transaction` WHERE `ct_cr_id` = ' . $rez['cr_id'];
+
 					$costres = mysql_query($query);
 					$vmmpoints = 0;
 					while ($costrez = mysql_fetch_assoc($costres)) {
@@ -414,89 +415,95 @@ class cloud_controller
 			if (!empty($month) && !empty($year)) {
 				
 				if ($user != 'All') {
-				$query = "SELECT `cu_id` FROM `cloud_users` WHERE `cu_name`=\"".$user."\"";
-				$res = mysql_query($query);
-				$res = mysql_fetch_row($res);
-				$userid = $res[0];
+					$query = "SELECT `cu_id` FROM `cloud_users` WHERE `cu_name`=\"".$user."\"";
+					$res = mysql_query($query);
+					$res = mysql_fetch_row($res);
+					$userid = $res[0];
 
-				mysql_select_db('cloud_transaction');
-				$query = "SELECT `ct_time`, `ct_ccu_charge`, `ct_ccu_balance`, `ct_comment` FROM `cloud_transaction` WHERE `ct_cu_id`=\"".$userid."\"";
+					mysql_select_db('cloud_transaction');
+					$query = "SELECT `ct_time`, `ct_ccu_charge`, `ct_ccu_balance`, `ct_comment` FROM `cloud_transaction` WHERE `ct_cu_id`=\"".$userid."\"";
 
-				
-
-				
-
-				$res = mysql_query($query);
-				$ccu =0;
-				$detailtable = '<table class="table table-striped table-bordered"><tr class="info"><td>Date</td><td>CCU</td><td>Comment</td></tr>';
-
-				$vmpoints = 0;
-				$netpoints = 0;
-				$rampoints = 0;
-				$storagepoints = 0;
-				$cpupoints = 0;
-
-				while ($rez = mysql_fetch_assoc($res)) {
-
-					//var_dump($rez); die();
-
-					$timestamp=$rez['ct_time'];
 					
-					$yeardb = gmdate("Y", $timestamp);
-					$monthdb = gmdate("M", $timestamp);
+
+					
+
+					$res = mysql_query($query);
+
+					//$rez = mysql_fetch_assoc($res);
+
+					//die(var_export($rez));
 
 
-					if ( ($year == $yeardb) && ($month == $monthdb) ) {
+					$ccu =0;
+					$detailtable = '<table class="table table-striped table-bordered"><tr class="info"><td>Date</td><td>CCU</td><td>Comment</td></tr>';
 
-						$ccu = $ccu + $rez['ct_ccu_charge'];
-						$tabledate = gmdate("Y-m-d h:i", $timestamp);
-						$detailtable .= '<tr class="headertr"><td>'.$tabledate.'</td><td>'.$rez['ct_ccu_charge'].'</td><td>'.$rez['ct_comment'].'</td></tr>';
+					$vmpoints = 0;
+					$netpoints = 0;
+					$rampoints = 0;
+					$storagepoints = 0;
+					$cpupoints = 0;
+
+					while ($rez = mysql_fetch_assoc($res)) {
+
+						//var_dump($rez); die();
+
+						$timestamp=$rez['ct_time'];
 						
-						
-						if ($detailcategory == true || $forbill == true) {
+						$yeardb = gmdate("Y", $timestamp);
+						$monthdb = gmdate("M", $timestamp);
 
-							$ccu = (int) $rez['ct_ccu_charge'];
-							$done = 0;
-							if ( preg_match('@CPU@',$rez['ct_comment']) && ($done == 0) ) {
-								$cpupoints = $cpupoints + $ccu;
-								$done = 1;
-							}
 
-							if ( ((preg_match('@Memory@',$rez['ct_comment'])) || (preg_match('#RAM#', $rez['ct_comment'])) ) && ($done == 0) ) {
-								$rampoints = $rampoints + $ccu;
-								$done = 1;
-							}
+						if ( ($year == $yeardb) && ($month == $monthdb) ) {
 
-							if ( ((preg_match('@Disk Space@',$rez['ct_comment'])) || (preg_match('@MB@',$rez['ct_comment'])) || (preg_match('@GB@',$rez['ct_comment'])) || (preg_match('@storage@',$rez['ct_comment'])) ) && ($done == 0) ) {
-								$storagepoints = $storagepoints + $ccu;
-								$done = 1;
-							}
-
-							if ( ((preg_match('@Kernel@',$rez['ct_comment'])) || (preg_match('#KVM#', $rez['ct_comment'])) || (preg_match('#VM#', $rez['ct_comment'])) ) && ($done == 0)  ) {
-								$vmpoints = $vmpoints + $ccu;
-								$done = 1;
-							}
-
+							$ccu = $ccu + $rez['ct_ccu_charge'];
+							$tabledate = gmdate("Y-m-d h:i", $timestamp);
+							$detailtable .= '<tr class="headertr"><td>'.$tabledate.'</td><td>'.$rez['ct_ccu_charge'].'</td><td>'.$rez['ct_comment'].'</td></tr>';
 							
+							
+							if ($detailcategory == true || $forbill == true) {
 
-							if ( (preg_match('@Network@',$rez['ct_comment']) ) && ($done == 0) ) {
-								$netpoints = $netpoints + $ccu;
-								$done = 1;
+								$ccu = (int) $rez['ct_ccu_charge'];
+								$done = 0;
+								if ( preg_match('@CPU@',$rez['ct_comment']) && ($done == 0) ) {
+									$cpupoints = $cpupoints + $ccu;
+									$done = 1;
+								}
+
+								if ( ((preg_match('@Memory@',$rez['ct_comment'])) || (preg_match('#RAM#', $rez['ct_comment'])) ) && ($done == 0) ) {
+									$rampoints = $rampoints + $ccu;
+									$done = 1;
+								}
+
+								if ( ((preg_match('@Disk Space@',$rez['ct_comment'])) || (preg_match('@MB@',$rez['ct_comment'])) || (preg_match('@GB@',$rez['ct_comment'])) || (preg_match('@storage@',$rez['ct_comment'])) ) && ($done == 0) ) {
+									$storagepoints = $storagepoints + $ccu;
+									$done = 1;
+								}
+
+								if ( ((preg_match('@Kernel@',$rez['ct_comment'])) || (preg_match('#KVM#', $rez['ct_comment'])) || (preg_match('#VM#', $rez['ct_comment'])) ) && ($done == 0)  ) {
+									$vmpoints = $vmpoints + $ccu;
+									$done = 1;
+								}
+
+								
+
+								if ( (preg_match('@Network@',$rez['ct_comment']) ) && ($done == 0) ) {
+									$netpoints = $netpoints + $ccu;
+									$done = 1;
+								}
+
 							}
-
 						}
 					}
-				}
-				$jsonarr = array();
-				$jsonarr['memory'] = $rampoints;
-				$jsonarr['network'] = $netpoints;
-				$jsonarr['virtualisation'] = $vmpoints;
-				$jsonarr['storage'] = $storagepoints;
-				$jsonarr['cpu'] = $cpupoints;
-				$jsonarr['sum'] = $rampoints + $netpoints + $vmpoints + $storagepoints + $cpupoints;
-				
+					$jsonarr = array();
+					$jsonarr['memory'] = $rampoints;
+					$jsonarr['network'] = $netpoints;
+					$jsonarr['virtualisation'] = $vmpoints;
+					$jsonarr['storage'] = $storagepoints;
+					$jsonarr['cpu'] = $cpupoints;
+					$jsonarr['sum'] = $rampoints + $netpoints + $vmpoints + $storagepoints + $cpupoints;
+					
 
-				$detailtable .= '</table>';
+					$detailtable .= '</table>';
 				} else {
 
 
@@ -634,12 +641,12 @@ class cloud_controller
 					$billjson['virtualization'] = round($vmpoints/1000*$price, 2);
 					$billjson['networking'] = round($netpoints/1000*$price, 2);
 
-					$billjson['cpu'] = '$'.$billjson['cpu'];
-					$billjson['storage'] = '$'.$billjson['storage'];
-					$billjson['memory'] = '$'.$billjson['memory'];
-					$billjson['virtualization'] = '$'.$billjson['virtualization'];
-					$billjson['networking'] = '$'.$billjson['networking'];
-					$billjson['all'] = '$'.$cost;
+					$billjson['cpu'] = '$'.number_format($billjson['cpu'], 2);
+					$billjson['storage'] = '$'.number_format($billjson['storage'], 2);
+					$billjson['memory'] = '$'.number_format($billjson['memory'], 2);
+					$billjson['virtualization'] = '$'.number_format($billjson['virtualization'], 2);
+					$billjson['networking'] = '$'.number_format($billjson['networking'], 2);
+					$billjson['all'] = '$'.number_format($cost,2);
 
 					if (isset($_GET['chatbot']) && $_GET['chatbot'] == 'true') {
 						$result = json_encode($billjson);
