@@ -1,3 +1,4 @@
+
 <?php
 
 /*ini_set('display_errors', 1);
@@ -296,12 +297,12 @@ var $cloud_id;
 				
 				if ($cdaction == 'insert') {
 					$command = '/usr/share/htvcenter/plugins/kvm/bin/kvmcdrom.sh insert '.$hostname.' '.$isofile;
-					$resource->send_command($resip, $command);
+					@$resource->send_command($resip, $command);
 					echo 'Insert succesful'; die();
 				} else {
 					if ($cdaction == 'eject') {
 						$command = '/usr/share/htvcenter/plugins/kvm/bin/kvmcdrom.sh eject '.$hostname;
-						$resource->send_command($resip, $command);
+						@$resource->send_command($resip, $command);
 						echo 'Eject succesful'; die();
 					}
 				}
@@ -736,8 +737,8 @@ var $cloud_id;
 						// $cdrom = '<a class="plugin cdrom">Insert CD</a>';
 						// $cdrom .= '<a class="plugin cdromeject" style="display:none">Eject CD</a>';
 						
-						$cdrom = '<li class="list-group-item plugin cdrom"><span><i class="fa fa-circle-thin"></i>&nbsp;Insert CD</span></li>';
-						$cdrom .= '<li class="list-group-item plugin cdromeject"><span><i class="fa fa-eject"></i>&nbsp;Eject CD</span></li>';
+						$cdrom = '<li class="list-group-item plugin cdrom" data-hostname="' . $appliance->name . '"><span><i class="fa fa-circle-thin"></i>&nbsp;Insert CD</span></li>';
+						$cdrom .= '<li class="list-group-item plugin cdromeject" data-hostname="' . $appliance->name . '" style="display:block;"><span><i class="fa fa-eject"></i>&nbsp;Eject CD</span></li>';
 					}
 					#$comment .= '<textarea id="'.$this->cloudrequest->id.'" style="height:60px;width:95%;font-size:10px;"></textarea><script>get_state("'.$this->cloudrequest->id.'");</script>';
 					

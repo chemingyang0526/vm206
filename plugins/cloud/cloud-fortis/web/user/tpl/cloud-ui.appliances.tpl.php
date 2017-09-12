@@ -207,6 +207,10 @@ $(document).ready(function() {
 
 								$('.cdrom').click(function(){
 
+										//hostname  = $(this).data('hostname');
+
+										console.log("cdrom hostname: " +hostname);
+
 									// hostname = $(this).closest('tr').find('.hostnamee').text();
 									// hostnameglobal = hostname;
 									//if ( $(this).text() == 'Insert CD' ) {
@@ -227,19 +231,21 @@ $(document).ready(function() {
 
 								$('.cdromeject').click(function() {
 
+									console.log("in eject");
 									// hostname = $(this).closest('tr').find('.hostnamee').text();
 									// hostnameglobal = hostname;
-									if ( $(this).text() == 'Eject CD' ) {
+									// if ( $(this).text() == 'Eject CD' ) {
 										var action = 'eject';
 										cdromsender(hostname, action);
-									}
+									// }
 								});
 
 								$('.filepickclose').click(function(){
 									hostname = '';
 								});
 
-								$('.file').on('click', function() {
+
+								$('body').on('click', '.file', function() {
 									var filetext = $(this).text();
 									cdromsender(hostname, 'insert', filetext);
 								});
@@ -522,7 +528,65 @@ $(document).ready(function() {
 		});
 	}); 
 
+	function cdromsender(hostname, action, isofile) {
+		
+			console.log(action);
 
+			var url = "/cloud-fortis/user/index.php?cloud_ui=appliances&action=cdrom&hostname=" + hostname;
+			url = url + "&cdaction=" + action;
+			url = url + "&isofile=" + isofile;
+			var row = '';
+			$('.hostnamee').each(function(){
+				if ( $(this).text() == hostname ) {
+					row = $(this).closest('tr');
+				}
+			});
+			
+			$.ajax({
+				url : url,
+				type: "GET",
+				cache: false,
+				async: false,
+				dataType: "html",
+				success : function (data) {
+					if (action == 'getlist') {
+						list = data.split(';');
+						for (i in list) {
+							cdromlist[i] = list[i];
+						}
+					}
+
+					console.log(action);
+
+					console.log(data);
+
+
+					if (action == 'insert') {
+						if (data.trim() == 'Insert succesful') {
+							alert(data);
+							$('#filepicker').hide();
+							row.find('.cdrom').hide();
+							row.find('.cdromeject').show();
+						} else {
+							alert('Can\'t insert iso file, please, read documentation first');
+							$('#filepicker').hide();
+						}
+						
+					}
+
+					if (action == 'eject') {
+						if (data.trim() == 'Eject succesful') {
+							alert(data);
+							row.find('.cdromeject').hide();
+							row.find('.cdrom').show();
+						} else {
+							alert('Can\'t eject cd');
+						}
+					}	
+				}
+			});
+	}
+	// --- end cdrom ---
 
 	function makeSummary() {
 		var apps = [];
@@ -569,6 +633,9 @@ $(document).ready(function() {
 			});
 		});
 	}
+
+	// --- end cdrom ---
+
 /*
 	function initiateOwlCarousel() {
 		if ($(".owl-carousel.uninitiated").length > 0) {
@@ -651,7 +718,7 @@ $(document).ready(function() {
 	        clearInterval(t);
 	        t = setInterval( function () {
 				loadAppliancesTable();
-			}, 4000 ); // time is in milliseconds
+			}, 5000 ); // time is in milliseconds
 	    }
 	}
 	loadAppliancesTable();
@@ -735,59 +802,6 @@ $(document).ready(function() {
 	});
 	*/
 });
-
-function cdromsender(hostname, action, isofile) {
-		
-	var url = "/cloud-fortis/user/index.php?cloud_ui=appliances&action=cdrom&hostname=" + hostname;
-	url = url + "&cdaction=" + action;
-	url = url + "&isofile=" + isofile;
-	var row = '';
-	$('.hostnamee').each(function(){
-		if ( $(this).text() == hostname ) {
-			row = $(this).closest('tr');
-		}
-	});
-	
-	$.ajax({
-		url : url,
-		type: "GET",
-		cache: false,
-		async: false,
-		dataType: "html",
-		success : function (data) {
-			if (action == 'getlist') {
-				list = data.split(';');
-				for (i in list) {
-					cdromlist[i] = list[i];
-				}
-			}
-
-			if (action == 'insert') {
-				if (data == 'Insert succesful') {
-					alert(data);
-					$('#filepicker').hide();
-					row.find('.cdrom').hide();
-					row.find('.cdromeject').show();
-				} else {
-					alert('Can\'t insert iso file, please, read documentation first');
-					$('#filepicker').hide();
-				}
-				
-			}
-
-			if (action == 'eject') {
-				if (data == 'Eject succesful') {
-					alert(data);
-					row.find('.cdromeject').hide();
-					row.find('.cdrom').show();
-				} else {
-					alert('Can\'t eject cd');
-				}
-			}	
-		}
-	});
-}
-
 
 function get_state( id ) {
 /*
