@@ -1,17 +1,17 @@
 <!--
 /*
-    htvcenter Enterprise developed by htvcenter Enterprise GmbH.
+	htvcenter Enterprise developed by htvcenter Enterprise GmbH.
 
-    All source code and content (c) Copyright 2014, htvcenter Enterprise GmbH unless specifically noted otherwise.
+	All source code and content (c) Copyright 2014, htvcenter Enterprise GmbH unless specifically noted otherwise.
 
-    This source code is released under the htvcenter Enterprise Server and Client License, unless otherwise agreed with htvcenter Enterprise GmbH.
-    The latest version of this license can be found here: http://htvcenter-enterprise.com/license
+	This source code is released under the htvcenter Enterprise Server and Client License, unless otherwise agreed with htvcenter Enterprise GmbH.
+	The latest version of this license can be found here: http://htvcenter-enterprise.com/license
 
-    By using this software, you acknowledge having read this license and agree to be bound thereby.
+	By using this software, you acknowledge having read this license and agree to be bound thereby.
 
-                http://htvcenter-enterprise.com
+				http://htvcenter-enterprise.com
 
-    Copyright 2014, htvcenter Enterprise GmbH <info@htvcenter-enterprise.com>
+	Copyright 2014, htvcenter Enterprise GmbH <info@htvcenter-enterprise.com>
 */
 -->
 <link href="/cloud-fortis/designplugins/datatables/media/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
@@ -206,44 +206,27 @@ $(document).ready(function() {
 								hostname = $(this).data('hostname');
 
 								$('.cdrom').click(function(){
-
-										//hostname  = $(this).data('hostname');
-
-										console.log("cdrom hostname: " +hostname);
-
-									// hostname = $(this).closest('tr').find('.hostnamee').text();
-									// hostnameglobal = hostname;
-									//if ( $(this).text() == 'Insert CD' ) {
-										var action = 'getlist';
-										cdromsender(hostname, action);
-										
-										$('#isofilez').html('');
-										for( i in cdromlist ) {
-											var file = cdromlist[i];
-											var filerow = '<tr class="htmlobject_tr odd last"><td class="htmlobject_td name"><a href="#" class="file">'+file+'</a></td></tr>';
-											$('#isofilez').append(filerow);
-										}
-										
-										$('#filepicker').show();
-									//}
-
+									var action = 'getlist';
+									cdromsender(hostname, action);
+									
+									$('#isofilez').html('');
+									for( i in cdromlist ) {
+										var file = cdromlist[i];
+										var filerow = '<tr class="htmlobject_tr odd last"><td class="htmlobject_td name"><a href="#" class="file">'+file+'</a></td></tr>';
+										$('#isofilez').append(filerow);
+									}
+									
+									$('#filepicker').show();
 								});
 
 								$('.cdromeject').click(function() {
-
-									console.log("in eject");
-									// hostname = $(this).closest('tr').find('.hostnamee').text();
-									// hostnameglobal = hostname;
-									// if ( $(this).text() == 'Eject CD' ) {
-										var action = 'eject';
-										cdromsender(hostname, action);
-									// }
+									var action = 'eject';
+									cdromsender(hostname, action);
 								});
 
 								$('.filepickclose').click(function(){
 									hostname = '';
 								});
-
 
 								$('body').on('click', '.file', function() {
 									var filetext = $(this).text();
@@ -342,7 +325,6 @@ $(document).ready(function() {
 																return false;
 															}
 														}); 
-														//setInterval(updatevolumes(linktext), 20000);
 													});
 												}
 											});
@@ -381,11 +363,10 @@ $(document).ready(function() {
 					return this.optional(element) || /^[a-z0-9]{1,}[a-z0-9-]*[a-z0-9]$/i.test( value );
 				}, 'Please use only alphanumeric characters for the name; Dash(-) is allowed only in the middle.');
 
-
 				form.validate({
 					errorPlacement: function errorPlacement(error, element) { element.before(error); },
 					rules: {
-						cloud_hostname_input: "HOSTNAME",
+						cloud_hostname_input: "HOSTNAME"
 					}
 				}); 
 
@@ -529,8 +510,6 @@ $(document).ready(function() {
 	}); 
 
 	function cdromsender(hostname, action, isofile) {
-		
-			console.log(action);
 
 			var url = "/cloud-fortis/user/index.php?cloud_ui=appliances&action=cdrom&hostname=" + hostname;
 			url = url + "&cdaction=" + action;
@@ -556,11 +535,6 @@ $(document).ready(function() {
 						}
 					}
 
-					console.log(action);
-
-					console.log(data);
-
-
 					if (action == 'insert') {
 						if (data.trim() == 'Insert succesful') {
 							alert(data);
@@ -582,7 +556,7 @@ $(document).ready(function() {
 						} else {
 							alert('Can\'t eject cd');
 						}
-					}	
+					}
 				}
 			});
 	}
@@ -603,7 +577,7 @@ $(document).ready(function() {
 
 		$(".owl-carousel div.item:not(.slick-cloned) input.checkbox:checked").each(function () {
 			var elem = $(this).parent("div.item").first().contents().filter(function() {
-							    return this.nodeType == 3;
+								return this.nodeType == 3;
 							}).text().trim().toLowerCase();
 
 			if (apps.indexOf(elem) == -1) {
@@ -706,20 +680,20 @@ $(document).ready(function() {
 */
 	// reload the table every 5 seconds
 	function reloadAppliancesTable() {
-	    var t;
-	    window.onload = resetTimer;
-	    window.onmousemove = resetTimer;
-	    window.onmousedown = resetTimer; // catches touchscreen presses
-	    window.onclick = resetTimer;     // catches touchpad clicks
-	    window.onscroll = resetTimer;    // catches scrolling with arrow keys
-	    window.onkeypress = resetTimer;
+		var t;
+		window.onload = resetTimer;
+		window.onmousemove = resetTimer;
+		window.onmousedown = resetTimer; // catches touchscreen presses
+		window.onclick = resetTimer;	 // catches touchpad clicks
+		window.onscroll = resetTimer;	// catches scrolling with arrow keys
+		window.onkeypress = resetTimer;
 
-	    function resetTimer() {
-	        clearInterval(t);
-	        t = setInterval( function () {
+		function resetTimer() {
+			clearInterval(t);
+			t = setInterval( function () {
 				loadAppliancesTable();
 			}, 5000 ); // time is in milliseconds
-	    }
+		}
 	}
 	loadAppliancesTable();
 	reloadAppliancesTable();
@@ -1034,49 +1008,49 @@ function get_state( id ) {
 
 <div id="volumepopup" class="modal-dialog">
 <div class="panel">
-                    
-                                <!-- Classic Form Wizard -->
-                                <!--===================================================-->
-                                <div id="demo-cls-wz">
-                    
-                                    <!--Nav-->
-                                    <ul class="wz-nav-off wz-icon-inline wz-classic">
-                                        <li class="col-xs-3 bg-info active">
-                                            <a href="#demo-cls-tab1" data-toggle="tab" aria-expanded="true">
-                                                <span class="icon-wrap icon-wrap-xs bg-trans-dark"><i class="fa fa-cloud"></i></span> Fortis
-                                            </a>
-                                        </li>
-                                        <div class="volumepopupclass"><a id="volumepopupclose"><i class="fa fa-icon fa-close"></i></a></div>
-                                        
-                                    </ul>
-                    
-                                    <!--Progress bar-->
-                                    <div class="progress progress-sm progress-striped active">
-                                        <div class="progress-bar progress-bar-info" style="width: 100%;"></div>
-                                    </div>
-                    
-                    
-                                    <!--Form-->
-                                    <div class="form-horizontal mar-top">
-                                        <div class="panel-body">
-                                            <div class="tab-content">
-                    
-                                                <!--First tab-->
-                                                <div class="tab-pane active in" id="demo-cls-tab1">
-                                                    <div id="storageform">
-                                                    
-                                                    </div>
-                                                </div>
-                    
-                                                
-                                            </div>
-                                        </div>
-                    
-                    
-                                    </div>
-                                </div>
-                                <!--===================================================-->
-                                <!-- End Classic Form Wizard -->
-                    
-                            </div>
+					
+								<!-- Classic Form Wizard -->
+								<!--===================================================-->
+								<div id="demo-cls-wz">
+					
+									<!--Nav-->
+									<ul class="wz-nav-off wz-icon-inline wz-classic">
+										<li class="col-xs-3 bg-info active">
+											<a href="#demo-cls-tab1" data-toggle="tab" aria-expanded="true">
+												<span class="icon-wrap icon-wrap-xs bg-trans-dark"><i class="fa fa-cloud"></i></span> Fortis
+											</a>
+										</li>
+										<div class="volumepopupclass"><a id="volumepopupclose"><i class="fa fa-icon fa-close"></i></a></div>
+										
+									</ul>
+					
+									<!--Progress bar-->
+									<div class="progress progress-sm progress-striped active">
+										<div class="progress-bar progress-bar-info" style="width: 100%;"></div>
+									</div>
+					
+					
+									<!--Form-->
+									<div class="form-horizontal mar-top">
+										<div class="panel-body">
+											<div class="tab-content">
+					
+												<!--First tab-->
+												<div class="tab-pane active in" id="demo-cls-tab1">
+													<div id="storageform">
+													
+													</div>
+												</div>
+					
+												
+											</div>
+										</div>
+					
+					
+									</div>
+								</div>
+								<!--===================================================-->
+								<!-- End Classic Form Wizard -->
+					
+							</div>
 </div>

@@ -307,14 +307,20 @@ class cloud_controller
 					$hostname = $rez['cr_appliance_hostname'];
 					$query = 'SELECT `appliance_state` FROM `appliance_info` WHERE `appliance_name` = "'.$hostname.'"';
 					$stres = mysql_query($query);
-
-					while($strez = mysql_fetch_assoc($stres)) {
-						$state = $strez['appliance_state'];
+					if(mysql_num_rows($stres) > 0) {
+						while($strez = mysql_fetch_assoc($stres)) {
+							$state = $strez['appliance_state'];
+						}
+					} else {
+						$state = 'no-res';
 					}
-
 					if ($state == '') {
 						$state = 'removed';
 					}
+					if ($state == 'stopped') {
+						$state = 'paused';
+					}
+
 					$serverblocks[$i]['status'] = $state;
 
 					$aplid = $rez['cr_appliance_id'];
@@ -422,18 +428,7 @@ class cloud_controller
 
 					mysql_select_db('cloud_transaction');
 					$query = "SELECT `ct_time`, `ct_ccu_charge`, `ct_ccu_balance`, `ct_comment` FROM `cloud_transaction` WHERE `ct_cu_id`=\"".$userid."\"";
-
-					
-
-					
-
 					$res = mysql_query($query);
-
-					//$rez = mysql_fetch_assoc($res);
-
-					//die(var_export($rez));
-
-
 					$ccu =0;
 					$detailtable = '<table class="table table-striped table-bordered"><tr class="info"><td>Date</td><td>CCU</td><td>Comment</td></tr>';
 
@@ -444,8 +439,6 @@ class cloud_controller
 					$cpupoints = 0;
 
 					while ($rez = mysql_fetch_assoc($res)) {
-
-						//var_dump($rez); die();
 
 						$timestamp=$rez['ct_time'];
 						
@@ -531,20 +524,10 @@ class cloud_controller
 
 							mysql_select_db('cloud_transaction');
 							$query = "SELECT `ct_time`, `ct_ccu_charge`, `ct_ccu_balance`, `ct_comment` FROM `cloud_transaction` WHERE `ct_cu_id`=\"".$userid."\"";
-
-							
-
-							
-
 							$res = mysql_query($query);
-							
 							$detailtable = '<table class="table table-striped table-bordered"><tr class="info"><td>Date</td><td>CCU</td><td>Comment</td></tr>';
 
-							
-
 							while ($rez = mysql_fetch_assoc($res)) {
-
-
 
 								$timestamp=$rez['ct_time'];
 								
@@ -738,13 +721,6 @@ class cloud_controller
 		} else {
 			$tpl = $this->portaldir."/user/tpl/index.login.tpl.php";
 		}
-
-		// die($tpl);
-
-
-		// if($this->file->exists($this->portaldir."/user/tpl/index.tpl.php")) {
-		// 	$tpl = $this->portaldir."/user/tpl/index.tpl.php";
-		// }
 
 		$this->tpl = $tpl;
 	}
