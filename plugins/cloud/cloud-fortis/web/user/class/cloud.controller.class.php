@@ -80,6 +80,7 @@ class cloud_controller
 			
 			$getbudgets = $_POST['getbudgets'];
 			$create = $_POST['create'];
+			$update = $_POST['update'];
 			$name = $_POST['name'];
 			$date_start = $_POST['date_start'];
 			$date_end = $_POST['date_end'];
@@ -221,10 +222,10 @@ class cloud_controller
 			$storage = (int)$storage;
 			$networking = (int)$networking;
 			$vm = (int)$vm;
+			$globalid = (int)$globalid;
+			$sql_responses = [];
 
 			if ($create == 1) {
-				
-				
 
 				if (is_int($cpu) && is_int($memory) && is_int($storage) && is_int($networking) && is_int($vm)) {
 					$username = $this->htvcenter->user()->name;
@@ -234,8 +235,44 @@ class cloud_controller
 					
 					$query = "INSERT INTO `cloud_price_limits`( `name`, `date_start`, `date_end`, `cpu`, `memory`, `storage`, `network`, `vm`, `user`) VALUES ('$name','$date_start','$date_end','$cpu','$memory','$storage','$networking','$vm','$username')";
 					
-					mysql_query($query);
+					$sql_responses[] = mysql_query($query);
 
+					if ($date_start == '') {
+						$date_start = 'unlim';
+					}
+
+					if ($date_end == '') {
+						$date_end = 'unlim';
+					}
+
+					$query2 = "SELECT `id` FROM `cloud_price_limits` WHERE `name` = '$name' AND `date_start` = '$date_start' AND `date_end` = '$date_end' AND `cpu` = '$cpu' AND `memory` = '$memory' AND `storage` = '$storage' AND `network` = '$networking' AND `vm` = '$vm' AND `user` = '$username'";
+
+					$res = mysql_query($query2);
+					while ($rez = mysql_fetch_assoc($res)) {
+						$budgetid = $rez['id'];
+					}
+
+					$username = $this->htvcenter->user()->name;
+
+					if ($limit != '') {
+						$limits = explode(',', $limit);
+						foreach ($limits as $key => $lim) {
+							 $queryl = "INSERT INTO `cloud_price_alert`(`percent`, `budget_id`, `user`) VALUES ($lim, $budgetid, '$username')";
+							 $sql_responses[] = mysql_query($queryl);
+						}
+					}
+					echo json_encode($sql_responses); die();
+				} else {
+					echo "Field(s) missing when creating a budget. Abort."; die();
+				}
+			}
+
+			if ($update == 1) {
+
+				if (is_int($cpu) && is_int($memory) && is_int($storage) && is_int($networking) && is_int($vm) && is_int($globalid)) {
+					// $username = $this->htvcenter->user()->name;
+					$date_start = str_replace('"', '', $date_start);
+					$date_end = str_replace('"', '', $date_end);
 					
 					if ($date_start == '') {
 						$date_start = 'unlim';
@@ -245,35 +282,28 @@ class cloud_controller
 						$date_end = 'unlim';
 					}
 
-					$date_start = str_replace('"', '', $date_start);
-					$date_end = str_replace('"', '', $date_end);
-
-
-					$query2 = "SELECT `id` FROM `cloud_price_limits` WHERE `name` = '$name' AND `date_start` = $date_start AND `date_end` = $date_end AND `cpu` = '$cpu' AND `memory` = '$memory' AND `storage` = '$storage' AND `network` = '$networking' AND `vm` = '$vm' AND `user` = '$username'";
-
+					$query = "UPDATE `cloud_price_limits` SET `name` = '$name', `date_start` = '$date_start', `date_end` = '$date_end', `cpu` = '$cpu', `memory` = '$memory', `storage` = '$storage', `network` = '$networking', `vm` = '$vm' WHERE `id` = '$globalid'";
 					
-					$res = mysql_query($query2);
-					while ($rez = mysql_fetch_assoc($res)) {
-						$budgetid = $rez['id'];
-					}
+					$sql_responses[] = mysql_query($query);
 
-					
-					$username = $this->htvcenter->user()->name;
+					$query2 = "DELETE FROM `cloud_price_alert` WHERE `budget_id` = '$globalid'";
+
+					$sql_responses[] = mysql_query($query2);
 
 					if ($limit != '') {
-							$limits = explode(',', $limit);
-							foreach ($limits as $key => $lim) {
-								 $queryl = "INSERT INTO `cloud_price_alert`(`percent`, `budget_id`, `user`) VALUES ($lim, $budgetid, '$username')";
-								 mysql_query($queryl);	
-							}
+
+						$limits = explode(',', $limit);
+						
+						foreach ($limits as $key => $lim) {
+							$queryl = "INSERT INTO `cloud_price_alert`(`percent`, `budget_id`, `user`) VALUES ($lim, $budgetid, '$username')";
+							$sql_responses[] = mysql_query($queryl);
+						}
 					}
-				}	
+					echo json_encode($sql_responses); die();
+				} else {
+					echo "Field(s) missing when updating a budget. Abort."; die();
+				}
 			}
-
-
-
-			echo 'works'; die();
-
 		}
 
 		

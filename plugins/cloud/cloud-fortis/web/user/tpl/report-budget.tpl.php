@@ -41,13 +41,14 @@
 <script src="/cloud-fortis/js/chartjs/utils.js" type="text/javascript"></script>
 <script src="/cloud-fortis/js/fetch-report.js" type="text/javascript"></script>
 <script src="/cloud-fortis/js/jquery.validate.min.js" type="text/javascript"></script>
-<script src="/cloud-fortis/js/jquery.steps.min.js" type="text/javascript"></script>
+<script src="/cloud-fortis/js/jquery.steps.js" type="text/javascript"></script>
 <script>
 	var budgetpage = true;
 	var datepickeryep = true;
 
 function submitallprice() {
 
+	var id = $('#budgetid').val();
 	var name = $('#budgetname').val();
 	var date_start = $('#budgetdatestart').val();
 	var date_end = $('#budgetdateend').val();
@@ -56,8 +57,8 @@ function submitallprice() {
 	var storage = $('#budgetstorage').val();
 	var networking = $('#budgetnetwork').val();
 	var vm = $('#budgetvm').val();
-
 	var perval = Array();
+
 	$('.perval').each(function(i){
 		perval[i] = $(this).text();
 	});
@@ -87,8 +88,14 @@ function submitallprice() {
 		vm = 0;
 	}
 
+	id = parseInt(id);
+	if (id == 'NaN') {
+		id = 0;
+	}
+
+	var action = (id > 0 ? "update" : "create");
 	var url = '/cloud-fortis/user/index.php?budget=yes';
-	var dataval = 'create=1&name='+name+'&limit='+perval+'&date_start="'+date_start+'"&date_end="'+date_end+'"&cpu='+cpu+'&memory='+memory+'&storage='+storage+'&networking='+networking+'&vm='+vm;
+	var dataval = action+'=1&name='+name+'&limit='+perval+'&date_start="'+date_start+'"&date_end="'+date_end+'"&cpu='+cpu+'&memory='+memory+'&storage='+storage+'&networking='+networking+'&vm='+vm+(id > 0 ? '&id='+id : '');
 	
 	$.ajax({
 		url : url,
@@ -98,26 +105,80 @@ function submitallprice() {
 		async: false,
 		dataType: "html",
 		success : function (data) {
-			if (data != 'none') {
-				if (data == 'works') {
-					location.href='index.php?report=report_budget';
-				} else {
-					alert(data);
-				}
+			if (data.indexOf("Abort") > -1) {
+				alert('Failed to create or update a budget.  Please contact the Administrator.');
 			} else {
-				alert('Something wrong');
+				location.reload();
 			}
 		}
 	});
 }
 
-
-
 $(document).ready(function() {
+
+	var url = '/cloud-fortis/user/index.php?budget=yes';
+	var dataval = 'getbudgets=1';
+	var bds = '';
+
+	$.ajax({
+		url : url,
+		type: "POST",
+		data: dataval,
+		cache: false,
+		async: false,
+		dataType: "html",
+		success : function (data) {
+			if (data != 'none') { 
+				bds = JSON.parse(data);
+			} else {
+				$("#budgets-setting").append("<span><strong>No Budget has been set up.</strong></span>");
+			}
+		}
+	});
+
+	var i = 0;
+	var budgets = [];
+
+	$.each(bds, function(key, serv) {
+		$('#budgets').append('<option key="' + key + '" value="' + serv.id +  '" ' + (i == 0 ? 'selected' : '') + '>&nbsp;<strong>' + serv.name + '</strong>&nbsp;(' + serv.date_start + '~' + serv.date_end + ')&nbsp;</option>');
+
+		var html =	'<table id="resources-' +  key + '" class="table table-hover table-stripped budget-resources"' + (i > 0 ? ' style="display:none;" ' : '') + '><tbody>';
+		html	+=		'<tr><td style="width: 40%"><strong>' + "CPU:" +			'</strong></td><td class="cpu">'	+ serv.cpu +	'</td></tr>';
+		html	+=		'<tr><td style="width: 40%"><strong>' + "Storage:" + 		'</strong></td><td class="storage">'+ serv.storage+	'</td></tr>';
+		html	+=		'<tr><td style="width: 40%"><strong>' + "Memory:" + 		'</strong></td><td class="memory">'	+ serv.memory +	'</td></tr>';
+		html	+=		'<tr><td style="width: 40%"><strong>' + "Virtualization:" +	'</strong></td><td class="vm">'		+ serv.vm +		'</td></tr>';
+		html	+=		'<tr><td style="width: 40%"><strong>' + "Network:" +		'</strong></td><td class="network">'+ serv.network +'</td></tr>';
+		html	+=		'<tr style="display: none"><td></td><td class="datestart">'	+ serv.date_start	+	'</td><tr>';
+		html	+=		'<tr style="display: none"><td></td><td class="dateend">'	+ serv.date_end 	+	'</td><tr>';
+		html	+=		'<tr style="display: none"><td></td><td class="id">'		+ serv.id			+	'</td><tr>';
+		html	+=		'<tr style="display: none"><td></td><td class="name">'		+ serv.name			+	'</td><tr>';
+		html	+=	'</tbody></table>';
+
+		$("#budgets-setting").append(html);
+
+		var html_alerts = '';
+
+		if (serv.havealerts) {
+			html_alerts =	'<table id="alerts-' +  key + '" class="table table-hover table-stripped budget-alerts"' + (i > 0 ? ' style="display:none;" ' : '') + '>';
+			html_alerts +=		'<tbody><tr><td style="width: 50%"><strong>' + "% of Budget" + '</strong></td><td><strong>' + "Action" + '</strong></td></tr>';
+
+			for (j = 0; j < serv.alerts.length; j++) {
+				html_alerts +=	'<tr><td style="width: 50%">' + serv.alerts[j] + '</td><td><a href="#"><i class="fa fa-minus-circle" style="color:red"></i>&nbsp;Remove</a></td></tr>';
+			}
+			html_alerts	+=	'</tbody></table>';
+		} else {
+			html_alerts = 	'<label id="alerts-' + key + '" ' + (i > 0 ? ' style="display:none;" ' : '') + ' class="budget-alerts"><strong>There is no alert set up for this budget.</strong></label>';
+		}
+
+		$("#budgets-alert").append(html_alerts);
+
+		i++;
+	});
+
 	var form = $("#create-budget-form");
 
 	form.validate({
-		errorPlacement: function errorPlacement(error, element) { element.before(error); },
+		errorPlacement: function errorPlacement(error, element) { element.after(error); },
 		rules: {
 			field: {
 				required: true,
@@ -140,9 +201,9 @@ $(document).ready(function() {
 		},
 		onStepChanging: function (event, currentIndex, newIndex)
 		{
-			// form.validate().settings.ignore = ":disabled,:hidden";
-			// return form.valid();
-			return true;
+			form.validate().settings.ignore = ":disabled,:hidden";
+
+			return $("#create-budget-form input").valid();
 		},
 		onFinished: function (event, currentIndex)
 		{
@@ -152,18 +213,34 @@ $(document).ready(function() {
 
 	$("#create-budget-modal").on('hidden.bs.modal', function () {
 		$(this).find("input[type=text]").val("");
+		$(this).find("input[type=hidden]").val("");
+		/* hacky reset steps */
+		$("#create-budget-form-t-0").trigger("click");
+		$("#create-budget-form .steps ul li:not(:first)").removeClass("done").addClass("disabled");
+		/* end hacky reset steps */
 	});
+
+	$("#delete-budget-modal").on('shown.bs.modal', function () {
+		$("#confirm-budget-name").text($("#budgets option:selected").text());
+	});
+
+	function refresh_alert_table() {
+		var rows =  $("#table-alerts tr");
+
+		if (rows.length <= 1) {
+			$('#table-alerts').hide();
+		} else {
+			$('#table-alerts').show();
+		}
+	}
 
 	$('#alertprice').click(function(){
 		var percent = parseInt($('#percentbudg').val());
 		
 		if ( (percent != 'NaN') && (percent <= 100) ) {
-
 			var matched = $("#table-alerts td.perval").filter(function () {
 				return $(this).text() == $('#percentbudg').val();
 			});
-
-			console.log(matched);
 
 			if (matched.length > 0) {
 				alert('The '+percent+"% alert was added previously.");
@@ -173,40 +250,130 @@ $(document).ready(function() {
 
 				$('.remove-row').on('click', function(){
 					$(this).closest('tr').remove();
-					var rows =  $("#table-alerts tr");
-
-					if (rows.length <= 1) {
-						$('#table-alerts').hide();
-					}
+					refresh_alert_table();
 				});
 			}
 		} else {
-			alert('Only integer number of percent value and not bigger, than 100, please');
+			alert('Please input an integer between 0 to 100.');
 		}
-		$('#table-alerts').show();
+		refresh_alert_table();
 	});
 
-	
+	$("#budgets").on("change", function () {
+		var key = $(this).find("option:selected").attr("key");
 
+		$(".budget-resources").hide();
+		$(".budget-alerts").hide();
+		$("#resources-"+key).show();
+		$("#alerts-"+key).show();
+
+		plot_budget_total(bds[key]);
+	});
+
+	function plot_budget_total(serv) {
+		var total_budget = parseInt(serv.cpu) + parseInt(serv.storage) + parseInt(serv.memory) + parseInt(serv.vm) + parseInt(serv.network);
+		var column_x = ['x'];
+		var total_y = ['total budgeted'];
+
+		var date_loop	= new Date(serv.date_start);
+		var date_end	= new Date(serv.date_end);
+
+		while (date_loop <= date_end) {
+			column_x.push(parseDate(date_loop, "Y-M-D"));
+			total_y.push(total_budget);
+			date_loop.setDate(date_loop.getDate() + 15);
+		}
+		time_series_chart("#budget-vs-spent-chart", [column_x, total_y]);
+	}
+
+	function time_series_chart(bindto, data) {
+		var chart = c3.generate({
+			bindto: bindto,
+			data: {
+				x: 'x',
+				columns: data,
+				type: 'spline',
+				color: function (color, d) {
+					return seriesColors[d.index];
+				},
+			},
+			axis: {
+				x:  {
+					type: 'timeseries',
+					tick: {
+						format: '%Y-%m-%d'
+					}
+				},
+				y:  {
+					label: {
+						text: 'total cost ($)'
+					}
+				}
+			},
+			grid: {
+				y: {
+					show: true
+				}
+			},
+			legend: {
+				show: false
+			}
+		});
+	}
+
+	$("#create-budget").click(function() {
+		$("#create-budget-modal modal-header h3").text("Create A New Budget");
+		$("#create-budget-modal").modal("show");
+	});
+
+	$("#edit-budget").click(function() {
+		var resources_key = "resources-" + $("#budgets option:selected").attr("key");
+		$("#" + resources_key + " tr td:nth-of-type(2)").each( function (){
+			$("#budget" + $(this).attr('class')).val($(this).text());
+		});
+		$("#create-budget-modal modal-header h3").text("Edit Budget");
+		$("#create-budget-modal").modal("show");
+	});
+
+	$('#delete-budget-confirm').click(function(){
+		$('#delete-budget-modal').modal("hide");
+		var budget_id = $("#budgets").val();
+		var url = '/cloud-fortis/user/index.php?budget=yes';
+		var dataval = 'rembudgets=1&remid='+budget_id;
+		var bds = '';
+
+		$.ajax({
+			url : url,
+			type: "POST",
+			data: dataval,
+			cache: false,
+			async: true,
+			dataType: "html",
+			success : function (data) {
+				if (data == 'remdone') {
+					alert('Budget deleted succesfully.');
+					location.reload();
+				} 
+			}
+		});
+	});
 });
-
-
 </script>
+
 <div class="cat__content">
 	<cat-page>
 	<div class="row" id="chart-row">
 		<div class="col-sm-12">
 			<section class="card">  
 				<div class="card-header">
-					<span class="cat__core__title d-inline-block" style="min-width: 500px;">
+					<span class="cat__core__title d-inline-block" style="min-width: 650px;">
 						<label class="d-inline"><strong>Budget Planning</strong></label>
-						<!-- <a class="d-inline" id="prev-budget" style="padding: 0 1rem;"><i class="fa fa-backward disabled"></i></a> 
-						<h5 class="d-inline" id="budget-name" style="padding: 0 2rem; text-align: center;">BUDGET NAME</h5>
-						<a class="d-inline" id="next-budget" style="padding: 0 1rem;"><i class="fa fa-forward"></i></a> -->
 						<select id="budgets" class="form-control d-inline" style="max-width: 19rem;"></select>
+						&nbsp;<a href="#" id="edit-budget"><span class="small"><u><i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;Edit Budget</u></span></a>
+						&nbsp;<a href="#" id="delete-budget" data-toggle="modal" data-target="#delete-budget-modal"><span class="text-danger small"><u><i class="fa fa-eraser" aria-hidden="true"></i>&nbsp;Delete Budget</u></span></a>
 					</span>
 					<div class="pull-right d-inline-block">
-					<a id="create-budget" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#create-budget-modal"><i class="fa fa-plus"></i>&nbsp;Create Budget</a>
+					<a id="create-budget" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i>&nbsp;Create Budget</a>
 					</div>
 				</div>
 				<div class="card-block">
@@ -262,6 +429,25 @@ $(document).ready(function() {
 	</cat-page>
 </div>
 
+<div id="delete-budget-modal" class="modal" data-backdrop="static" style="display: none;" aria-hidden="true">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="text-black">Confirm Deleting A Budget</h3>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<p>Are you sure you want to delete this budget?&nbsp;<span id="confirm-budget-name" class="text-danger"><strong></strong></span></p>
+		</div>
+		<div class="modal-footer">
+			<button data-dismiss="modal" class="btn btn-sm btn-default" type="button">Close</button>
+			<button id="delete-budget-confirm" class="btn btn-sm btn-danger" type="button">Confirm Delete</button>
+		</div>
+	</div>
+</div>
+
+
 <div id="create-budget-modal" class="modal" data-backdrop="static" style="display: none;" aria-hidden="true">
 	<div class="modal-content">
 		<div class="modal-header">
@@ -272,29 +458,30 @@ $(document).ready(function() {
 		</div>
 		<div class="modal-body">
 			<form id="create-budget-form">
+				<input type="hidden" id="budgetid">
 				<h3>Name & Timeframe</h3>
 					<section>
 						<div class="col-lg-12">
 							<div class="form-group">
 								<label for="budgetname">Budget Name</label>
-								<input type="text" class="form-control required" id="budgetname">
+								<input type="text" class="form-control" id="budgetname" required>
 							</div>
 							<div class="form-group">
 								<label for="budgetdatestart">Budget Start Date</label>
 								<div class="input-group date">
-									<input type="text" class="form-control required" id="budgetdatestart">
 									<span class="input-group-addon">
 										<i class="fa fa-calendar" aria-hidden="true"></i>
 									</span>
+									<input type="text" class="form-control" id="budgetdatestart" required>
 								</div>
 							</div>
 							<div class="form-group">
 								<label for="budgetdateend">Budget End Date</label>
 								<div class="input-group date">
-									<input type="text" class="form-control required" id="budgetdateend">
 									<span class="input-group-addon">
 										<i class="fa fa-calendar" aria-hidden="true"></i>
 									</span>
+									<input type="text" class="form-control" id="budgetdateend" required>
 								</div>
 							</div>
 						</div>
@@ -313,7 +500,7 @@ $(document).ready(function() {
 											</div>
 											<p class="text-muted pad-btm">
 												<label for="budgetcpu">Monthly Price Limit in $: </label>
-												<input type="text" name="input" id="budgetcpu" class="required number">
+												<input type="text" name="input" id="budgetcpu" required class="number">
 											</p>
 										</div>
 									</div>
@@ -329,7 +516,7 @@ $(document).ready(function() {
 											</div>
 											<p class="text-muted pad-btm">
 												<label for="budgetmemory">Monthly Price Limit in $: </label>
-												<input type="text" name="input" id="budgetmemory" class="required number">
+												<input type="text" name="input" id="budgetmemory" required class="number">
 											</p>
 										</div>
 									</div>
@@ -344,7 +531,7 @@ $(document).ready(function() {
 											</div>
 											<p class="text-muted pad-btm">
 												<label for="budgetstorage">Monthly Price Limit in $: </label>
-												<input type="text" name="input" id="budgetstorage" class="required number">
+												<input type="text" name="input" id="budgetstorage" required class="number">
 											</p>
 										</div>
 									</div>
@@ -360,7 +547,7 @@ $(document).ready(function() {
 											</div>
 											<p class="text-muted pad-btm">
 												<label for="budgetnetwork">Monthly Price Limit in $: </label>
-												<input type="text" name="input" id="budgetnetwork" class="required number">
+												<input type="text" name="input" id="budgetnetwork" required class="number">
 											</p>
 										</div>
 									</div>
@@ -376,7 +563,7 @@ $(document).ready(function() {
 											</div>
 											<p class="text-muted pad-btm">
 												<label for="budgetvm">Monthly Price Limit in $: </label>
-												<input type="text" name="input" id="budgetvm" class="required number">
+												<input type="text" name="input" id="budgetvm" required class="number">
 											</p>
 										</div>
 									</div>
@@ -390,7 +577,7 @@ $(document).ready(function() {
 							<div class="panel plan">
 								<div class="panel-body">
 									<div class="form-group">
-										<span>Notify me when costs exceed&nbsp;</span><input type="text" id="percentbudg" class="number"><span>&nbsp;% of budgeted costs&nbsp;</span>
+										<span>Notify me when costs exceed&nbsp;</span><input type="text" id="percentbudg" number>d<span>&nbsp;% of budgeted costs&nbsp;</span>
 										<div class="d-inline pull-right"><a class="btn btn-sm btn-primary" id="alertprice">Create Alert</a></div>
 									</div>
 								</div>
