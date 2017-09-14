@@ -8,7 +8,7 @@ if (typeof(repflag) !='undefined' && repflag == true) {
 	changereporte();
 }
 
-
+/*
 
 var remid = '';
 var globalid = '';
@@ -267,6 +267,7 @@ $('#saveperiod').click(function(){
 			});
 });
 
+
 $('.editright').focusout(function(){
 	console.log('save');
 	var val = $(this).val();
@@ -327,32 +328,6 @@ $('.editright').focusout(function(){
 			});
 
 });
-
-
-
-$('#remform').click(function(){
-	var url = '/cloud-fortis/user/index.php?budget=yes';
-	var dataval = 'rembudgets=1&remid='+remid;
-	var bds = '';
-			$.ajax({
-				url : url,
-				type: "POST",
-				data: dataval,
-				cache: false,
-				async: false,
-				dataType: "html",
-				success : function (data) {
-					$('.lead').hide();
-					if (data == 'remdone') {
-						$('.lead').hide();
-						alert('Removed succesfully');
-						$('#popupremconfirm').hide();
-						location.reload();
-					} 
-				}
-			});
-});
-
 
 
 $('body').on('click', '.budgservn', function(){
@@ -470,6 +445,9 @@ $('body').on('click', '.budgservn', function(){
 $('body').on('click','.rempercent', function(){
 	$(this).closest('tr').remove();
 });
+
+*/
+
 
 $('#content_container').click(function(){
 	$('.reportdropdown').hide();

@@ -26,8 +26,6 @@ class cloud_controller
 	 */
 	//--------------------------------------------
 	function __construct() {
-
-		
 		// handle timezone needed since php 5.3
 		if(function_exists('ini_get')) {
 			if(ini_get('date.timezone') === '') {
@@ -46,9 +44,6 @@ class cloud_controller
 		$html = new htvcenter_htmlobject();
 		$file = new file_handler();
 		$this->response = $html->response();
-
-
-
 
 		// handle user
 		$user = '';
@@ -77,7 +72,6 @@ class cloud_controller
 		}
 
 		if ( isset($_GET['budget']) && ($_GET['budget'] == 'yes') ) {
-			
 			$getbudgets = $_POST['getbudgets'];
 			$create = $_POST['create'];
 			$update = $_POST['update'];
@@ -86,11 +80,11 @@ class cloud_controller
 			$date_end = $_POST['date_end'];
 			
 			if ($date_start =='""') {
-						$date_start = 'unlim';
+				$date_start = 'unlim';
 			}
 
 			if ($date_end =='""') {
-						$date_end = 'unlim';
+				$date_end = 'unlim';
 			}
 
 			$date_start = str_replace('"', '', $date_start);
@@ -110,6 +104,8 @@ class cloud_controller
 
 			if ( isset($edit) && ($edit == 1)) {
 				
+				$sql_response = null;
+
 				if ($place == 'cpuedit') {
 					$query = 'UPDATE `cloud_price_limits` SET `cpu`="'.$editval.'" WHERE `id` = "'.$globalid.'"';
 				}
@@ -149,7 +145,6 @@ class cloud_controller
 				if ($place == 'percremove') {
 					$editval = str_replace('"', '', $editval);
 					$query = 'DELETE FROM `cloud_price_alert` WHERE `budget_id` = "'.$globalid.'" AND `percent` = "'.$editval.'"';
-					
 				}
 
 				if ($place == 'percadd') {
@@ -157,27 +152,45 @@ class cloud_controller
 					$query = 'INSERT INTO `cloud_price_alert`( `percent`, `budget_id`) VALUES ("'.$editval.'", "'.$globalid.'")';
 				}
 
-				var_dump($query);
-				mysql_query($query);
-				echo 'edit'; die();
+				// var_dump($query);
+				$sql_response = mysql_query($query);
+				
+				if (!$sql_response) { 
+					die('Query:' . $query . ' Error msg:' . $mysql_error()); 
+				}
+				echo 'Updated'; die();
 			}
 
 			if (isset($rembudget) && $rembudget == 1) {
+				$sql_response = null;
+
 				$remid = $_POST['remid'];
 				$query = 'DELETE FROM `cloud_price_alert` WHERE `budget_id` = "'.$remid.'"';
-				mysql_query($query);
-				$query = 'DELETE FROM `cloud_price_limits` WHERE `id` = "'.$remid.'"';
-				mysql_query($query);
+				$sql_response = mysql_query($query);
 
+				if (!$sql_response) { 
+					die('Query:' . $query . ' Error msg:' . $mysql_error()); 
+				}
+				$query2 = 'DELETE FROM `cloud_price_limits` WHERE `id` = "'.$remid.'"';
+				$sql_response = mysql_query($query);
+
+				if (!$sql_response) { 
+					die('Query:' . $query2 . ' Error msg:' . $mysql_error()); 
+				}
 				echo 'remdone'; die();
 			}
 
 			if (isset($getbudgets) && $getbudgets == true) {
+				$sql_response = null;
 
 				$username = $this->htvcenter->user()->name;
 				$queryb = 'SELECT * FROM `cloud_price_limits` WHERE `user`="'.$username.'"';
 				$budgets = array();
 				$res = mysql_query($queryb);
+				
+				if (!$res) { 
+					die('Query:' . $queryb . ' Error msg:' . $mysql_error()); 
+				}
 				$i = 0;
 				$result = array();
 
@@ -186,7 +199,6 @@ class cloud_controller
 					$budgets[$i]['name'] = $rez['name'];
 					$budgets[$i]['date_start'] = $rez['date_start'];
 					$budgets[$i]['date_end'] = $rez['date_end'];
-
 					$budgets[$i]['cpu'] = $rez['cpu'];
 					$budgets[$i]['memory'] = $rez['memory'];
 					$budgets[$i]['storage'] = $rez['storage'];
@@ -195,27 +207,24 @@ class cloud_controller
 					$budgets[$i]['id'] = $rez['id'];
 					$idlim = $rez['id'];
 					$queryl = 'SELECT * FROM `cloud_price_alert` WHERE `budget_id` = '.$idlim;
-					
 					$ress = mysql_query($queryl);
-					
-					//var_dump($queryl);
-					$budgets[$i]['havealerts'] = 0;
-					if ($ress) {
+
+					if (!$ress) { 
+						die('Query:' . $queryl . ' Error msg:' . $mysql_error()); 
+					} else {
+						$budgets[$i]['havealerts'] = 0;
+						
 						while($rezz = mysql_fetch_assoc($ress)) {
 							$budgets[$i]['havealerts'] = 1;
 							$budgets[$i]['alerts'][] = $rezz['percent'];
 						}
-					}	
+					}
 				}
 
-				
 				//var_dump($budgets);
 				$result = json_encode($budgets);
-					echo $result; die();
-				
-				
+				echo $result; die();
 			}
-
 
 			$cpu = (int)$cpu;
 			$memory = (int)$memory;
@@ -223,20 +232,26 @@ class cloud_controller
 			$networking = (int)$networking;
 			$vm = (int)$vm;
 			$globalid = (int)$globalid;
-			$sql_responses = [];
+			$sql_response = null;
 
-			if ($create == 1) {
+			if (isset($create) && intval($create) == 1) {
 
 				if (is_int($cpu) && is_int($memory) && is_int($storage) && is_int($networking) && is_int($vm)) {
 					$username = $this->htvcenter->user()->name;
-
 					$date_start = str_replace('"', '', $date_start);
 					$date_end = str_replace('"', '', $date_end);
 					
 					$query = "INSERT INTO `cloud_price_limits`( `name`, `date_start`, `date_end`, `cpu`, `memory`, `storage`, `network`, `vm`, `user`) VALUES ('$name','$date_start','$date_end','$cpu','$memory','$storage','$networking','$vm','$username')";
-					
-					$sql_responses[] = mysql_query($query);
 
+					$sql_response = mysql_query($query);
+
+					if (!$sql_response) { 
+						die('Query:' . $query . ' Error msg:' . $mysql_error()); 
+					} else {
+						$budgetid = mysql_insert_id(); 
+					}
+
+					/* date_start and date_end is always required 
 					if ($date_start == '') {
 						$date_start = 'unlim';
 					}
@@ -244,64 +259,76 @@ class cloud_controller
 					if ($date_end == '') {
 						$date_end = 'unlim';
 					}
-
+					*/
+					/*
 					$query2 = "SELECT `id` FROM `cloud_price_limits` WHERE `name` = '$name' AND `date_start` = '$date_start' AND `date_end` = '$date_end' AND `cpu` = '$cpu' AND `memory` = '$memory' AND `storage` = '$storage' AND `network` = '$networking' AND `vm` = '$vm' AND `user` = '$username'";
 
 					$res = mysql_query($query2);
+
+					if (!$res) { die('Invalid Query:' . $query2 . ' Error msg:' . mysql_error()); }
+					
 					while ($rez = mysql_fetch_assoc($res)) {
 						$budgetid = $rez['id'];
 					}
-
-					$username = $this->htvcenter->user()->name;
+					*/
+					// $username = $this->htvcenter->user()->name;
 
 					if ($limit != '') {
 						$limits = explode(',', $limit);
 						foreach ($limits as $key => $lim) {
 							 $queryl = "INSERT INTO `cloud_price_alert`(`percent`, `budget_id`, `user`) VALUES ($lim, $budgetid, '$username')";
-							 $sql_responses[] = mysql_query($queryl);
+							 $sql_response = mysql_query($queryl);
+							
+							if (!$sql_response) { die('Query:'. $queryl . ' Error msg:'  . mysql_error()); }
 						}
 					}
-					echo json_encode($sql_responses); die();
+					echo "Success"; die();
 				} else {
-					echo "Field(s) missing when creating a budget. Abort."; die();
+					echo "Field(s) missing or invalid when creating a budget. Abort."; die();
 				}
 			}
 
-			if ($update == 1) {
+			if (isset($update) && intval($update) == 1) {
 
 				if (is_int($cpu) && is_int($memory) && is_int($storage) && is_int($networking) && is_int($vm) && is_int($globalid)) {
-					// $username = $this->htvcenter->user()->name;
+					$username = $this->htvcenter->user()->name;
 					$date_start = str_replace('"', '', $date_start);
 					$date_end = str_replace('"', '', $date_end);
-					
+
+					/*
 					if ($date_start == '') {
 						$date_start = 'unlim';
 					}
 
 					if ($date_end == '') {
 						$date_end = 'unlim';
-					}
+					} */
 
 					$query = "UPDATE `cloud_price_limits` SET `name` = '$name', `date_start` = '$date_start', `date_end` = '$date_end', `cpu` = '$cpu', `memory` = '$memory', `storage` = '$storage', `network` = '$networking', `vm` = '$vm' WHERE `id` = '$globalid'";
-					
-					$sql_responses[] = mysql_query($query);
+
+					$sql_response = mysql_query($query);
+
+					if (!$sql_response) { die('Query:'. $query . ' Error msg:'  . mysql_error()); }
 
 					$query2 = "DELETE FROM `cloud_price_alert` WHERE `budget_id` = '$globalid'";
 
-					$sql_responses[] = mysql_query($query2);
+					$sql_response = mysql_query($query2);
+
+					if (!$sql_response) { die('Query:'. $query2 . ' Error msg:'  . mysql_error()); }
 
 					if ($limit != '') {
-
 						$limits = explode(',', $limit);
 						
 						foreach ($limits as $key => $lim) {
-							$queryl = "INSERT INTO `cloud_price_alert`(`percent`, `budget_id`, `user`) VALUES ($lim, $budgetid, '$username')";
-							$sql_responses[] = mysql_query($queryl);
+							$queryl = "INSERT INTO `cloud_price_alert`(`percent`, `budget_id`, `user`) VALUES ($lim, $globalid, '$username')";
+							$sql_response = mysql_query($queryl);
+
+							if (!$sql_response) { die('Query:'. $queryl . ' Error msg:'  . mysql_error()); }
 						}
 					}
-					echo json_encode($sql_responses); die();
+					echo "Success"; die();
 				} else {
-					echo "Field(s) missing when updating a budget. Abort."; die();
+					echo "Field(s) missing or invalid when updating a budget. Abort."; die();
 				}
 			}
 		}
@@ -414,14 +441,12 @@ class cloud_controller
 					$serverblocks[$i]['created'] = gmdate("Y-m-d H:i:s", $rez['cr_request_time']);
 					$serverblocks[$i]['worked'] = $workingtime;
 				}
-				
 
 				$result = json_encode($serverblocks);
 			}
 
 			echo $result; die();
 		}
-		
 
 		if (isset($_GET) && $_GET['report'] == 'yes') {
 			
@@ -469,24 +494,19 @@ class cloud_controller
 					$cpupoints = 0;
 
 					while ($rez = mysql_fetch_assoc($res)) {
-
 						$timestamp=$rez['ct_time'];
-						
 						$yeardb = gmdate("Y", $timestamp);
 						$monthdb = gmdate("M", $timestamp);
 
-
 						if ( ($year == $yeardb) && ($month == $monthdb) ) {
-
 							$ccu = $ccu + $rez['ct_ccu_charge'];
 							$tabledate = gmdate("Y-m-d h:i", $timestamp);
 							$detailtable .= '<tr class="headertr"><td>'.$tabledate.'</td><td>'.$rez['ct_ccu_charge'].'</td><td>'.$rez['ct_comment'].'</td></tr>';
-							
-							
-							if ($detailcategory == true || $forbill == true) {
 
+							if ($detailcategory == true || $forbill == true) {
 								$ccu = (int) $rez['ct_ccu_charge'];
 								$done = 0;
+
 								if ( preg_match('@CPU@',$rez['ct_comment']) && ($done == 0) ) {
 									$cpupoints = $cpupoints + $ccu;
 									$done = 1;
@@ -507,16 +527,14 @@ class cloud_controller
 									$done = 1;
 								}
 
-								
-
 								if ( (preg_match('@Network@',$rez['ct_comment']) ) && ($done == 0) ) {
 									$netpoints = $netpoints + $ccu;
 									$done = 1;
 								}
-
 							}
 						}
 					}
+
 					$jsonarr = array();
 					$jsonarr['memory'] = $rampoints;
 					$jsonarr['network'] = $netpoints;
@@ -524,89 +542,84 @@ class cloud_controller
 					$jsonarr['storage'] = $storagepoints;
 					$jsonarr['cpu'] = $cpupoints;
 					$jsonarr['sum'] = $rampoints + $netpoints + $vmpoints + $storagepoints + $cpupoints;
-					
 
 					$detailtable .= '</table>';
 				} else {
-
-
 					$query = 'SELECT `cu_name` FROM `cloud_users`';
 					$uzres = mysql_query($query);
-
 					$uzerz = array();
+
 					while ($uzrez = mysql_fetch_assoc($uzres)) {
 						$uzerz[] = $uzrez['cu_name'];
 					}
 
-
-							$vmpoints = 0;
-							$netpoints = 0;
-							$rampoints = 0;
-							$storagepoints = 0;
-							$cpupoints = 0;
-							$ccu =0;
+					$vmpoints = 0;
+					$netpoints = 0;
+					$rampoints = 0;
+					$storagepoints = 0;
+					$cpupoints = 0;
+					$ccu =0;
 
 					foreach ($uzerz as $user) {
-							$query = "SELECT `cu_id` FROM `cloud_users` WHERE `cu_name`=\"".$user."\"";
-							$res = mysql_query($query);
-							$res = mysql_fetch_row($res);
-							$userid = $res[0];
 
-							mysql_select_db('cloud_transaction');
-							$query = "SELECT `ct_time`, `ct_ccu_charge`, `ct_ccu_balance`, `ct_comment` FROM `cloud_transaction` WHERE `ct_cu_id`=\"".$userid."\"";
-							$res = mysql_query($query);
-							$detailtable = '<table class="table table-striped table-bordered"><tr class="info"><td>Date</td><td>CCU</td><td>Comment</td></tr>';
+						$query = "SELECT `cu_id` FROM `cloud_users` WHERE `cu_name`=\"".$user."\"";
+						$res = mysql_query($query);
+						$res = mysql_fetch_row($res);
+						$userid = $res[0];
 
-							while ($rez = mysql_fetch_assoc($res)) {
+						mysql_select_db('cloud_transaction');
+						$query = "SELECT `ct_time`, `ct_ccu_charge`, `ct_ccu_balance`, `ct_comment` FROM `cloud_transaction` WHERE `ct_cu_id`=\"".$userid."\"";
+						$res = mysql_query($query);
+						$detailtable = '<table class="table table-striped table-bordered"><tr class="info"><td>Date</td><td>CCU</td><td>Comment</td></tr>';
 
-								$timestamp=$rez['ct_time'];
-								
-								$yeardb = gmdate("Y", $timestamp);
-								$monthdb = gmdate("M", $timestamp);
+						while ($rez = mysql_fetch_assoc($res)) {
 
-								if ( ($year == $yeardb) && ($month == $monthdb) ) {
+							$timestamp=$rez['ct_time'];
+							
+							$yeardb = gmdate("Y", $timestamp);
+							$monthdb = gmdate("M", $timestamp);
 
-									$ccu = $ccu + $rez['ct_ccu_charge'];
-									$tabledate = gmdate("Y-m-d h:i", $timestamp);
-									$detailtable .= '<tr class="headertr"><td>'.$tabledate.'</td><td>'.$rez['ct_ccu_charge'].'</td><td>'.$rez['ct_comment'].'</td></tr>';
+							if ( ($year == $yeardb) && ($month == $monthdb) ) {
 
-									if ($detailcategory == true || $forbill == true) {
-										$ccu = (int) $rez['ct_ccu_charge'];
-										$done = 0;
-										if ( preg_match('@CPU@',$rez['ct_comment']) && ($done == 0) ) {
-											$cpupoints = $cpupoints + $ccu;
-											$done = 1;
-										}
+								$ccu = $ccu + $rez['ct_ccu_charge'];
+								$tabledate = gmdate("Y-m-d h:i", $timestamp);
+								$detailtable .= '<tr class="headertr"><td>'.$tabledate.'</td><td>'.$rez['ct_ccu_charge'].'</td><td>'.$rez['ct_comment'].'</td></tr>';
 
-										if ( ((preg_match('@Memory@',$rez['ct_comment'])) || (preg_match('#RAM#', $rez['ct_comment'])) ) && ($done == 0) ) {
-											$rampoints = $rampoints + $ccu;
-											$done = 1;
-										}
-
-										if ( ((preg_match('@Disk Space@',$rez['ct_comment'])) || (preg_match('@MB@',$rez['ct_comment'])) || (preg_match('@GB@',$rez['ct_comment'])) || (preg_match('@storage@',$rez['ct_comment'])) ) && ($done == 0) ) {
-											$storagepoints = $storagepoints + $ccu;
-											$done = 1;
-										}
-
-										if ( ((preg_match('@Kernel@',$rez['ct_comment'])) || (preg_match('#KVM#', $rez['ct_comment'])) || (preg_match('#VM#', $rez['ct_comment'])) ) && ($done == 0)  ) {
-											$vmpoints = $vmpoints + $ccu;
-											$done = 1;
-										}
-
-										
-
-										if ( (preg_match('@Network@',$rez['ct_comment']) ) && ($done == 0) ) {
-											$netpoints = $netpoints + $ccu;
-											$done = 1;
-										}
-
+								if ($detailcategory == true || $forbill == true) {
+									$ccu = (int) $rez['ct_ccu_charge'];
+									$done = 0;
+									if ( preg_match('@CPU@',$rez['ct_comment']) && ($done == 0) ) {
+										$cpupoints = $cpupoints + $ccu;
+										$done = 1;
 									}
+
+									if ( ((preg_match('@Memory@',$rez['ct_comment'])) || (preg_match('#RAM#', $rez['ct_comment'])) ) && ($done == 0) ) {
+										$rampoints = $rampoints + $ccu;
+										$done = 1;
+									}
+
+									if ( ((preg_match('@Disk Space@',$rez['ct_comment'])) || (preg_match('@MB@',$rez['ct_comment'])) || (preg_match('@GB@',$rez['ct_comment'])) || (preg_match('@storage@',$rez['ct_comment'])) ) && ($done == 0) ) {
+										$storagepoints = $storagepoints + $ccu;
+										$done = 1;
+									}
+
+									if ( ((preg_match('@Kernel@',$rez['ct_comment'])) || (preg_match('#KVM#', $rez['ct_comment'])) || (preg_match('#VM#', $rez['ct_comment'])) ) && ($done == 0)  ) {
+										$vmpoints = $vmpoints + $ccu;
+										$done = 1;
+									}
+
+									
+
+									if ( (preg_match('@Network@',$rez['ct_comment']) ) && ($done == 0) ) {
+										$netpoints = $netpoints + $ccu;
+										$done = 1;
+									}
+
 								}
 							}
-							
+						}
 
 						$detailtable .= '</table>';
-
 					}
 
 					$jsonarr = array();
@@ -624,9 +637,7 @@ class cloud_controller
 				$query = "SELECT `cc_value` FROM `cloud_config` WHERE `cc_key`='cloud_1000_ccus'";
 				$res = mysql_query($query);
 				$rez = mysql_fetch_row($res);
-				
 				$price = $rez[0];
-
 
 				if ($forbill == true) {
 					$ccu = $cpupoints + $storagepoints + $rampoints + $vmpoints + $netpoints;
@@ -643,7 +654,6 @@ class cloud_controller
 				} else {
 					$cost = $cost.'.00';
 				}
-
 
 				if ( $forbill == true ) {
 					$billjson = array();
@@ -668,7 +678,6 @@ class cloud_controller
 					}
 					$billresult = json_encode($billjson);
 				}
-
 
 				if ($priceonly == true) {
 					$result = $cost;
@@ -715,7 +724,6 @@ class cloud_controller
 					
 				}
 
-				
 				echo $result;
 				die();
 				
