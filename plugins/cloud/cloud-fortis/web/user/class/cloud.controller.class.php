@@ -172,7 +172,7 @@ class cloud_controller
 					die('Query:' . $query . ' Error msg:' . $mysql_error()); 
 				}
 				$query2 = 'DELETE FROM `cloud_price_limits` WHERE `id` = "'.$remid.'"';
-				$sql_response = mysql_query($query);
+				$sql_response = mysql_query($query2);
 
 				if (!$sql_response) { 
 					die('Query:' . $query2 . ' Error msg:' . $mysql_error()); 

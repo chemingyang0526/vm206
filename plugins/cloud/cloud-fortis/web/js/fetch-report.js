@@ -63,9 +63,26 @@ function current_year_monthly_spent_by_resource(bindto, data) {
     });
 }
 
+function get_daily_data(year_str, month_str, day_str) {
+    var url = '/cloud-fortis/user/index.php?report=yes';
+    var dataval = 'year='+year_str+'&month='+month_str+'&day='+day_str+'&priceonly=1&user=All';
+    var category = '';
+    
+    var rtrn = $.ajax({
+            url : url,
+            type: "POST",
+            data: dataval,
+            cache: false,
+            async: true,
+            dataType: "html",
+        });
+
+    return rtrn;
+}
+
 function get_monthly_data(year_str, month_str) {
     var url = '/cloud-fortis/user/index.php?report=yes';
-    var dataval = 'year='+year_str+'&month='+month_str+'&forbill=1';
+    var dataval = 'year='+year_str+'&month='+month_str+'&forbill=1&user=All';
     var category = '';
     
     var rtrn = $.ajax({
@@ -86,6 +103,8 @@ function parseDate(d, format) {
         return d.getFullYear();
     } else if (format == 'm') {
         return d.toLocaleString("en-us", {month: "numeric"});
+    } else if (format == 'd') {
+        return d.toLocaleString("en-us", {day: "numeric"});
     }  else if (format == 'mon') {
         return d.toLocaleString("en-us", {month: "short"});
     } else if (format == 'Y-M-D') {

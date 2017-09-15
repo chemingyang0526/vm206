@@ -1,10 +1,10 @@
 <style>
 	#project_tab_ui { display: none; }  /* hack for tabmenu issue */
-
+	/*
 	#budgets {
 		font-size: 1.25rem;
 	}
-
+	*/
 	h5 {
 		font-size: 1.1rem;
 		margin: 1.3rem 0;
@@ -106,28 +106,42 @@ function submitallprice() {
 	var url = '/cloud-fortis/user/index.php?budget=yes';
 	var dataval = action+'=1&name='+name+'&limit='+perval+'&date_start="'+date_start+'"&date_end="'+date_end+'"&cpu='+cpu+'&memory='+memory+'&storage='+storage+'&networking='+networking+'&vm='+vm+(id > 0 ? '&globalid='+id : '');
 
-	$.ajax({
+	var deferred = $.ajax({
 		url : url,
 		type: "POST",
 		data: dataval,
 		cache: false,
 		async: false,
-		dataType: "html",
+		dataType: "html" /*,
 		success : function (data) {
 			if (data.indexOf("Success") > -1) {
 				location.reload();
 			} else {
 				alert('Failed to create or update a budget.');
 			}
+		} */
+	});
+
+	$.when(deferred).done(function (data) { 
+		if (data.indexOf("Success") > -1) {
+			var url = window.location.href;
+			var base_url = url.split('?')[0];
+			
+			if (action == "update") {
+				window.location.href = base_url + "?report=report_budget&budgetid="+id;
+			} else {
+				window.location.href = base_url + "?report=report_budget&budgetid=-1";
+			}
+		} else {
+			alert('Failed to create or update a budget.');
 		}
 	});
 }
 
 function update_budget(place, budgetid, newval) {
-
 	var url = '/cloud-fortis/user/index.php?budget=yes';
 	var dataval = 'editbudgets=1&place='+place+'&globalid='+budgetid+'&editval='+newval;
-	var bds = '';
+	// var bds = '';
 
 	var rtrn = $.ajax({
 		url : url,
@@ -137,10 +151,8 @@ function update_budget(place, budgetid, newval) {
 		async: false,
 		dataType: "html"
 	});
-
 	return rtrn;
 }
-
 
 $(document).ready(function() {
 
@@ -161,9 +173,9 @@ $(document).ready(function() {
 				var i = 0;
 
 				$.each(bds, function(key, serv) {
-					$('#budgets').append('<option key="' + key + '" value="' + serv.id +  '" ' + (i == 0 ? 'selected' : '') + '>&nbsp;<strong>' + serv.name + '</strong>&nbsp;(' + serv.date_start + '~' + serv.date_end + ')&nbsp;</option>');
+					$('#budgets').append('<option key="' + key + '" value="' + serv.id +  '">&nbsp;<strong>' + serv.name + '</strong>&nbsp;(' + serv.date_start + '~' + serv.date_end + ')&nbsp;</option>');
 
-					var html =	'<table id="resources-' +  key + '" class="table table-hover table-stripped budget-resources"' + (i > 0 ? ' style="display:none;" ' : '') + '><tbody>';
+					var html =	'<table id="resources-' +  key + '" class="table table-hover table-stripped budget-resources"><tbody>';
 					html	+=		'<tr><td style="width: 50%"><strong>' + "CPU:" +			'</strong></td><td class="cpu">'	+ serv.cpu +	'</td></tr>';
 					html	+=		'<tr><td style="width: 50%"><strong>' + "Storage:" + 		'</strong></td><td class="storage">'+ serv.storage+	'</td></tr>';
 					html	+=		'<tr><td style="width: 50%"><strong>' + "Memory:" + 		'</strong></td><td class="memory">'	+ serv.memory +	'</td></tr>';
@@ -179,14 +191,14 @@ $(document).ready(function() {
 
 					var html_alerts = '';
 
-					html_alerts +=	'<div class="budget-alerts-box" id="alerts-' +  key + '"' + (i > 0 ? ' style="display:none;" ' : '') + '>'
+					html_alerts +=	'<div class="budget-alerts-box" id="alerts-' +  key + '">';
 
 					html_alerts +=	'<table class="table table-hover table-stripped budget-alerts"' + (serv.havealerts ? '' : ' style="display:none;"') + '>';
 					html_alerts +=		'<tbody><tr><td style="width: 50%"><strong>' + "% of Budget" + '</strong></td><td><strong>' + "Action" + '</strong></td></tr>';
 
 					if (serv.havealerts) {
 						for (j = 0; j < serv.alerts.length; j++) {
-							html_alerts +=	'<tr><td style="width: 50%" class="valperc">' + serv.alerts[j] + '</td><td><a href="#" class="rempercent text-danger"><i class="fa fa-minus-circle" aria-hidden="true" style="color:red"></i><u>&nbsp;Remove</u></a></td></tr>';
+							html_alerts +=	'<tr class="valpercrow"><td style="width: 50%" class="valperc">' + serv.alerts[j] + '</td><td><a href="#" class="removepercent text-danger"><i class="fa fa-minus-circle" aria-hidden="true" style="color:red"></i><u>&nbsp;Remove</u></a></td></tr>';
 						}
 					}
 					html_alerts	+=	'</tbody></table>';
@@ -198,6 +210,25 @@ $(document).ready(function() {
 					i++;
 				});
 
+				// initial selection of budgets on load
+				$(".budget-resources").hide();
+				$(".budget-alerts-box").hide();
+				var budgetid_on_load = $("#budgetid-on-load").val();
+				var elem = null;
+				var target_elem = $("#budgets option[value='" + budgetid_on_load + "']");
+
+				if ($(target_elem).length > 0) {
+					elem = target_elem;
+				} else {
+					elem = $("#budgets option:first-of-type");
+				}
+				
+				$(elem).prop("selected", true);
+				var key = $(elem).attr("key");
+				$("#resources-" + key).show();
+				$("#alerts-" + key).show();
+				// end initial selection of budgets on load
+
 				$("#budgets-alert").append('<a href="#" id="addpercent" class="text-primary"><i class="fa fa-plus-circle" aria-hidden="true" style="color:blue"></i><u>&nbsp;Add Alert</u></a>');
 
 				$("#budgets").on("change", function () {
@@ -208,29 +239,30 @@ $(document).ready(function() {
 					$("#resources-"+key).show();
 					$("#alerts-"+key).show();
 
+					// remove temporary new alert input field row and show add alert button when switching budgets midway through adding new alert
+					$("table.budget-alerts").find("tr.new-alert-row").remove();
+					$("#addpercent").show();
+
 					plot_budget_total(bds[key]);
 				});
 
-				$("table.budget-alerts").on("click", ".rempercent", function() {
+				$("table.budget-alerts").on("click", ".removepercent", function() {
 
 					var budgetid = $('#budgets').val();
 					var row = $(this).closest('tr');
-					var table = $(this).closest('table.budget-alerts');
+					var table = $(this).closest("table.budget-alerts");
 					var box = $(this).closest('div.budget-alerts-box');
 					var h5 = $(box).find('h5.budget-alerts');
 					var percval = $(row).find('.valperc').text();
-
+					$(row).removeClass("valpercrow");
 					var deferred = update_budget('percremove', budgetid, percval);
 
 					$.when(deferred).done(function (data) {
 
-						console.log("defere returned rempercent");
-						console.log(data);
-
 						if (data.indexOf("Updated") > -1) {
-							$(row).fadeOut("slow", function() { $(this).remove(); });
+							$(row).remove();
 
-							if ($(table).find('tr').length == 0) {
+							if ($(table).find('tr.valpercrow').length == 0) {
 								$(table).hide();
 								$(h5).show();
 							}
@@ -246,7 +278,7 @@ $(document).ready(function() {
 					var table = $('#alerts-'+key+' table.budget-alerts');
 					var h5 = $('#alerts-'+key+' h5.budget-alerts');
 
-					$(table).show().find('tbody').append('<tr><td style="width: 50%"><input class="form-control new-alert"></td><td><a href="#" rel="' + budgetid + '" class="confirm-add-alert btn btn-sm btn-primary" style="margin-top: 0.2rem;">Confirm Alert</a></td></tr>');
+					$(table).show().find('tbody').append('<tr class="new-alert-row"><td style="width: 50%"><input class="form-control new-alert"></td><td><a href="#" rel="' + budgetid + '" class="confirm-add-alert btn btn-sm btn-primary" style="margin-top: 0.2rem;">Confirm Alert</a></td></tr>');
 					$(h5).hide();
 					$(this).hide();
 				
@@ -267,15 +299,10 @@ $(document).ready(function() {
 
 							$.when(deferred).done(function (data) {
 
-								console.log("defer returned for add");
-								console.log(data);
-
 								if (data.indexOf("Updated") > -1) { 
-									// $(table).remove($(row));
 									$(row).remove();
-									console.log("yay");
-									$(table).append('<tr><td style="width: 50%" class="valperc">' + newval + '</td><td><a href="#" class="rempercent text-danger"><i class="fa fa-minus-circle" aria-hidden="true" style="color:red"></i><u>&nbsp;Remove</u></a></td></tr>').hide().fadeIn('show');
-
+									$(table).append('<tr class="valpercrow"><td style="width: 50%" class="valperc">' + newval + '</td><td><a href="#" class="removepercent text-danger"><i class="fa fa-minus-circle" aria-hidden="true" style="color:red"></i><u>&nbsp;Remove</u></a></td></tr>').hide().fadeIn('show');
+									$("#addpercent").show();
 								} else {
 									alert('Failed to add this alert for the budget.');
 								}
@@ -284,7 +311,6 @@ $(document).ready(function() {
 					});
 				});
 
-				
 				plot_budget_total(bds[1]);
 
 			} else {
@@ -316,12 +342,24 @@ $(document).ready(function() {
 					date: "fa fa-calendar",
 				}
 			});
+			$("#budgetname").focus();
 		},
 		onStepChanging: function (event, currentIndex, newIndex)
 		{
 			form.validate().settings.ignore = ":disabled,:hidden";
-
 			return $("#create-budget-form input").valid();
+		},
+		onStepChanged: function (event, currentIndex, priorIndex)
+		{
+			if (currentIndex == 0) {
+				$("#budgetname").focus();
+			}
+			if (currentIndex == 1) {
+				$("#budgetcpu").focus();
+			}
+			if (currentIndex == 2) {
+				$("#percentbudg").focus();
+			}
 		},
 		onFinished: function (event, currentIndex)
 		{
@@ -342,10 +380,10 @@ $(document).ready(function() {
 		$("#confirm-budget-name").text($("#budgets option:selected").text());
 	});
 
-	function refresh_alert_table() {
-		var rows =  $("#table-alerts tr");
+	function refresh_table_alerts() {
+		var rows =  $("#table-alerts tr.perval-row");
 
-		if (rows.length <= 1) {
+		if (rows.length < 1) {
 			$('#table-alerts').hide();
 		} else {
 			$('#table-alerts').show();
@@ -363,38 +401,56 @@ $(document).ready(function() {
 			if (matched.length > 0) {
 				alert('The '+percent+"% alert was added previously.");
 			} else {
-				var row = '<tr><td class="perval">'+percent+'</td><td> <a class="remove-row"><i class="fa fa-close"></i> Remove</a></td></tr>';
+				var row = '<tr class="perval-row"><td class="perval">'+percent+'</td><td> <a class="remove-row"><i class="fa fa-close"></i> Remove</a></td></tr>';
 				$('#table-alerts').append(row);
-
-				$('.remove-row').on('click', function(){
-					$(this).closest('tr').remove();
-					refresh_alert_table();
-				});
 			}
 		} else {
 			alert('Please input an integer between 0 to 100.');
 		}
 		$('#percentbudg').val('').focus();
-		refresh_alert_table();
+		refresh_table_alerts();
 	});
 
 	function plot_budget_total(serv) {
-		var total_budget = parseInt(serv.cpu) + parseInt(serv.storage) + parseInt(serv.memory) + parseInt(serv.vm) + parseInt(serv.network);
+		var total = parseInt(serv.cpu) + parseInt(serv.storage) + parseInt(serv.memory) + parseInt(serv.vm) + parseInt(serv.network);
 		var column_x = ['x'];
-		var total_y = ['total budgeted'];
+		var total_y_budget = ['total budgeted'];
+		var total_y_spent = ['total spent'];
 
 		var date_loop	= new Date(serv.date_start);
 		var date_end	= new Date(serv.date_end);
 
+		var deferred = [];
+
 		while (date_loop <= date_end) {
+			deferred.push(get_daily_data(parseDate(date_loop, "Y"), parseDate(date_loop, "m"), parseDate(date_loop, "d")));
 			column_x.push(parseDate(date_loop, "Y-M-D"));
-			total_y.push(total_budget);
-			date_loop.setDate(date_loop.getDate() + 15);
+			total_y_budget.push(total);
+			date_loop.setDate(date_loop.getDate() + 1);
 		}
-		time_series_chart("#budget-vs-spent-chart", [column_x, total_y]);
+
+		$.when.apply($, deferred).done(function () {
+			var objects=arguments;
+
+			for (var j = 0; j < objects.length; j++) {
+
+
+				var json = JSON.parse(objects[j][0]);
+				
+				console.log(json);
+
+
+				total_y_spent.push(json.all);
+			}
+			time_series_chart("#budget-vs-spent-chart", [column_x, total_y_budget, total_y_spent]);
+		});
 	}
 
 	function time_series_chart(bindto, data) {
+		
+		console.log(data);
+
+/*
 		var chart = c3.generate({
 			bindto: bindto,
 			data: {
@@ -427,6 +483,7 @@ $(document).ready(function() {
 				show: false
 			}
 		});
+*/
 	}
 
 	$("#create-budget").click(function() {
@@ -436,9 +493,19 @@ $(document).ready(function() {
 
 	$("#edit-budget").click(function() {
 		var resources_key = "resources-" + $("#budgets option:selected").attr("key");
+		var alerts_key = "alerts-" + $("#budgets option:selected").attr("key");
+
 		$("#" + resources_key + " tr td:nth-of-type(2)").each( function (){
 			$("#budget" + $(this).attr('class')).val($(this).text());
 		});
+
+		$("#table-alerts").find("tbody tr.perval-row").remove();
+		$("#" + alerts_key + " tr td.valperc").each( function (){
+			var row = '<tr class="perval-row"><td class="perval">'+$(this).text()+'</td><td> <a class="remove-row"><i class="fa fa-close"></i> Remove</a></td></tr>';
+			$("#table-alerts").find("tbody").eq(0).append(row);
+		});
+		refresh_table_alerts();
+
 		$("#create-budget-modal .modal-header h3").text("Edit Budget");
 		$("#create-budget-modal").modal("show");
 	});
@@ -448,7 +515,7 @@ $(document).ready(function() {
 		var budget_id = $("#budgets").val();
 		var url = '/cloud-fortis/user/index.php?budget=yes';
 		var dataval = 'rembudgets=1&remid='+budget_id;
-		var bds = '';
+		// var bds = '';
 
 		$.ajax({
 			url : url,
@@ -464,6 +531,10 @@ $(document).ready(function() {
 				} 
 			}
 		});
+	});
+
+	$('#table-alerts').on('click', '.remove-row', function(){
+		$(this).closest('tr').remove();
 	});
 });
 </script>
@@ -523,7 +594,7 @@ $(document).ready(function() {
 										</div>
 									</div>
 									<div>
-										<div id="budget-vs-spent-chart" style="height: 34.7rem;">
+										<div id="budget-vs-spent-chart" style="height: 35.35rem;">
 										</div>
 									</div>
 								</div>
@@ -535,6 +606,7 @@ $(document).ready(function() {
 		</div>
 	</div>
 	</cat-page>
+	<input type="hidden" id="budgetid-on-load" value="{budgetid}">
 </div>
 
 <div id="delete-budget-modal" class="modal" data-backdrop="static" style="display: none;" aria-hidden="true">
