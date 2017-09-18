@@ -65,7 +65,7 @@ function current_year_monthly_spent_by_resource(bindto, data) {
 
 function get_daily_data(year_str, month_str, day_str) {
     var url = '/cloud-fortis/user/index.php?report=yes';
-    var dataval = 'year='+year_str+'&month='+month_str+'&day='+day_str+'&priceonly=1&user=All';
+    var dataval = 'year='+year_str+'&month='+month_str+'&day='+day_str+'&priceonly=1';
     var category = '';
     
     var rtrn = $.ajax({

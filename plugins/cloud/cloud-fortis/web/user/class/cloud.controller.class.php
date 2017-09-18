@@ -457,6 +457,8 @@ class cloud_controller
 				}
 				$month = $_POST['month'];
 				$year = $_POST['year'];
+				$day = $_POST['day'];
+
 				$priceonly = $_POST['priceonly'];
 				$detailcategory = $_POST['detailcategory'];
 				$forbill = $_POST['forbill'];
@@ -497,8 +499,10 @@ class cloud_controller
 						$timestamp=$rez['ct_time'];
 						$yeardb = gmdate("Y", $timestamp);
 						$monthdb = gmdate("M", $timestamp);
+						$daydb = gmdate("d", $timestamp);
 
-						if ( ($year == $yeardb) && ($month == $monthdb) ) {
+						if ( ($year == $yeardb) && ($month == $monthdb) && (empty($day) ? true : $day == $daydb) ) {
+
 							$ccu = $ccu + $rez['ct_ccu_charge'];
 							$tabledate = gmdate("Y-m-d h:i", $timestamp);
 							$detailtable .= '<tr class="headertr"><td>'.$tabledate.'</td><td>'.$rez['ct_ccu_charge'].'</td><td>'.$rez['ct_comment'].'</td></tr>';

@@ -423,7 +423,7 @@ $(document).ready(function() {
 		var deferred = [];
 
 		while (date_loop <= date_end) {
-			deferred.push(get_daily_data(parseDate(date_loop, "Y"), parseDate(date_loop, "m"), parseDate(date_loop, "d")));
+			deferred.push(get_daily_data(parseDate(date_loop, "Y"), parseDate(date_loop, "mon"), parseDate(date_loop, "d")));
 			column_x.push(parseDate(date_loop, "Y-M-D"));
 			total_y_budget.push(total);
 			date_loop.setDate(date_loop.getDate() + 1);
@@ -433,14 +433,9 @@ $(document).ready(function() {
 			var objects=arguments;
 
 			for (var j = 0; j < objects.length; j++) {
-
-
-				var json = JSON.parse(objects[j][0]);
-				
-				console.log(json);
-
-
-				total_y_spent.push(json.all);
+				var json = objects[j];
+				//console.log(json);
+				total_y_spent.push(json[0]);
 			}
 			time_series_chart("#budget-vs-spent-chart", [column_x, total_y_budget, total_y_spent]);
 		});
@@ -450,7 +445,7 @@ $(document).ready(function() {
 		
 		console.log(data);
 
-/*
+
 		var chart = c3.generate({
 			bindto: bindto,
 			data: {
@@ -483,7 +478,7 @@ $(document).ready(function() {
 				show: false
 			}
 		});
-*/
+
 	}
 
 	$("#create-budget").click(function() {
