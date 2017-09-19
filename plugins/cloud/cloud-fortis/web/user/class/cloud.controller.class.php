@@ -661,13 +661,11 @@ class cloud_controller
 
 				if ( $forbill == true ) {
 					$billjson = array();
-					
 					$billjson['cpu'] = round($cpupoints/1000*$price, 2);
 					$billjson['storage'] = round($storagepoints/1000*$price, 2);
 					$billjson['memory'] = round($rampoints/1000*$price, 2);
 					$billjson['virtualization'] = round($vmpoints/1000*$price, 2);
 					$billjson['networking'] = round($netpoints/1000*$price, 2);
-
 					$billjson['cpu'] = '$'.number_format($billjson['cpu'], 2);
 					$billjson['storage'] = '$'.number_format($billjson['storage'], 2);
 					$billjson['memory'] = '$'.number_format($billjson['memory'], 2);
@@ -684,7 +682,23 @@ class cloud_controller
 				}
 
 				if ($priceonly == true) {
-					$result = $cost;
+					$type = (!isset($_POST['type']) ? "total" :  $_POST['type']);
+
+					if ($type == 'total') {
+						$result = $cost;
+					} else if ($type == 'cpu') {
+						$result = round($cpupoints/1000*$price, 2);
+					} else if ($type == 'storage') {
+						$result = round($storagepoints/1000*$price, 2);
+					} else if ($type == 'memory') {
+						$result = round($rampoints/1000*$price, 2);
+					} else if ($type == 'networking') {
+						$result = round($netpoints/1000*$price, 2);
+					} else if ($type == 'virtualization') {
+						$result = round($vmpoints/1000*$price, 2);
+					} else {
+						$result = 0;
+					}
 				} else {
 
 					$cost ='$'.$cost;

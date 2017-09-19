@@ -176,11 +176,11 @@ $(document).ready(function() {
 					$('#budgets').append('<option key="' + key + '" value="' + serv.id +  '">&nbsp;<strong>' + serv.name + '</strong>&nbsp;(' + serv.date_start + '~' + serv.date_end + ')&nbsp;</option>');
 
 					var html =	'<table id="resources-' +  key + '" class="table table-hover table-stripped budget-resources"><tbody>';
-					html	+=		'<tr><td style="width: 50%"><strong>' + "CPU:" +			'</strong></td><td class="cpu">'	+ serv.cpu +	'</td></tr>';
-					html	+=		'<tr><td style="width: 50%"><strong>' + "Storage:" + 		'</strong></td><td class="storage">'+ serv.storage+	'</td></tr>';
-					html	+=		'<tr><td style="width: 50%"><strong>' + "Memory:" + 		'</strong></td><td class="memory">'	+ serv.memory +	'</td></tr>';
-					html	+=		'<tr><td style="width: 50%"><strong>' + "Virtualization:" +	'</strong></td><td class="vm">'		+ serv.vm +		'</td></tr>';
-					html	+=		'<tr><td style="width: 50%"><strong>' + "Network:" +		'</strong></td><td class="network">'+ serv.network +'</td></tr>';
+					html	+=		'<tr><td style="width: 45%"><strong>' + "CPU:" +			'</strong></td><td style="width: 45%" class="cpu">'	+ serv.cpu +	'</td><td style="width: 10%">$/mon.</td></tr>';
+					html	+=		'<tr><td style="width: 45%"><strong>' + "Memory:" + 		'</strong></td><td style="width: 45%" class="memory">'	+ serv.memory +	'</td><td style="width: 10%">$/mon.</td></tr>';
+					html	+=		'<tr><td style="width: 45%"><strong>' + "Storage:" + 		'</strong></td><td style="width: 45%" class="storage">'+ serv.storage+	'</td><td style="width: 10%">$/mon.</td></tr>';
+					html	+=		'<tr><td style="width: 45%"><strong>' + "Virtualization:" +	'</strong></td><td style="width: 45%" class="vm">'		+ serv.vm +		'</td><td style="width: 10%">$/mon.</td></tr>';
+					html	+=		'<tr><td style="width: 45%"><strong>' + "Network:" +		'</strong></td><td style="width: 45%" class="network">'+ serv.network +'</td><td style="width: 10%">$/mon.</td></tr>';
 					html	+=		'<tr style="display: none"><td></td><td class="datestart">'	+ serv.date_start	+	'</td><tr>';
 					html	+=		'<tr style="display: none"><td></td><td class="dateend">'	+ serv.date_end 	+	'</td><tr>';
 					html	+=		'<tr style="display: none"><td></td><td class="id">'		+ serv.id			+	'</td><tr>';
@@ -190,9 +190,7 @@ $(document).ready(function() {
 					$("#budgets-setting").append(html);
 
 					var html_alerts = '';
-
 					html_alerts +=	'<div class="budget-alerts-box" id="alerts-' +  key + '">';
-
 					html_alerts +=	'<table class="table table-hover table-stripped budget-alerts"' + (serv.havealerts ? '' : ' style="display:none;"') + '>';
 					html_alerts +=		'<tbody><tr><td style="width: 50%"><strong>' + "% of Budget" + '</strong></td><td><strong>' + "Action" + '</strong></td></tr>';
 
@@ -206,7 +204,6 @@ $(document).ready(function() {
 					html_alerts +=	'</div>';
 
 					$("#budgets-alert").append(html_alerts);
-
 					i++;
 				});
 
@@ -238,12 +235,11 @@ $(document).ready(function() {
 					$(".budget-alerts-box").hide();
 					$("#resources-"+key).show();
 					$("#alerts-"+key).show();
-
 					// remove temporary new alert input field row and show add alert button when switching budgets midway through adding new alert
 					$("table.budget-alerts").find("tr.new-alert-row").remove();
 					$("#addpercent").show();
-
-					plot_budget_total(bds[key]);
+					$("#chart-type option[value='total']").prop("selected", true);
+					plot_budget(bds[key], 'total');
 				});
 
 				$("table.budget-alerts").on("click", ".removepercent", function() {
@@ -311,7 +307,12 @@ $(document).ready(function() {
 					});
 				});
 
-				plot_budget_total(bds[1]);
+				$("#chart-type").on('change', function () {
+					var key = $("#budgets").find("option:selected").attr("key");
+					plot_budget(bds[key], $(this).val());
+				});
+
+				plot_budget(bds[1], 'total');
 
 			} else {
 				$("#budgets-setting").append("<span><strong>No Budget has been set up.</strong></span>");
@@ -411,40 +412,53 @@ $(document).ready(function() {
 		refresh_table_alerts();
 	});
 
-	function plot_budget_total(serv) {
-		var total = parseInt(serv.cpu) + parseInt(serv.storage) + parseInt(serv.memory) + parseInt(serv.vm) + parseInt(serv.network);
-		var column_x = ['x'];
-		var total_y_budget = ['total budgeted'];
-		var total_y_spent = ['total spent'];
+	function plot_budget(serv, type) {
+		var budgeted =0;
+		if (type == 'total') {
+			budgeted = parseInt(serv.cpu) + parseInt(serv.storage) + parseInt(serv.memory) + parseInt(serv.vm) + parseInt(serv.network);
+		} else if (type == 'cpu') {
+			budgeted = parseInt(serv.cpu)
+		} else if (type == 'storage') {
+			budgeted = parseInt(serv.storage)
+		} else if (type == 'memory') {
+			budgeted = parseInt(serv.memory)
+		} else if (type == 'networking') {
+			budgeted = parseInt(serv.network)
+		} else if (type == 'virtualization') {
+			budgeted = parseInt(serv.vm)
+		}
 
+		var column_x = ['x'];
+		var y_budgeted = ['budgeted'];
+		var y_spent = ['spent'];
 		var date_loop	= new Date(serv.date_start);
 		var date_end	= new Date(serv.date_end);
-
+		var today 		= new Date();
 		var deferred = [];
 
 		while (date_loop <= date_end) {
-			deferred.push(get_daily_data(parseDate(date_loop, "Y"), parseDate(date_loop, "mon"), parseDate(date_loop, "d")));
+			if (date_loop <= today) {
+				deferred.push(get_daily_data(parseDate(date_loop, "Y"), parseDate(date_loop, "mon"), parseDate(date_loop, "d"), type));
+			}
 			column_x.push(parseDate(date_loop, "Y-M-D"));
-			total_y_budget.push(total);
+			y_budgeted.push(budgeted);
 			date_loop.setDate(date_loop.getDate() + 1);
 		}
 
 		$.when.apply($, deferred).done(function () {
 			var objects=arguments;
+			var cumulative_cost = 0.0;
 
 			for (var j = 0; j < objects.length; j++) {
 				var json = objects[j];
-				//console.log(json);
-				total_y_spent.push(json[0]);
+				cumulative_cost += parseFloat(json[0]);
+				y_spent.push(cumulative_cost);
 			}
-			time_series_chart("#budget-vs-spent-chart", [column_x, total_y_budget, total_y_spent]);
+			time_series_chart("#budget-vs-spent-chart", [column_x, y_budgeted, y_spent], type);
 		});
 	}
 
-	function time_series_chart(bindto, data) {
-		
-		console.log(data);
-
+	function time_series_chart(bindto, data, type) {
 
 		var chart = c3.generate({
 			bindto: bindto,
@@ -452,8 +466,9 @@ $(document).ready(function() {
 				x: 'x',
 				columns: data,
 				type: 'spline',
-				color: function (color, d) {
-					return seriesColors[d.index];
+				colors: {
+					budgeted: seriesColors[2],
+					spent: seriesColors[1]
 				},
 			},
 			axis: {
@@ -465,7 +480,7 @@ $(document).ready(function() {
 				},
 				y:  {
 					label: {
-						text: 'total cost ($)'
+						text: type + ' cost ($)'
 					}
 				}
 			},
@@ -475,10 +490,18 @@ $(document).ready(function() {
 				}
 			},
 			legend: {
-				show: false
+				show: true
+			},
+			tooltip: {
+				show: true,
+				format: {
+					value: function (value, ratio, id) {
+						var formatDecimalComma = d3.format(",.2f")
+						return "$" + formatDecimalComma(value); 
+					}
+				}
 			}
 		});
-
 	}
 
 	$("#create-budget").click(function() {
@@ -541,8 +564,8 @@ $(document).ready(function() {
 			<section class="card">  
 				<div class="card-header">
 					<span class="cat__core__title">
-						<label class="d-inline"><strong>Budget Planning</strong></label>
-						<select id="budgets" class="form-control d-inline" style="max-width: 21rem;"></select>
+						<strong>Budget Planning</strong>
+						<select id="budgets" class="form-control d-inline" style="max-width: 20rem;"></select>
 					</span>
 					<div class="pull-right d-inline-block" style="margin-top: 6px;">
 						<a href="#" id="delete-budget" data-toggle="modal" data-target="#delete-budget-modal"><span class="text-danger"><u><i class="fa fa-eraser" aria-hidden="true"></i>&nbsp;Delete Budget</u></span></a>&nbsp;
@@ -585,7 +608,15 @@ $(document).ready(function() {
 								<div class="card-block">
 									<div class="panel-heading">
 										<div class="panel-control">
-											 <h3 class="panel-title">Spent vs Budget</h3>
+											<h3 class="panel-title d-inline">Budgeted vs Spent</h3>
+											<select id="chart-type" class="form-control d-inline" style="max-width: 10rem;">
+												<option name="total" value="total">Total</option>
+												<option name="cpu" value="cpu">CPU</option>
+												<option name="memory" value="memory">Memory</option>
+												<option name="storage" value="storage">Storage</option>
+												<option name="networking" value="networking">Networking</option>
+												<option name="virtualization" value="virtualization">Virtualization</option>
+											</select>
 										</div>
 									</div>
 									<div>
@@ -773,4 +804,3 @@ $(document).ready(function() {
 		</div>
 	</div>
 </div>
-
