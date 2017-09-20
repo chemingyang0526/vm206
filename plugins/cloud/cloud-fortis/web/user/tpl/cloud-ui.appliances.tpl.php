@@ -354,8 +354,9 @@ $(document).ready(function() {
 			dataType: "html",
 			success : function (data) {
 				$("#create-vm-modal .modal-body").empty().append(data.slice(0,-20));
-				$("#create-vm-modal .modal-body input").addClass("form-control").addClass("require").removeClass("text");
-				$("#create-vm-modal .modal-body select").addClass("form-control").addClass("require");
+				$("#create-vm-modal .modal-body input").addClass("form-control").addClass("required").removeClass("text");
+				$("#search-app").removeClass("required");
+				$("#create-vm-modal .modal-body select").addClass("form-control").addClass("required");
 
 				var form = $("#create-vm-form");
 

@@ -445,13 +445,26 @@ $(document).ready(function() {
 			date_loop.setDate(date_loop.getDate() + 1);
 		}
 
+		cur_month = '';
+		cur_year = '';
+
 		$.when.apply($, deferred).done(function () {
 			var objects=arguments;
 			var cumulative_cost = 0.0;
 
 			for (var j = 0; j < objects.length; j++) {
-				var json = objects[j];
-				cumulative_cost += parseFloat(json[0]);
+				var json = JSON.parse(objects[j][0]);
+				// console.log(json.cost, json.date);
+				date_loop = new Date(json.date);
+
+				if (cur_year == parseDate(date_loop, "Y") && cur_month == parseDate(date_loop, "mon")) {
+					cumulative_cost += parseFloat(json.cost);
+				} else {
+					cur_year = parseDate(date_loop, "Y");
+					cur_month = parseDate(date_loop, "mon");
+					cumulative_cost = parseFloat(json.cost);
+				}
+
 				y_spent.push(cumulative_cost);
 			}
 			time_series_chart("#budget-vs-spent-chart", [column_x, y_budgeted, y_spent], type);

@@ -612,8 +612,6 @@ class cloud_controller
 										$done = 1;
 									}
 
-									
-
 									if ( (preg_match('@Network@',$rez['ct_comment']) ) && ($done == 0) ) {
 										$netpoints = $netpoints + $ccu;
 										$done = 1;
@@ -682,11 +680,9 @@ class cloud_controller
 				}
 
 				if ($priceonly == true) {
-					$type = (!isset($_POST['type']) ? "total" :  $_POST['type']);
+					$type = (!isset($_POST['type']) ? "total" : $_POST['type']);
 
-					if ($type == 'total') {
-						$result = $cost;
-					} else if ($type == 'cpu') {
+					if ($type == 'cpu') {
 						$result = round($cpupoints/1000*$price, 2);
 					} else if ($type == 'storage') {
 						$result = round($storagepoints/1000*$price, 2);
@@ -696,9 +692,15 @@ class cloud_controller
 						$result = round($netpoints/1000*$price, 2);
 					} else if ($type == 'virtualization') {
 						$result = round($vmpoints/1000*$price, 2);
-					} else {
-						$result = 0;
+					} else { // type == 'total'
+						$result = $cost;
 					}
+
+					if (($detailcategory == true || $type == 'total') && isset($_POST['day'])) {
+						echo json_encode(array('cost' => $result, 'date' => $year.'-'.$month.'-'.$day)); 
+						die();
+					} 
+
 				} else {
 
 					$cost ='$'.$cost;
