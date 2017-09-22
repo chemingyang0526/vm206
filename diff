@@ -1,0 +1,366 @@
+Only in /var/www/htv/: diff
+Files /var/www/htv/etc/dropbear/dropbear_rsa_host_key and /usr/share/htvcenter/etc/dropbear/dropbear_rsa_host_key differ
+Files /var/www/htv/etc/htvcenter-server.conf and /usr/share/htvcenter/etc/htvcenter-server.conf differ
+Only in /var/www/htv/: .git
+Only in /var/www/htv/: .gitignore
+Only in /usr/share/htvcenter/: logs
+Only in /var/www/htv/plugins: chatbot
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis: tmp
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/AutoFill: css
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/AutoFill: examples
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/AutoFill: images
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/AutoFill: js
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/ColReorder: css
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/ColReorder: examples
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/ColReorder: images
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/ColReorder: js
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/ColVis: css
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/ColVis: examples
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/ColVis: js
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/FixedColumns: css
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/FixedColumns: examples
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/FixedColumns: js
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/FixedHeader: css
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/FixedHeader: examples
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/FixedHeader: js
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/KeyTable: css
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/KeyTable: examples
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/KeyTable: js
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/Responsive: css
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/Responsive: examples
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/Responsive: js
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/Scroller: css
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/Scroller: examples
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/Scroller: images
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/Scroller: js
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/TableTools: css
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/TableTools: examples
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/TableTools: images
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/TableTools: js
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/datatables/extensions/TableTools: swf
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/flot-charts/examples: gauge
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/fooTable: css
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/fooTable: demos
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/fooTable: dist
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/fooTable: icomoon
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/fooTable: js
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/fooTable: less
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/designplugins/fullcalendar: less
+Files /var/www/htv/plugins/cloud/cloud-fortis/web/js/interface.js and /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/js/interface.js differ
+Files /var/www/htv/plugins/cloud/cloud-fortis/web/user/class/cloud.controller.class.php and /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/user/class/cloud.controller.class.php differ
+Files /var/www/htv/plugins/cloud/cloud-fortis/web/user/class/cloud-ui.appliances.class.php and /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/user/class/cloud-ui.appliances.class.php differ
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/user: custom-icons
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/user: .htpasswd
+Files /var/www/htv/plugins/cloud/cloud-fortis/web/user/tpl/report-bills.tpl.php and /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/user/tpl/report-bills.tpl.php differ
+Files /var/www/htv/plugins/cloud/cloud-fortis/web/user/tpl/report-dashboard.tpl.php and /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/user/tpl/report-dashboard.tpl.php differ
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/user/users/akang: .htpasswd
+Only in /var/www/htv/plugins/cloud/cloud-fortis/web/user/users: bandrade
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/user/users/bruno: .htpasswd
+Only in /var/www/htv/plugins/cloud/cloud-fortis/web/user/users/htbase: HTInt1
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/user/users/htbase: .htpasswd
+Only in /var/www/htv/plugins/cloud/cloud-fortis/web/user/users/htvcenter: Fortis1
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis/web/user/users/htvcenter: .htpasswd
+Only in /var/www/htv/plugins/cloud/cloud-fortis/web/user/users/htvcenter: Sergei1
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/AutoFill: css
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/AutoFill: examples
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/AutoFill: images
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/AutoFill: js
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/ColReorder: css
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/ColReorder: examples
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/ColReorder: images
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/ColReorder: js
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/ColVis: css
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/ColVis: examples
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/ColVis: js
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/FixedColumns: css
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/FixedColumns: examples
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/FixedColumns: js
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/FixedHeader: css
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/FixedHeader: examples
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/FixedHeader: js
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/KeyTable: css
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/KeyTable: examples
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/KeyTable: js
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/Responsive: css
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/Responsive: examples
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/Responsive: js
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/Scroller: css
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/Scroller: examples
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/Scroller: images
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/Scroller: js
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/TableTools: css
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/TableTools: examples
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/TableTools: images
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/TableTools: js
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/datatables/extensions/TableTools: swf
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/flot-charts/examples: gauge
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/fooTable: css
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/fooTable: demos
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/fooTable: dist
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/fooTable: icomoon
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/fooTable: js
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/fooTable: less
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/designplugins/fullcalendar: less
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/user: custom-icons
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/user: .htpasswd
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/user/users/akang: .htpasswd
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/user/users/htbase: .htpasswd
+Only in /usr/share/htvcenter/plugins/cloud/cloud-fortis.old/web/user/users/htvcenter: .htpasswd
+Files /var/www/htv/plugins/cloud/web/css/cloud.css and /usr/share/htvcenter/plugins/cloud/web/css/cloud.css differ
+Files /var/www/htv/plugins/cloud/web/tpl/cloud-request-select.tpl.php and /usr/share/htvcenter/plugins/cloud/web/tpl/cloud-request-select.tpl.php differ
+Files /var/www/htv/plugins/cloud/web/tpl/cloud-usergroup-select.tpl.php and /usr/share/htvcenter/plugins/cloud/web/tpl/cloud-usergroup-select.tpl.php differ
+Files /var/www/htv/plugins/cloud/web/tpl/cloud-user-select.tpl.php and /usr/share/htvcenter/plugins/cloud/web/tpl/cloud-user-select.tpl.php differ
+Only in /usr/share/htvcenter/plugins/collectd: data
+Files /var/www/htv/plugins/collectd/etc/collectd.conf and /usr/share/htvcenter/plugins/collectd/etc/collectd.conf differ
+Only in /usr/share/htvcenter/plugins/device-manager/web: storage
+Files /var/www/htv/plugins/dhcpd/etc/dhcpd.conf and /usr/share/htvcenter/plugins/dhcpd/etc/dhcpd.conf differ
+Files /var/www/htv/plugins/dhcpd/etc/dhcpd.conf.htvcenter-dhcpd-appliance and /usr/share/htvcenter/plugins/dhcpd/etc/dhcpd.conf.htvcenter-dhcpd-appliance differ
+Files /var/www/htv/plugins/dhcpd/etc/dhcpd.conf.old and /usr/share/htvcenter/plugins/dhcpd/etc/dhcpd.conf.old differ
+Files /var/www/htv/plugins/dhcpd/var/state/dhcp/dhcpd.leases and /usr/share/htvcenter/plugins/dhcpd/var/state/dhcp/dhcpd.leases differ
+Only in /usr/share/htvcenter/plugins/dhcpd/var/state/dhcp: dhcpd.leases~
+Only in /usr/share/htvcenter/plugins/dns/etc/bind: backup
+Files /var/www/htv/plugins/dns/etc/bind/zones/internal.htbase.com.in.db and /usr/share/htvcenter/plugins/dns/etc/bind/zones/internal.htbase.com.in.db differ
+Files /var/www/htv/plugins/dns/etc/bind/zones/internal.htbase.com.rev.db and /usr/share/htvcenter/plugins/dns/etc/bind/zones/internal.htbase.com.rev.db differ
+Only in /var/www/htv/plugins/dns/etc: htvcenter-plugin-dns.conf
+Files /var/www/htv/plugins/dns/etc/htvcenter-plugin-dns.conf.old and /usr/share/htvcenter/plugins/dns/etc/htvcenter-plugin-dns.conf.old differ
+Only in /var/www/htv/plugins: docker
+Files /var/www/htv/plugins/fai/web/css/fai.css and /usr/share/htvcenter/plugins/fai/web/css/fai.css differ
+Only in /usr/share/htvcenter/plugins/fai/web: .running
+Only in /usr/share/htvcenter/plugins/fai/web: storage
+Files /var/www/htv/plugins/highavailability/web/class/highavailability.controller.class.php and /usr/share/htvcenter/plugins/highavailability/web/class/highavailability.controller.class.php differ
+Only in /usr/share/htvcenter/plugins/hybrid-cloud/etc: instances
+Only in /usr/share/htvcenter/plugins/hybrid-cloud/web: boot-service.tmp
+Only in /usr/share/htvcenter/plugins/hyperv/conf: vm
+Only in /usr/share/htvcenter/plugins/hyperv/web/hyperv-stat: autodiscovery_finished
+Files /var/www/htv/plugins/ip-mgmt/web/class/ip-mgmt.details.class.php and /usr/share/htvcenter/plugins/ip-mgmt/web/class/ip-mgmt.details.class.php differ
+Files /var/www/htv/plugins/ip-mgmt/web/class/ip-mgmt.select.class.php and /usr/share/htvcenter/plugins/ip-mgmt/web/class/ip-mgmt.select.class.php differ
+Files /var/www/htv/plugins/ip-mgmt/web/css/ip-mgmt.css and /usr/share/htvcenter/plugins/ip-mgmt/web/css/ip-mgmt.css differ
+Files /var/www/htv/plugins/ip-mgmt/web/tpl/ip-mgmt-details.tpl.php and /usr/share/htvcenter/plugins/ip-mgmt/web/tpl/ip-mgmt-details.tpl.php differ
+Files /var/www/htv/plugins/ip-mgmt/web/tpl/ip-mgmt-select.tpl.php and /usr/share/htvcenter/plugins/ip-mgmt/web/tpl/ip-mgmt-select.tpl.php differ
+Only in /usr/share/htvcenter/plugins/kvm: lock
+Only in /usr/share/htvcenter/plugins/kvm: tmp
+Files /var/www/htv/plugins/kvm/web/boot-service-kvm.tgz and /usr/share/htvcenter/plugins/kvm/web/boot-service-kvm.tgz differ
+Only in /usr/share/htvcenter/plugins/kvm/web: kvm-stat
+Only in /usr/share/htvcenter/plugins/kvm/web: storage
+Only in /usr/share/htvcenter/plugins/ldap: config-backup
+Files /var/www/htv/plugins/local-server/bin/execute and /usr/share/htvcenter/plugins/local-server/bin/execute differ
+Files /var/www/htv/plugins/local-server/web/local-vm/htvcenter-local-vm-client and /usr/share/htvcenter/plugins/local-server/web/local-vm/htvcenter-local-vm-client differ
+Only in /usr/share/htvcenter/plugins/lvm-storage: lock
+Only in /usr/share/htvcenter/plugins/network-manager/web: storage
+Only in /usr/share/htvcenter/plugins/novnc/vncclient/utils: websocket.pyc
+Files /var/www/htv/plugins/opsi/web/css/opsi.css and /usr/share/htvcenter/plugins/opsi/web/css/opsi.css differ
+Only in /usr/share/htvcenter/plugins/opsi/web: storage
+Only in /usr/share/htvcenter/plugins/puppet/etc/default: files
+Files /var/www/htv/plugins/puppet/etc/puppet/db/current and /usr/share/htvcenter/plugins/puppet/etc/puppet/db/current differ
+Files /var/www/htv/plugins/puppet/etc/puppet/db/rep-cache.db and /usr/share/htvcenter/plugins/puppet/etc/puppet/db/rep-cache.db differ
+Files /var/www/htv/plugins/puppet/etc/puppet/db/revprops/0/0 and /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revprops/0/0 differ
+Files /var/www/htv/plugins/puppet/etc/puppet/db/revprops/0/1 and /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revprops/0/1 differ
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revprops/0: 10
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revprops/0: 11
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revprops/0: 12
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revprops/0: 13
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revprops/0: 14
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revprops/0: 15
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revprops/0: 16
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revprops/0: 17
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revprops/0: 18
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revprops/0: 2
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revprops/0: 3
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revprops/0: 4
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revprops/0: 5
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revprops/0: 6
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revprops/0: 7
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revprops/0: 8
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revprops/0: 9
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revs/0: 10
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revs/0: 11
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revs/0: 12
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revs/0: 13
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revs/0: 14
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revs/0: 15
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revs/0: 16
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revs/0: 17
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revs/0: 18
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revs/0: 2
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revs/0: 3
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revs/0: 4
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revs/0: 5
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revs/0: 6
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revs/0: 7
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revs/0: 8
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db/revs/0: 9
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db: transactions
+Files /var/www/htv/plugins/puppet/etc/puppet/db/txn-current and /usr/share/htvcenter/plugins/puppet/etc/puppet/db/txn-current differ
+Only in /usr/share/htvcenter/plugins/puppet/etc/puppet/db: txn-protorevs
+Files /var/www/htv/plugins/puppet/etc/puppet/db/uuid and /usr/share/htvcenter/plugins/puppet/etc/puppet/db/uuid differ
+Files /var/www/htv/plugins/puppet/etc/puppet-svn-version and /usr/share/htvcenter/plugins/puppet/etc/puppet-svn-version differ
+Only in /usr/share/htvcenter/plugins/puppet/web/class: node-class.add.class.php
+Only in /usr/share/htvcenter/plugins/puppet/web/class: node-class.controller.class.php
+Only in /usr/share/htvcenter/plugins/puppet/web/class: node-class.edit.class.php
+Only in /usr/share/htvcenter/plugins/puppet/web/class: node-class.remove.class.php
+Only in /usr/share/htvcenter/plugins/puppet/web/class: node-class.select.class.php
+Only in /usr/share/htvcenter/plugins/puppet/web/class: personalize-node.add.class.php
+Only in /usr/share/htvcenter/plugins/puppet/web/class: personalize-node.controller.class.php
+Only in /usr/share/htvcenter/plugins/puppet/web/class: personalize-node.edit.class.php
+Only in /usr/share/htvcenter/plugins/puppet/web/class: personalize-node.remove.class.php
+Only in /usr/share/htvcenter/plugins/puppet/web/class: personalize-node.select.class.php
+Files /var/www/htv/plugins/puppet/web/class/puppet-about.controller.class.php and /usr/share/htvcenter/plugins/puppet/web/class/puppet-about.controller.class.php differ
+Files /var/www/htv/plugins/puppet/web/class/puppet-about.documentation.class.php and /usr/share/htvcenter/plugins/puppet/web/class/puppet-about.documentation.class.php differ
+Only in /usr/share/htvcenter/plugins/puppet/web/class: puppet-form.controller.class.php
+Only in /usr/share/htvcenter/plugins/puppet/web/class: puppet-report.controller.class.php
+Files /var/www/htv/plugins/puppet/web/css/puppet.css and /usr/share/htvcenter/plugins/puppet/web/css/puppet.css differ
+Only in /usr/share/htvcenter/plugins/puppet/web/lang: de.puppet-report.ini
+Only in /usr/share/htvcenter/plugins/puppet/web/lang: en.node-class.ini
+Only in /usr/share/htvcenter/plugins/puppet/web/lang: en.personalize-node.ini
+Files /var/www/htv/plugins/puppet/web/lang/en.puppet-about.ini and /usr/share/htvcenter/plugins/puppet/web/lang/en.puppet-about.ini differ
+Only in /usr/share/htvcenter/plugins/puppet/web/lang: en.puppet-report.ini
+Files /var/www/htv/plugins/puppet/web/menu.txt and /usr/share/htvcenter/plugins/puppet/web/menu.txt differ
+Only in /usr/share/htvcenter/plugins/puppet/web/puppet: files
+Only in /usr/share/htvcenter/plugins/puppet/web/puppet/manifests/appliances: app1545617566.internal.htbase.com.pp
+Only in /usr/share/htvcenter/plugins/puppet/web/puppet/manifests/appliances: htvcenter.internal.htbase.com.pp
+Only in /usr/share/htvcenter/plugins/puppet/web/puppet/manifests/appliances: localhost.htbase.puppet.pp
+Only in /usr/share/htvcenter/plugins/puppet/web/puppet/manifests/appliances: manish.local.htbase.pp.pp
+Files /var/www/htv/plugins/puppet/web/puppet/manifests/classes/apache-server.pp and /usr/share/htvcenter/plugins/puppet/web/puppet/manifests/classes/apache-server.pp differ
+Only in /usr/share/htvcenter/plugins/puppet/web/puppet: modules
+Only in /var/www/htv/plugins/puppet/web/puppet: .svn
+Only in /usr/share/htvcenter/plugins/puppet/web: puppet-apply.tpl.php
+Only in /usr/share/htvcenter/plugins/puppet/web/tpl: node-class-add.tpl.php
+Only in /usr/share/htvcenter/plugins/puppet/web/tpl: node-class-edit.tpl.php
+Only in /usr/share/htvcenter/plugins/puppet/web/tpl: node-class-remove.tpl.php
+Only in /usr/share/htvcenter/plugins/puppet/web/tpl: node-class.select.tpl.php
+Only in /usr/share/htvcenter/plugins/puppet/web/tpl: personalize-node-edit.tpl.php
+Only in /usr/share/htvcenter/plugins/puppet/web/tpl: personalize-node-remove.tpl.php
+Only in /usr/share/htvcenter/plugins/puppet/web/tpl: personalize-node.select.tpl.php
+Only in /usr/share/htvcenter/plugins/puppet/web/tpl: personalize-node.tpl.php
+Files /var/www/htv/plugins/puppet/web/tpl/puppet-about-documentation.tpl.php and /usr/share/htvcenter/plugins/puppet/web/tpl/puppet-about-documentation.tpl.php differ
+Only in /usr/share/htvcenter/plugins/puppet/web/tpl: puppet-form.tpl.php
+Only in /usr/share/htvcenter/plugins/puppet/web/tpl: puppet-report.tpl.php
+Files /var/www/htv/plugins/role-administration/web/css/role-administration.css and /usr/share/htvcenter/plugins/role-administration/web/css/role-administration.css differ
+Only in /usr/share/htvcenter/plugins/template/web: img
+Only in /usr/share/htvcenter/plugins/template/web: .running
+Only in /usr/share/htvcenter/plugins/vmware-vsphere/conf: host
+Only in /usr/share/htvcenter/plugins/xen: lock
+Only in /usr/share/htvcenter/plugins/xen/web: .running
+Only in /usr/share/htvcenter/plugins/xen/web: storage
+Only in /var/www/htv/: README.md
+Only in /usr/share/htvcenter/: storage
+Files /var/www/htv/tftpboot/boot/initrd-default.img and /usr/share/htvcenter/tftpboot/boot/initrd-default.img differ
+Files /var/www/htv/tftpboot/boot/modules-default.tgz and /usr/share/htvcenter/tftpboot/boot/modules-default.tgz differ
+Only in /usr/share/htvcenter/tftpboot: pxelinux.cfg
+Only in /usr/share/htvcenter/: var
+Only in /var/www/htv/web/action/cloud-conf: 00:a3:78:cb:6b:df.vnc
+Only in /var/www/htv/web/action/cloud-conf: 00:b9:cb:5f:86:13.vnc
+Only in /var/www/htv/web/action/cloud-conf: 00:ca:ab:67:13:de.vnc
+Only in /var/www/htv/web/action/image-auth: iauth.14853799298966.php
+Files /var/www/htv/web/base/class/htvcenter.controller.class.php and /usr/share/htvcenter/web/base/class/htvcenter.controller.class.php differ
+Files /var/www/htv/web/base/css/default.css and /usr/share/htvcenter/web/base/css/default.css differ
+Files /var/www/htv/web/base/css/nifty.css and /usr/share/htvcenter/web/base/css/nifty.css differ
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/AutoFill: css
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/AutoFill: examples
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/AutoFill: images
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/AutoFill: js
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/ColReorder: css
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/ColReorder: examples
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/ColReorder: images
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/ColReorder: js
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/ColVis: css
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/ColVis: examples
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/ColVis: js
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/FixedColumns: css
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/FixedColumns: examples
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/FixedColumns: js
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/FixedHeader: css
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/FixedHeader: examples
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/FixedHeader: js
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/KeyTable: css
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/KeyTable: examples
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/KeyTable: js
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/Responsive: css
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/Responsive: examples
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/Responsive: js
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/Scroller: css
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/Scroller: examples
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/Scroller: images
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/Scroller: js
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/TableTools: css
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/TableTools: examples
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/TableTools: images
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/TableTools: js
+Only in /usr/share/htvcenter/web/base/designplugins/datatables/extensions/TableTools: swf
+Only in /usr/share/htvcenter/web/base/designplugins/flot-charts/examples: gauge
+Only in /usr/share/htvcenter/web/base/designplugins/fooTable: css
+Only in /usr/share/htvcenter/web/base/designplugins/fooTable: demos
+Only in /usr/share/htvcenter/web/base/designplugins/fooTable: dist
+Only in /usr/share/htvcenter/web/base/designplugins/fooTable: icomoon
+Only in /usr/share/htvcenter/web/base/designplugins/fooTable: js
+Only in /usr/share/htvcenter/web/base/designplugins/fooTable: less
+Only in /usr/share/htvcenter/web/base/designplugins/fullcalendar: less
+Only in /usr/share/htvcenter/web/base: .htpasswd
+Only in /var/www/htv/web/base/img/menu: docker
+Only in /usr/share/htvcenter/web/base/img/menu: template
+Files /var/www/htv/web/base/js/interface.js and /usr/share/htvcenter/web/base/js/interface.js differ
+Files /var/www/htv/web/base/js/menu.js and /usr/share/htvcenter/web/base/js/menu.js differ
+Files /var/www/htv/web/base/js/nifty.js and /usr/share/htvcenter/web/base/js/nifty.js differ
+Only in /var/www/htv/web/base/js: scheduler.js
+Only in /var/www/htv/web/base/js: treejs
+Files /var/www/htv/web/base/plugins/aa_plugins/class/aa_plugins.select.class.php and /usr/share/htvcenter/web/base/plugins/aa_plugins/class/aa_plugins.select.class.php differ
+Only in /var/www/htv/web/base/plugins: chatbot
+Only in /var/www/htv/web/base/plugins: docker
+Only in /usr/share/htvcenter/web/base/plugins: event-mailer
+Only in /usr/share/htvcenter/web/base/plugins: fai
+Only in /usr/share/htvcenter/web/base/plugins: hyperv
+Only in /var/www/htv/web/base/plugins: kvm
+Only in /usr/share/htvcenter/web/base/plugins: opsi
+Only in /usr/share/htvcenter/web/base/plugins: role-administration
+Only in /usr/share/htvcenter/web/base/plugins: template
+Only in /usr/share/htvcenter/web/base/plugins: xen
+Files /var/www/htv/web/base/server/aa_server/class/datacenter.dashboard.class.php and /usr/share/htvcenter/web/base/server/aa_server/class/datacenter.dashboard.class.php differ
+Files /var/www/htv/web/base/server/aa_server/css/aa_server.css and /usr/share/htvcenter/web/base/server/aa_server/css/aa_server.css differ
+Files /var/www/htv/web/base/server/aa_server/tpl/datacenter-dashboard.tpl.php and /usr/share/htvcenter/web/base/server/aa_server/tpl/datacenter-dashboard.tpl.php differ
+Files /var/www/htv/web/base/server/appliance/class/appliance.controller.class.php and /usr/share/htvcenter/web/base/server/appliance/class/appliance.controller.class.php differ
+Files /var/www/htv/web/base/server/appliance/class/appliance.remove.class.php and /usr/share/htvcenter/web/base/server/appliance/class/appliance.remove.class.php differ
+Files /var/www/htv/web/base/server/appliance/class/appliance.select.class.php and /usr/share/htvcenter/web/base/server/appliance/class/appliance.select.class.php differ
+Files /var/www/htv/web/base/server/appliance/class/appliance.start.class.php and /usr/share/htvcenter/web/base/server/appliance/class/appliance.start.class.php differ
+Files /var/www/htv/web/base/server/appliance/class/appliance.stop.class.php and /usr/share/htvcenter/web/base/server/appliance/class/appliance.stop.class.php differ
+Files /var/www/htv/web/base/server/appliance/css/appliance.css and /usr/share/htvcenter/web/base/server/appliance/css/appliance.css differ
+Files /var/www/htv/web/base/server/appliance/tpl/appliance-step1.tpl.php and /usr/share/htvcenter/web/base/server/appliance/tpl/appliance-step1.tpl.php differ
+Only in /usr/share/htvcenter/web/base/server/event: errors
+Only in /usr/share/htvcenter/web/base/server/event: img
+Only in /var/www/htv/web/base/server/resource/class: res14_back.php
+Only in /var/www/htv/web/base/server/resource/class: res14.php
+Files /var/www/htv/web/base/server/resource/class/resource.select.class.php and /usr/share/htvcenter/web/base/server/resource/class/resource.select.class.php differ
+Only in /usr/share/htvcenter/web/base/server: storage
+Only in /usr/share/htvcenter/web/base/server/zz_documentation: img
+Only in /usr/share/htvcenter/web/base: tmp
+Files /var/www/htv/web/base/tpl/index_top.tpl.php and /usr/share/htvcenter/web/base/tpl/index_top.tpl.php differ
+Files /var/www/htv/web/base/tpl/index.tpl.php and /usr/share/htvcenter/web/base/tpl/index.tpl.php differ
+Files /var/www/htv/web/base/tpl/report-bills-h.tpl.php and /usr/share/htvcenter/web/base/tpl/report-bills-h.tpl.php differ
+Files /var/www/htv/web/base/tpl/report-explorer-h.tpl.php and /usr/share/htvcenter/web/base/tpl/report-explorer-h.tpl.php differ
+Files /var/www/htv/web/base/tpl/report-inactive-h.tpl.php and /usr/share/htvcenter/web/base/tpl/report-inactive-h.tpl.php differ
+Files /var/www/htv/web/base/tpl/repport-dashboard-h.tpl.php and /usr/share/htvcenter/web/base/tpl/repport-dashboard-h.tpl.php differ
+Only in /var/www/htv/web/boot-service: boot-service-docker.tgz
+Only in /usr/share/htvcenter/web/boot-service: boot-service-fai.tgz
+Only in /var/www/htv/web/boot-service: boot-service-kvm.tgz
+Only in /usr/share/htvcenter/web/boot-service: boot-service-opsi.tgz
+Only in /usr/share/htvcenter/web/boot-service: boot-service-template.tgz
+Only in /usr/share/htvcenter/web/boot-service: boot-service-xen.tgz
+Files /var/www/htv/web/boot-service/cloudadmin.compat.wdsl and /usr/share/htvcenter/web/boot-service/cloudadmin.compat.wdsl differ
+Files /var/www/htv/web/boot-service/cloudadmin.wdsl and /usr/share/htvcenter/web/boot-service/cloudadmin.wdsl differ
+Files /var/www/htv/web/boot-service/clouduser.compat.wdsl and /usr/share/htvcenter/web/boot-service/clouduser.compat.wdsl differ
+Files /var/www/htv/web/boot-service/clouduser.wdsl and /usr/share/htvcenter/web/boot-service/clouduser.wdsl differ
+Only in /usr/share/htvcenter/web/boot-service: htvcenter_client_fai_auto_install.snippets
+Only in /usr/share/htvcenter/web/boot-service: htvcenter-fai-autoinstall-client
+Files /var/www/htv/web/boot-service/htvcenter-server-public-rsa-key and /usr/share/htvcenter/web/boot-service/htvcenter-server-public-rsa-key differ
+Only in /usr/share/htvcenter/web/boot-service: image.fai-deployment.php
+Only in /usr/share/htvcenter/web/boot-service: image.hyperv-deployment.php
+Only in /var/www/htv/web/boot-service: image.kvm-bf-deployment.php
+Only in /var/www/htv/web/boot-service: image.kvm-gluster-deployment.php
+Only in /var/www/htv/web/boot-service: image.kvm-lvm-deployment.php
+Only in /usr/share/htvcenter/web/boot-service: image.opsi-deployment.php
+Only in /usr/share/htvcenter/web/boot-service: image.xen-bf-deployment.php
+Only in /usr/share/htvcenter/web/boot-service: image.xen-lvm-deployment.php
+Only in /usr/share/htvcenter/web/boot-service: template.fai-deployment.php
+Only in /usr/share/htvcenter/web/boot-service: template.opsi-deployment.php
+Files /var/www/htv/web/css/login.css and /usr/share/htvcenter/web/css/login.css differ
+Files /var/www/htv/web/index.php and /usr/share/htvcenter/web/index.php differ
+Files /var/www/htv/web/js/login.js and /usr/share/htvcenter/web/js/login.js differ

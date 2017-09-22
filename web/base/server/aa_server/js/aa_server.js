@@ -407,13 +407,13 @@ $(document).ready(function(){
 	
 	// Init refresh interval for datacenter load section and chart, 
 	// event list section
-	setInterval(function (){
+	// setInterval(function (){
 	
-		updateLoadChart();
-		updateLoadSection();
-		updateEventSection();
-		
-	}, 5000);
+	//	updateLoadChart();
+	//	updateLoadSection();
+	//	updateEventSection();
+	//	
+	// }, 5000);
 	
 	
 	// add refresh events to widget buttons
