@@ -31,7 +31,7 @@
 #OCH_edit a.add {
    float: right;
     position: relative;
-    right: 17%;
+    right: 7%;
 }
 
 #appliance_tab1 #step2 a.add {
@@ -39,12 +39,13 @@
     left: 30px;
 }
 
-.addkvmoforme .bootstrap-select {
-     float: right;
-    left: 170px;
+.addkvmoforme .right .bootstrap-select {
+	float: left;
+	/*left: 170px;
     margin-bottom: -20px !important;
     position: relative;
-    top: -30px;
+    top: -30px;*/
+	top: 8px;
 }
 
 .addkvmoforme #name_box {
@@ -53,17 +54,25 @@
 }
 
 .addkvmoforme input[type=text] {
-     left: 170px !important;
-    margin-bottom: -50px !important;
-    position: relative;
-    top: -35px;
-    width: 320px;
+	/*left: 170px !important;
+	margin-bottom: -50px !important;
+	position: relative;
+	top: -35px;*/
+	width: 80%;
 }
 
-.addkvmoforme .left {
-    float: left;
+.addkvmoforme .htmlobject_box {
+	margin-bottom: 15px;
 }
 
-.addkvmoforme .right {
+.addkvmoforme .htmlobject_box .left {
     float: left;
+	width: 20%;
+	min-width: 100px !important;
+}
+
+.addkvmoforme .htmlobject_box .right {
+    float: left;
+	width: 75%;
+	min-width: 100px !important;
 }

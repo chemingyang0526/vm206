@@ -163,7 +163,7 @@ function namegen() {
 					{disk_interface}
 				</div>
 				<div style="float:left; width: 250px; margin: 3px 0 0 15px">
-					{add_vm_image} <a class="add btn-labeled fa fa-gear" id="managedisks"> Additional Disks</a>
+					{add_vm_image} <!-- <a class="add btn-labeled fa fa-gear" id="managedisks"> Additional Disks</a> -->
 				</div>
 				<div class="floatbreaker" style="line-height:0px;height:0px;clear:both;">&nbsp;</div>
 					{cdrom_iso_path}
@@ -186,6 +186,7 @@ function namegen() {
 				<div id="net0box" class="netbox">
 					{mac}
 					{bridge}
+					<!-- {ip_network} -->
 					{nic}
 				</div>
 			</fieldset>

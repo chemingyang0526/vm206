@@ -33,7 +33,7 @@
 {ip_mgmt_address}
 //-->
 
-<div style="float:left; width: 250px; margin: 20px 0 0 0;">
+<div style="float:left; width: 250px; margin: 20px 0 0 0;" class="maininfo">
 {ip_mgmt_name}
 {ip_mgmt_network_1}
 {ip_mgmt_network_2}
@@ -47,7 +47,7 @@
 {ip_mgmt_comment}
 </div>
 
-<div style="float:left; width: 650px; margin: 0 0 0 50px;">
+<div style="float:left; width: 650px; margin: 0 0 0 50px;" class="allinfo">
 {table}
 </div>
 

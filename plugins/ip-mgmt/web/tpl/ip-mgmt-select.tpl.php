@@ -14,8 +14,8 @@
     Copyright 2014, htvcenter Enterprise GmbH <info@htvcenter-enterprise.com>
 */
 -->
-<h2>{label}<span class="pull-right">{add}</span></h2>
-
+<h2>{label}</h2>
+<div class="pull-right-add">{add}</div>
 {table}
 
 <div id="volumepopup" class="modal-dialog longdialog">
@@ -68,7 +68,7 @@
 </div>
 
 
-<div id="volumepopup" class="modal-dialog longdialog">
+<div id="volumepopupinfo" class="modal-dialog longdialog">
 <div class="panel">
                     
                                 <!-- Classic Form Wizard -->
@@ -79,10 +79,10 @@
                                     <ul class="wz-nav-off wz-icon-inline wz-classic">
                                         <li class="col-xs-3 bg-info active">
                                             <a href="#demo-cls-tab1" data-toggle="tab" aria-expanded="true">
-                                                <span class="icon-wrap icon-wrap-xs bg-trans-dark"><i class="fa fa-edit"></i></span> Update
+                                                <span class="icon-wrap icon-wrap-xs bg-trans-dark"><i class="fa fa-eye"></i></span> Details
                                             </a>
                                         </li>
-                                        <div class="volumepopupclass"><a id="volumepopupclose"><i class="fa fa-icon fa-close"></i></a></div>
+                                        <div class="volumepopupclass"><a id="volumepopupinfoclose"><i class="fa fa-icon fa-close"></i></a></div>
                                         
                                     </ul>
                     
@@ -99,9 +99,10 @@
                     
                                                 <!--First tab-->
                                                 <div class="tab-pane active in" id="demo-cls-tab1">
-                                                    <div id="storageform">
+                                                    <div id="storageforminfo">
                                                     aa
                                                     </div>
+                                                    <span id="thedetailze"></span>
                                                 </div>
                     
                                                 

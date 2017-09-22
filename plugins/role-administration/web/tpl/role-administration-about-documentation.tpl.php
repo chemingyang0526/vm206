@@ -21,14 +21,14 @@
 		<h3>{introduction_title}</h3>
 		{introduction_content}
 	
-		<h3>{requirements_title}</h3>
-		{requirements_list}
+		<!-- <h3>{requirements_title}</h3>
+		{requirements_list} -->
 	</div>
 	<div class="span2 offset1">
-		<h3>{type_title}</h3>
+		<!-- <h3>{type_title}</h3>
 		<span class="pill">{type_content}</span>
 
 		<h3>{tested_title}</h3>
-		{tested_content}
+		{tested_content} -->
 	</div>
 </div>

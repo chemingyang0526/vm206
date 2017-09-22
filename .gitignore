@@ -1,6 +1,8 @@
 *.tar.gz
 *.rrd
 *.tgz
+*.tar.gz
+.DS_Store
 logs/*
 plugins/chatbot/*
 plugins/collectd/*

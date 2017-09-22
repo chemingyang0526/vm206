@@ -502,7 +502,6 @@ class cloud_controller
 						$daydb = gmdate("d", $timestamp);
 
 						if ( ($year == $yeardb) && ($month == $monthdb) && (empty($day) ? true : $day == $daydb) ) {
-
 							$ccu = $ccu + $rez['ct_ccu_charge'];
 							$tabledate = gmdate("Y-m-d h:i", $timestamp);
 							$detailtable .= '<tr class="headertr"><td>'.$tabledate.'</td><td>'.$rez['ct_ccu_charge'].'</td><td>'.$rez['ct_comment'].'</td></tr>';

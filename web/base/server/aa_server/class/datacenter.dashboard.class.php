@@ -204,8 +204,14 @@ var $lang = array();
 					$rowsel .= '<option val="'.$rezz['cu_name'].'">'.$rezz['cu_name'].'</option>';
 				}
 				
+				$yeardef = date("Y");
+				$monthdef = date("n");
+				$monthdef = $monthdef - 1;
+				
 				$t->add($yearz, 'reportyear');
 				$t->add($rowsel, 'hidenuser');
+				$t->add($monthdef, 'monthdefault');
+				$t->add($yeardef, 'yeardefault');
 
 
 
@@ -464,8 +470,11 @@ function get_response($mode = '') {
 		return $response;
 	}
 
+function controllerinfo() {
+	return $this->storage(true);
+}
 
-function storage() {
+function storage($controller=false) {
 
 $d = array();
 
@@ -564,6 +573,12 @@ $d = array();
  			$d['swaptotal'] = $resource->swaptotal;
  			$d['swapused'] = $resource->swapused;
 
+
+ 			$continfo['memory']['available'] = $d['memtotal'] - $d['memused'] ;
+ 			$continfo['memory']['used'] = $d['memused'];
+ 			$continfo['swap']['available'] = $d['swaptotal'] - $d['swapused'];
+ 			$continfo['swap']['used'] = $d['swapused'];
+
  			$mem = $d['memused']/($d['memtotal']/100);
  			$d['mempercent'] = round($mem);
 
@@ -591,7 +606,21 @@ $d = array();
 		$d['free'] = $free;
 		$d['used'] = $used;
 		$d['hddpercent'] = $hddpercent;
-		return $d;
+
+		$continfo['storage']['available'] = $d['free'];
+		$continfo['storage']['used'] = $d['used'];
+
+		$continfo['conditions'] = 0;
+
+		if ( ($d['hddpercent'] > 70) || ($d['mempercent'] > 70) || ($d['swappercent'] > 70) ) {
+			$continfo['conditions'] = 1;
+		}
+
+		if ($controller == false) {
+			return $d;
+		} else {
+			return $continfo;
+		}
 
 }
 

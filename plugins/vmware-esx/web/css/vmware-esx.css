@@ -114,3 +114,11 @@
 	background: url("../img/icons.gif") no-repeat scroll 0 0 transparent;
 	color: black;
 }
+
+div#vmware_esx_tab0 div.widget-body div.text-left {
+	padding-top: 30px;
+}
+
+div#vmware_esx_tab0 div.widget-body div.pad-ver {
+	margin-top: 15px;
+}

@@ -1,7 +1,7 @@
 <?xml version ='1.0' encoding ='UTF-8' ?>
 <definitions name='Cloud'
-  targetNamespace='http://192.168.0.206/htvcenter/boot-service/clouduser.wdsl'
-  xmlns:tns='http://192.168.0.206/htvcenter/boot-service/clouduser.wdsl'
+  targetNamespace='http://192.168.0.241/htvcenter/boot-service/clouduser.wdsl'
+  xmlns:tns='http://192.168.0.241/htvcenter/boot-service/clouduser.wdsl'
   xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/'
   xmlns='http://schemas.xmlsoap.org/wsdl/'>
 
@@ -644,7 +644,7 @@
 
 <service name='CloudService'>
   <port name='CloudPort' binding='CloudBinding'>
-    <soap:address location='http://192.168.0.206/cloud-fortis/user/soap/clouduser-soap.php'/>
+    <soap:address location='http://192.168.0.241/cloud-fortis/user/soap/clouduser-soap.php'/>
   </port>
 </service>
 </definitions>

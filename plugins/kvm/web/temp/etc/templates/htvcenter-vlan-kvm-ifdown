@@ -86,7 +86,7 @@ if [ "$VLAN_ID" != "" ]; then
 		exit -1
 	fi
 	echo "NOTICE: Found phys. interface mac adress $PHYS_MAC belongs to @@htvcenter_PLUGIN_KVM_BRIDGE@@!" | logger
-	PHYS_NIC=`ifconfig -a | grep -i $PHYS_MAC | grep bond | awk '{ print $1 }' | head -n1`
+	PHYS_NIC=`ifconfig -a | grep -i $PHYS_MAC | awk '{ print $1 }' | head -n1`
 	if [ "$PHYS_NIC" == "" ]; then
 		echo "ERROR: Could not find the phys. interface of @@htvcenter_PLUGIN_KVM_BRIDGE@@!" | logger
 		exit -1

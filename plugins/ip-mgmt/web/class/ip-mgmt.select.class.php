@@ -108,7 +108,7 @@ var $lang;
 	 * @return htmlobject_response
 	 */
 	//--------------------------------------------
-	function select() {
+	function select($forapi=false) {
 		// $this->response->html->debug();
 
 		$head['name']['title'] = $this->lang['ip_mgmt_name'];
@@ -134,7 +134,10 @@ var $lang;
 		$table->actions         = array(array('delete' => $this->lang['ip_mgmt_delete']));
 		$table->actions_name    = $this->actions_name;
 		$table->form_action		= $this->response->html->thisfile;
-
+		if ($forapi == true) {
+			require_once('/usr/share/htvcenter/plugins/ip-mgmt/web/class/ip-mgmt.class.php');
+			$this->ip_mgmt = new ip_mgmt();
+		}
 		$body  = $this->ip_mgmt->get_list();
 		if($body) {
 			foreach ($body as $key => $value) {
@@ -163,6 +166,10 @@ var $lang;
 					'details' => $details,
 					'edit' => $update,
 				);
+
+				if ($forapi == true) {
+					$networks['names'][] = $value['first']['ip_mgmt_name'];
+				}
 			}
 			$table->body = $ta;
 			$table->max = count($body);
@@ -170,10 +177,17 @@ var $lang;
 		} else {
 			$table = $this->response->html->div();
 			$table->add('No Ip Groups setup yet');
-			
 		}
-		return $table;
+		
+		if ($forapi == true) {
+			return $networks;
+		} else {
+			return $table;
+		}
 	}
+
+
+
 
 
 }

@@ -16,8 +16,7 @@
     Copyright 2014, htvcenter Enterprise GmbH <info@htvcenter-enterprise.com>
  */
 
-class storage_controller
-{
+class storage_controller {
 /**
 * name of action buttons
 * @access public
@@ -69,6 +68,55 @@ var $lang = array(
 		'table_deployment' => 'Deployment',
 		'lang_filter' => 'Filter by Storage type',
 		'please_wait' => 'Loading. Please wait ..',
+	),
+	'diskadd' => array (
+		'tab' => 'Add a new disk',
+		'label' => 'Add a new disk',
+		'action_remove' => 'remove',
+		'action_mgmt' => 'manage',
+		'action_edit' => 'edit',
+		'action_add' => 'Add new storage',
+		'table_state' => 'State',
+		'table_id' => 'Id',
+		'table_name' => 'Name',
+		'table_type' => 'Type',
+		'table_resource' => 'Resource',
+		'table_deployment' => 'Deployment',
+		'lang_filter' => 'Filter by Disk type',
+		'please_wait' => 'Loading. Please wait ..',
+	),
+	'memoryadd' => array (
+		'tab' => 'Add memory as disk storage',
+		'label' => 'Add memory as disk storage',
+		'action_remove' => 'remove',
+		'action_mgmt' => 'manage',
+		'action_edit' => 'edit',
+		'action_add' => 'Add new storage',
+		'table_state' => 'State',
+		'table_id' => 'Id',
+		'table_name' => 'Name',
+		'table_type' => 'Type',
+		'table_resource' => 'Resource',
+		'table_deployment' => 'Deployment',
+		'lang_filter' => 'Filter by Disk type',
+		'please_wait' => 'Loading. Please wait ..',
+	),
+	'addawsfile' => array (
+		'tab' => 'Add AWS Bucket (S3)',
+		'label' => 'Add AWS Bucket (S3)',
+		'action_remove' => 'remove',
+		'action_mgmt' => 'manage',
+		'action_edit' => 'edit',
+		'action_add' => 'Add new storage',
+		'table_state' => 'State',
+		'table_id' => 'Id',
+		'table_name' => 'Name',
+		'table_type' => 'Type',
+		'table_resource' => 'Resource',
+		'table_deployment' => 'Deployment',
+		'lang_filter' => 'Filter by Disk type',
+		'please_wait' => 'Loading. Please wait ..',
+		'aws_file_name' => 'Select file to upload'
 	),
 	'add' => array (
 		'label' => 'Add Storage',
@@ -124,6 +172,76 @@ var $lang = array(
 		$this->lang     = $this->user->translate($this->lang, $this->rootdir."/server/storage/lang", 'storage.ini');
 //		$response->html->debug();
 
+		if(isset($_GET) && $_GET['scandevice'] == 'yes'){
+			$hostList = shell_exec('python '.$this->rootdir.'/server/storage/script/scand.py');
+			$hostListData = json_decode($hostList, true);
+			$count = 1; $html_information = "";
+			foreach($hostListData as $k => $v){
+				$temp = explode(":", $v);
+				if($_GET['key'] != '') {
+					if (strpos($temp[0], $_GET['key']) !== false) {
+						$html_information .= "<div id='hd-".$count."' class='disk disk-".$count."'>
+						<p><i class='fa fa-server fa-sm'></i></span>
+						<span id='ip-header'>" . str_replace($_GET['key'], "<b>" . $_GET['key'] . "</b>", $temp[0]) . "</span> / Status: " . $temp[1] . " </p>
+						<div id='hdd-".$count."' class='disk-hd'><p>Disks available on this host:</p></div>
+						</div>";
+						$count++;
+					}
+				} else {
+					$html_information .= "<div id='hd-".$count."' class='disk disk-".$count."'>
+					<p><i class='fa fa-server fa-sm'></i></span>
+					<span id='ip-header'>" . $temp[0] . "</span> / Status: " . $temp[1] . " </p>
+					<div id='hdd-".$count."' class='disk-hd'><p>Disks available on this host:</p></div>
+					</div>";
+					$count++;
+				}
+			}
+			if($count == 1) {
+				$html_information = "<div class='disk'>No host found with the keyword <i>" . $_GET['key'] . "</i></disk>";
+			}
+			echo $html_information; exit();
+		}
+		
+		if(isset($_GET) && $_GET['scandisk'] == 'yes') {
+			$server     = new htvcenter_server();
+			$IP_ADDRESS = $_GET['ipaddress'];
+			$disk_info_dump = shell_exec('python '.$this->rootdir.'/server/storage/script/scandrive.py '.$IP_ADDRESS);
+			$disk_info = json_decode($disk_info_dump, true);	
+			$data = ""; $count = 1;
+			foreach($disk_info as $k => $v){
+				$temp = explode("/", $v);
+				if($temp[1] != "") {
+					$data .= "<p class='disk-bullet'><i class='fa fa-minus-circle fa-sm' aria-hidden='true'></i>" . $v . "</p>";
+				} else {
+					$t = explode(" ", $temp[0]);
+					$data .= "<p class='disk-bullet' data='".$IP_ADDRESS."' id='disk-bullet-".$count."'><i class='fa fa-plus-circle fa-sm' aria-hidden='true'></i>" . $v . "</p>";
+				}
+				$count++;
+			}
+			if(empty($data)) {
+				$data = "<p>No disk information available on this host.</p>";
+			}
+			echo "<div class='storage-info'>" . $data . "</div>"; exit();
+		}
+		
+		if(isset($_GET) && $_GET['mountdisk'] == 'yes') {
+			$server     = new htvcenter_server();
+			$htvcenter_SERVER_IP_ADDRESS = $server->get_ip_address();
+			$IP_ADDRESS = $_GET['ipaddress'];
+			$disk_name = str_replace("!", "/", $_GET['disk']);
+			//$disk_mount = $output = exec("./".$this->rootdir."/server/storage/script/chunk_disk_integration ".$IP_ADDRESS." htbase htbase ".$disk_name);
+			$disk_info_dump = shell_exec('python '.$this->rootdir.'/server/storage/script/mountdisk.py '.$IP_ADDRESS.' htbase htbase '.$disk_name.' '.$htvcenter_SERVER_IP_ADDRESS);
+			$disk_info = json_decode($disk_info_dump, true);
+			foreach($disk_info as $k => $v){
+				$data .= $v;
+			}
+			if(empty($data)) {
+				$data = "<p>Could not mount the disk properly. Contact the administrator for help.</p>";
+			} else {
+				$data = "<p><i><b>" . $disk_name . "</b></i> has been mounted on MFS. </p>";
+			}
+			echo $data; exit();
+		}
 	}
 
 	//--------------------------------------------
@@ -172,6 +290,18 @@ var $lang = array(
 			case '':
 			case 'select':
 				$content[] = $this->select(true);
+			break;
+			case 'diskadd':
+				$content[]  = $this->select(false);
+				$content[]  = $this->diskadd(true);
+			break;
+			case 'memoryadd':
+				$content[]  = $this->select(false);
+				$content[]  = $this->memoryadd(true);
+			break;
+			case 'addawsfile':
+				$content[]  = $this->select(false);
+				$content[]  = $this->addawsfile(true);
 			break;
 			case 'add':
 				$content[] = $this->select(false);
@@ -240,6 +370,109 @@ var $lang = array(
 		$content['request'] = $this->response->get_array($this->actions_name, 'select' );
 		$content['onclick'] = false;
 		if($this->action === 'select'){
+			$content['active']  = true;
+		}
+		return $content;
+	}
+	
+	//--------------------------------------------
+	/**
+	 * Add a new disk
+	 *
+	 * @access public
+	 * @param bool $hidden
+	 * @return array
+	 */
+	//--------------------------------------------
+	
+	function diskadd( $hidden = true ) {
+		$data = '';
+		if( $hidden === true ) {
+			require_once($this->rootdir.'/server/storage/class/storage.diskadd.class.php');
+			$controller = new storage_diskadd($this->htvcenter, $this->response);
+			$controller->actions_name    = $this->actions_name;
+			$controller->tpldir          = $this->tpldir;
+			$controller->message_param   = $this->message_param;
+			$controller->identifier_name = $this->identifier_name;
+			$controller->lang            = $this->lang['diskadd'];
+			$data = $controller->action();
+		}
+		
+		$content['label']   = $this->lang['diskadd']['tab'];
+		$content['value']   = $data;
+		$content['target']  = $this->response->html->thisfile;
+		$content['request'] = $this->response->get_array($this->actions_name, 'diskadd' );
+		$content['onclick'] = false;
+		if($this->action === 'diskadd'){
+			$content['active']  = true;
+		}
+		return $content;
+	}
+	
+	//--------------------------------------------
+	/**
+	 * Add memory as disk storage
+	 *
+	 * @access public
+	 * @param bool $hidden
+	 * @return array
+	 */
+	//--------------------------------------------
+	
+	function memoryadd( $hidden = true ) {
+		$data = '';
+		if( $hidden === true ) {
+			require_once($this->rootdir.'/server/storage/class/storage.memoryadd.class.php');
+			$controller = new storage_memoryadd($this->htvcenter, $this->response);
+			$controller->actions_name    = $this->actions_name;
+			$controller->tpldir          = $this->tpldir;
+			$controller->message_param   = $this->message_param;
+			$controller->identifier_name = $this->identifier_name;
+			$controller->lang            = $this->lang['memoryadd'];
+			$data = $controller->action();
+		}
+		
+		$content['label']   = $this->lang['memoryadd']['tab'];
+		$content['value']   = $data;
+		$content['target']  = $this->response->html->thisfile;
+		$content['request'] = $this->response->get_array($this->actions_name, 'memoryadd' );
+		$content['onclick'] = false;
+		if($this->action === 'memoryadd'){
+			$content['active']  = true;
+		}
+		return $content;
+	}
+	
+	//--------------------------------------------
+	/**
+	 * Add an AWS Storage (S3)
+	 *
+	 * @access public
+	 * @param bool $hidden
+	 * @return array
+	 */
+	//--------------------------------------------
+	
+	function addawsfile( $hidden = true ) {
+		$data = '';
+		if( $hidden === true ) {
+			require_once($this->rootdir.'/server/storage/class/storage.addawsfile.class.php');
+			$controller = new addawsfile($this->htvcenter, $this->response);
+			$controller->actions_name    = $this->actions_name;
+			$controller->tpldir          = $this->tpldir;
+			$controller->message_param   = $this->message_param;
+			$controller->identifier_name = $this->identifier_name;
+			$controller->lang            = $this->lang['addawsfile'];
+			$controller->rootdir         = $this->rootdir;
+			$controller->prefix_tab      = $this->prefix_tab;
+			$data = $controller->action();
+		}
+		$content['label']   = $this->lang['addawsfile']['label'];
+		$content['value']   = $data;
+		$content['target']  = $this->response->html->thisfile;
+		$content['request'] = $this->response->get_array($this->actions_name, 'addawsfile' );
+		$content['onclick'] = false;
+		if($this->action === 'addawsfile' || $this->action === $this->lang['select']['action_add']){
 			$content['active']  = true;
 		}
 		return $content;

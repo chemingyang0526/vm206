@@ -266,7 +266,18 @@ if (priceold !=0 || pricethis != 0) {
 
 
 }
-    </script>                         
+
+
+var realResize = false;
+setTimeout(function() { realResize = true; }, 500);
+
+$(window).on('resize', function () {
+    if(realResize){
+		$("#container #aside-container").css('display', 'none');
+	}
+});
+
+</script>                         
 
 
 

@@ -80,7 +80,7 @@ else
 		exit -1
 	fi
 	echo "NOTICE: Found phys. interface mac adress $PHYS_MAC belongs to br0!" | logger
-	PHYS_NIC=`ifconfig -a | grep -i $PHYS_MAC | grep bond | awk '{ print $1 }' | head -n1`
+	PHYS_NIC=`ifconfig -a | grep -i $PHYS_MAC   | awk '{ print $1 }' | head -n1`
 	if [ "$PHYS_NIC" == "" ]; then
 		echo "ERROR: Could not find the phys. interface of br0!" | logger
 		exit -1
@@ -100,7 +100,7 @@ else
 		echo "NOTICE: adding bridge brvlan$VLAN_ID" | logger
 		brctl addbr brvlan$VLAN_ID
 		# add vlan interface to bridge
-		echo "NOTICE: adding bond0.$VLAN_ID to brvlan$VLAN_ID" | logger
+		echo "NOTICE: adding br0.$VLAN_ID to brvlan$VLAN_ID" | logger
 		brctl addif brvlan$VLAN_ID $PHYS_NIC.$VLAN_ID
 		# enable stp
 		brctl stp brvlan$VLAN_ID on

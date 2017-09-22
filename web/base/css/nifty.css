@@ -441,10 +441,10 @@ h6,
 }
 .brand-icon {
      display: block !important;
-    float: left;
+    /*float: left;
     margin-left: 10px;
     margin-top: 5px;
-    width: 150px;
+    width: 150px;*/
     z-index: 9999999;
 }
 .brand-text {
@@ -950,8 +950,8 @@ h6,
     opacity: 0;
   }
   #container.mainnav-sm .brand-icon {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     margin: 0 5px;
     transform: translateY(5px);
   }
@@ -998,8 +998,10 @@ h6,
     width: 50px;
     left: 0;
   }
+  
   #container.mainnav-sm #navbar .navbar-content {
     margin-left: 50px;
+	height: 50px;
   }
   #container.mainnav-sm #content-container,
   #container.mainnav-sm #footer {
@@ -1461,6 +1463,13 @@ h6,
     text-align: left;
   }
 }
+
+@media (max-width: 992px) {
+	#container #aside-container {
+		display: none;
+	}
+}
+
 @media (min-width: 768px) {
   #aside {
     max-height: none;
@@ -1479,7 +1488,6 @@ h6,
     width: 220px;
     height: auto;
     left: auto;
-   
     top: 0;
     bottom: 0;
     min-height: 100vh;
@@ -2518,6 +2526,9 @@ a.disabled-link:hover {
   border-right-color: #f7f7f7;
 }
 @media (min-width: 768px) {
+    div.data-center-load {
+  	  width: 75%;
+    }
   .two-column.timeline {
     text-align: center;
   }
@@ -2703,6 +2714,9 @@ a.disabled-link:hover {
     overflow: hidden;
     margin: 0 20px 0 0;
   }
+  div.data-center-load {
+	  width: 75%;
+  }
 }
 @media (min-width: 470px) {
   .mail-star {
@@ -2718,6 +2732,21 @@ a.disabled-link:hover {
     display: block;
     padding-right: 50px;
   }
+  
+}
+
+@media (max-width: 767px) {
+    .serverpanel{
+  	  margin-top: 50px;
+    }
+	.botpanel {
+		margin: 3px 2% !important;
+		width: 96% !important; 
+	}
+	.allvmmain {
+		width: 50% !important;
+		margin: 25px auto;
+	}
 }
 /* MAIL ICON - (REQUIRE FONTAWESOME) */
 /*======================================*/
@@ -3107,6 +3136,15 @@ a.disabled-link:hover {
   background-color: #85898c;
   color: #ffffff;
 }
+
+div.text-center .bootstrap-select>.btn{
+    width: 70%;
+    font-size:10px;
+  }
+  div.text-center {
+    padding:0;
+  }
+
 /* Floating */
 /*======================================*/
 #floating-top-right {
@@ -3129,10 +3167,27 @@ a.disabled-link:hover {
 #floating-top-right .alert-wrap:hover {
   opacity: 1;
 }
+
 @media (min-width: 768px) {
   #floating-top-right {
     left: auto;
     max-width: 727px;
+  }
+  div.vm-summary-chart {
+	  width: 45%;
+  }
+  div.vm-summary-legend {
+	  width: 4%;
+  }
+  div.networkpie{
+	  padding: 0;
+  }
+  div.text-center .bootstrap-select>.btn{
+	  width: 70%;
+	  font-size:8px;
+  }
+  div.text-center {
+	  padding:0;
   }
 }
 @media (min-width: 992px) {
@@ -3140,11 +3195,25 @@ a.disabled-link:hover {
     left: auto;
     max-width: 50%;
   }
+  div.networkpie{
+	  padding: 0;
+  }
+  div.text-center .bootstrap-select>.btn{
+	  width: 80%;
+	  font-size:10px;
+  }
+  div.text-center {
+	  padding:0 0 0 5px;
+  }
 }
 @media (min-width: 1200px) {
   #floating-top-right {
     left: auto;
     max-width: 35%;
+  }
+  div.text-center .bootstrap-select>.btn{
+    width: 90%;
+    font-size:10px;
   }
 }
 /*!	Animate.css - http://daneden.me/animate - Licensed under the MIT license - http://opensource.org/licenses/MIT -	Copyright (c) 2014 Daniel Eden	*/
@@ -5239,6 +5308,11 @@ a.list-group-item-dark:focus {
 }
 /* TAB */
 /*======================================*/
+
+#aa_plugins_tab0 .nav-tabs li a{
+	text-transform: capitalize;
+}
+
 .tab-base {
   margin-bottom: 35px;
 }
@@ -6137,7 +6211,7 @@ a.text-dark:focus {
 .panel-title, h2.dash, h3.dash, h2.litli, legend {
   font-weight: 300;
   padding: 0 20px 0 20px;
-  font-size: 1.416em;
+  font-size: 1.5vw;
   line-height: 50px;
   white-space: nowrap;
   overflow: hidden;

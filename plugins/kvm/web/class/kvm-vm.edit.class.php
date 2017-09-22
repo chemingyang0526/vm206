@@ -274,7 +274,9 @@ var $lang = array();
 						$data  = '<b>'.$this->lang['table_id'].'</b>: '.$resource->id.'<br>';
 						$data .= '<b>'.$this->lang['table_name'].'</b>: <span class="kvmkvmname">'.$name.'</span><br>';
 						$data .= '<b>'.$this->lang['table_type'].'</b>: '.$res_virtualization->name.'<br>';
-						$data .= '<b>'.$this->lang['table_ip'].'</b>: '.$resource->ip.'<br>';
+						if($resource->ip !== '8.8.8.8'){
+							$data .= '<b>'.$this->lang['table_ip'].'</b>: '.$resource->ip.'<br>';
+						}
 						$data .= '<b>'.$this->lang['table_mac'].'</b>: <span class="kvmkvmmac">'.$mac.'</span><br>';
 						$data .= '<b>'.$this->lang['table_vnc'].'</b>: '.$line[5].'<br>';
 						$data .= '<b>'.$this->lang['table_cpu'].'</b>: '.$line[3].'<br>';

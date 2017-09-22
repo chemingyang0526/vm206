@@ -887,7 +887,7 @@ Both of the above methods will produce the same results.
 				var cl = $(this);
 				if (cl.hasClass('in')){
 					cl.parent('li').addClass('active');
-				}else{
+				} else {
 					cl.parent('li').removeClass('active');
 				}
 			});
@@ -1091,7 +1091,20 @@ Both of the above methods will produce the same results.
 			toggleBtn.on('click', function(e){
 
 				e.preventDefault();
-				$('.brand-icon').toggleClass('smallogoview');
+				
+				//$('.brand-icon').toggleClass('smallogoview');
+				
+				/* Logo size fix after resizing screen. Replacing previous line of code with the below code block */
+				
+				$('.brand-icon').on('click', function(e){
+					if($('.brand-icon').hasClass('smallogoview')) {
+						$('.brand-icon').removeClass('smallogoview');
+					} else {
+						$('.brand-icon').addClass('smallogoview');
+					}
+				});
+				
+				
 
 				if ($('#mainnav-container').width() != 50) {
 	     			$("#mainnav-container .nicescroll-cursors").hide();
@@ -1119,15 +1132,23 @@ Both of the above methods will produce the same results.
 		)}
 
 		var menu = $('#mainnav-menu');
+		
 		if (menu.length) {
 			// COLLAPSIBLE MENU LIST
 			// =================================================================
 			// Require MetisMenu
 			// http://demo.onokumus.com/metisMenu/
 			// =================================================================
-			$('#mainnav-menu').metisMenu({
-				toggle: true,
-				doubleTapToGo: false
+			
+			//Initialize the Plugin before any click event takes place.
+			$("#mainnav-menu").find("li").find("ul").collapse({toggle: false});
+			
+			$("#mainnav-menu").metisMenu({
+				toggle: false,
+				doubleTapToGo: false,
+				collapseInClass: 'in',
+				collapseClass: 'collapse',
+				preventDefault: true
 			});
 
 			// STYLEABLE SCROLLBARS

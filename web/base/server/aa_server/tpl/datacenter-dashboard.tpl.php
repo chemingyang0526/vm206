@@ -22,19 +22,15 @@ var lang_inventory_storages = "{lang_inventory_storages}";
 
 
 $(document).ready(function(){
-var flagmain = true;
-var sizes = ["{mempercent}%", "{swappercent}%", "{hddpercent}%"];
-var esxstorages = "{esxstoragespercent}";
-
-
+	var flagmain = true;
+	var sizes = ["{mempercent}%", "{swappercent}%", "{hddpercent}%"];
+	var esxstorages = "{esxstoragespercent}";
 	// index page actions:	
 	if (flagmain == true) {
-
-
 		 $('.progress-bar').each(function(i) {
 		 	i.target.css('width', sizes[i]);
+			//$(this).css('width', sizes[i]);
 		 });
-
 		// --- end progress animation ---
 	}
 });
@@ -316,16 +312,18 @@ if (priceold !=0 || pricethis != 0) {
 
 
 }
-    </script>                         
+</script>                         
 
 
 
 
 <div id="prenutanix">
 <div class="row">
+	
 	<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
 		<div class="panel serverpanel">
-			<h2 class="dash"><i class="fa fa-server"></i> HyperTask Server</h2>
+			<h2 class="dash"><i class="fa fa-server"></i> Maestro Server</h2>
+			
 			<div class="iron-place" id="devicearea">
 				<h2 class="litli"><i class="fa fa-cogs"></i> CPU & memory:</h2>
 				<ul class="storage-list">
@@ -361,7 +359,7 @@ if (priceold !=0 || pricethis != 0) {
 						var okchart = 'okkk';
 					</script>
 
-					<h2 class="dash"><i class="fa fa-signal"></i> HyperTask Network:</h2>
+					<h2 class="dash"><i class="fa fa-signal"></i> Maestro Network:</h2>
 					<div id="networkarea">
 					<div class="row">
 					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 networkpie">
@@ -371,8 +369,8 @@ if (priceold !=0 || pricethis != 0) {
 					<div id="sparklineinfo">
 						<div class="donut-chart-legend">
 							<ul>
-								<li><div class="legend-tile" style="background:#2d4859"></div>Physical ({physcount})</li>
-								<li><div class="legend-tile" style="background:#fe7211"></div>Bridge ({bridgecount})</li>
+								<li><div class="legend-tile" style="background:#2d4859"><span>Physical ({physcount})</span></div></li>
+								<li><div class="legend-tile" style="background:#fe7211"><span>Bridge ({bridgecount})</span></div></li>
 							</ul>
 						</div>
 					</div>
@@ -383,7 +381,7 @@ if (priceold !=0 || pricethis != 0) {
 			
 		</div>
 		<div class="panel storagespanel">
-			<h2 class="dash"><i class="fa fa-hdd-o"></i> HyperTask Storage</h2>
+			<h2 class="dash"><i class="fa fa-hdd-o"></i> Maestro Storage</h2>
 			<div id="storageareas">
 					
 				<div class="onestorage">
@@ -415,17 +413,17 @@ if (priceold !=0 || pricethis != 0) {
 			</div>
 		</div>
 	</div>
-	<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
-	<div class="panel" style="display:none">
+	
+	<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3" style="display:none;">
+		<div class="panel" style="display:none;">
+			<!-- Start: Quicklink section -->
+			<!--
+				{quicklinks_headline}
+				{quicklinks}
+			//-->
 		
-		<!-- Start: Quicklink section -->
-<!--
-		{quicklinks_headline}
-		{quicklinks}
-//-->
-		
-		<!-- Start: Datacenter load current -->		
-		<h2 class="dash">
+			<!-- Start: Datacenter load current -->		
+			<h2 class="dash">
 			{load_headline}
 			<small>{load_current}</small>
 			<!--
@@ -435,8 +433,8 @@ if (priceold !=0 || pricethis != 0) {
 				</a>
 			</span>
 			-->
-		</h2>
-		<table class="table">
+			</h2>
+			<table class="table">
 			<tr>
 				<td class="width0">{datacenter_load_overall}</td>
 				<td>
@@ -471,15 +469,10 @@ if (priceold !=0 || pricethis != 0) {
 				</td>
 			</tr>
 		</table>
+		</div>
 	</div>
 
-	
-
-
-	</div>
-
-
-		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-9">
+	<div class="col-xs-12 col-sm-6 col-md-6 col-lg-9 data-center-load">
 
 							<!--Network Line Chart-->
 							<!--===================================================-->
@@ -575,9 +568,7 @@ if (priceold !=0 || pricethis != 0) {
 							<!--End network line chart-->
 					
 		</div>
-
-
-			<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+	<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
 		<!--List Todo-->	
 
 
@@ -599,21 +590,8 @@ if (priceold !=0 || pricethis != 0) {
                                             </div>
     										
     										<div class="col-xs-4 col-sm-4 col-lg-4 col-md-4 text-center">
-    										<select id="reportmonthdashmain" class="shorto " >
-                                                            <option value="0">January</option>
-                                                            <option value="1">February</option>
-                                                            <option value="2">March</option>
-                                                            <option value="3">April</option>
-                                                            <option value="4">May</option>
-                                                            <option value="5">June</option>
-                                                            <option value="6">July</option>
-                                                            <option value="7">August</option>
-                                                            <option value="8">September</option>
-                                                            <option value="9">October</option>
-                                                            <option value="10">November</option>
-                                                            <option value="11">December</option>
-                                                            
-                                                        </select>
+    										<select id="reportmonthdashmain" class="shorto " ><option value="0">January</option><option value="1">February</option><option value="2">March</option><option value="3">April</option><option value="4">May</option><option value="5">June</option><option value="6">July</option><option value="7">August</option><option value="8">September</option><option value="9">October</option><option value="10">November</option><option value="11">December</option>
+                                                          </select>
                                              </div>
                                              <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4 text-center">
                                                      <select id="reportyeardashmain" class="shorto">{reportyear}</select>
@@ -698,14 +676,19 @@ if (priceold !=0 || pricethis != 0) {
 
 	</div>
 </div>
-<div class="row">
+
+<!-- Datacenter Summary Div -->
+
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 botpanel">
 	<div class="panel">	
 		<!-- Start: Inventory overview -->
 		<h2 class="dash">Datacenter Summary</h2>
 		<div class="row">
-			<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 withchart">
-				<h3 class="dash">Hosts:</h3>
+			
+			
+			
+				<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 withchart">
+					<h3 class="dash">Hosts:</h3>
 				
 					<div id="chartdiv-inventory-server">
 					<div class="no-data-available">
@@ -714,48 +697,37 @@ if (priceold !=0 || pricethis != 0) {
 					</div>
 					</div>
 					<div style="height: 220px; display:none" id="server-donut"></div>
-			</div>
-
-			<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 withlegend">
-				<div id="chartdiv-inventory-server-legend" class="donut-chart-legend"></div>
-				
-			</div>
-
-			<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 withchart">
-				
-				
-					<div class="panel panel-bordered-primary allvmmain">
-					<div class="panel-heading">
-					<h3 class="panel-title">VM Summary </h3>
-					
 				</div>
-					<div class="panel-body">
-					
-					
-					<div class="row">
-					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-						<div class="esxileft">
-							<b>{allvmcount}</b> <br>
-							<span>VMs</span>
+
+				<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 withlegend">
+					<div id="chartdiv-inventory-server-legend" class="donut-chart-legend"></div>	
+				</div>
+			
+				
+				<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 withchart vm-summary-chart">
+					<div class="panel panel-bordered-primary allvmmain">
+						<div class="panel-heading"><h3 class="panel-title">VM Summary </h3></div>
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+									<div class="esxileft"><b>{allvmcount}</b> <br><span>VMs</span></div>
+								</div>
+								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 esxiright">
+									<div class="vmsside">
+										<span class="roundbullet greenbullet"></span><b>{activeallvm}</b> active<br>
+										<a href="index.php?report=report_inactive"><span class="roundbullet yellowbullet"></span><b>{inactiveallvm}</b> inactive</a><br>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
-					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 esxiright">
-						<div class="vmsside">
-							<span class="roundbullet greenbullet"></span><b>{activeallvm}</b> active<br>
-							<a href="index.php?report=report_inactive"><span class="roundbullet yellowbullet"></span><b>{inactiveallvm}</b> inactive</a><br>
-							
-							
-						</div>
-					</div>
-					</div>
-					</div>
-		</div>
-			</div>
+				</div>
 
-			<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 withlegend">
-				<div id="chartdiv-inventory-server-storage" class="donut-chart-legend"></div>
-			</div>
+				<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 withlegend vm-summary-legend">
+					<div id="chartdiv-inventory-server-storage" class="donut-chart-legend"></div>
+				</div>
 
+			
 		</div>
 			
 	</div>
@@ -764,7 +736,8 @@ if (priceold !=0 || pricethis != 0) {
 									
 	</div>
 
-</div>
+<!-- Datacenter Summary Div Ends -->
+
 </div>
 
 <div id="nutanix">

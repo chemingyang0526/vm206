@@ -148,7 +148,7 @@ var $lang = array();
 		$servers = $appliance->display_overview_per_virtualization($virtualization->id, $table->offset, $table->limit, $table->sort, $table->order);
 
 		if(count($servers) >= 1) {
-			foreach($servers as $k => $v) {
+			foreach($servers as $k => $v) { if($v['appliance_name'] != "htvcenter") {
 				$resource->get_instance_by_id($v["appliance_resources"]);
 				$state_icon = '<div class="widget-header "></div>';
 
@@ -245,7 +245,7 @@ var $lang = array();
 						//'comment' => $v['appliance_comment'].'<hr>'.$plugins,
 						//'action' => $links,
 					);
-				//}
+			}
 			}
 
 			$h['state']['title'] ='&#160;';
@@ -292,3 +292,5 @@ var $lang = array();
 
 }
 ?>
+
+

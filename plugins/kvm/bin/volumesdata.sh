@@ -109,13 +109,13 @@ sudo rm -rf /var/www/html/${vmname}_volume_data
 				else
 					echo "<tr class=\"content\" num=\"$i\"><td> no volume</td><td><a class='voladd'><i class=\"fa fa-plus\"></i> Add volume</a></td></tr>" >> /var/www/html/${vmname}_volume_data;
 				fi        
-       exit 1;
 fi
 
 if [ "$action" == 'remove' ]; then
 	numeo=$(($num - 2)) 
 	rm -rf /var/lib/kvm/storage1/${vmname}vol$numeo
 	rm -rf /var/lib/kvm/htvcenter/$vmname/disk$num
+	rm -rf /usr/share/htvcenter/storage/${vmname}vol$numeo
 	echo "KVM_VM_DISK_$num=\"\"" >> /var/lib/kvm/htvcenter/$vmname/disk$num
 	echo "KVM_VM_DISK_SIZE_$num=\"\"" >> /var/lib/kvm/htvcenter/$vmname/disk$num
 fi
@@ -124,9 +124,7 @@ if [ "$action" == 'add' ]; then
 	numeo=$(($num - 2))
 	volname=${vmname}vol$numeo
 	rm -rf /var/lib/kvm/htvcenter/$vmname/disk$num
+#	echo "KVM_VM_DISK_$num=\"$volname\"" >> /var/lib/kvm/htvcenter/$vmname/disk$num
 	echo "KVM_VM_DISK_$num=\"/usr/share/htvcenter/storage/$volname\"" >> /var/lib/kvm/htvcenter/$vmname/disk$num
 	echo "KVM_VM_DISK_SIZE_$num=\"$sizevol\"" >> /var/lib/kvm/htvcenter/$vmname/disk$num
 fi
-
-
-

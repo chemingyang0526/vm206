@@ -365,15 +365,13 @@
 
 						<!--Language selector-->
 						<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-						<li class="dropdown">
+						<!-- <li class="dropdown">
 							<a id="demo-lang-switch" class="lang-selector dropdown-toggle" href="#" data-toggle="dropdown">
 								
 							</a>
 
-							<!--Language selector menu-->
 							<ul class="head-list dropdown-menu with-arrow langselectoul">
 								<li>
-									<!--English-->
 									<a href="#" >
 										<img class="lang-flag" src="img/flags/united-kingdom.png" alt="English">
 										<span class="lang-id">EN</span>
@@ -382,7 +380,7 @@
 								</li>
 							
 								<li>
-									<!--Germany-->
+
 									<a href="#" >
 										<img class="lang-flag" src="img/flags/germany.png" alt="Germany">
 										<span class="lang-id">DE</span>
@@ -391,7 +389,6 @@
 								</li>
 							
 								<li>
-									<!--Spain-->
 									<a href="#">
 										<img class="lang-flag" src="img/flags/spain.png" alt="Spain">
 										<span class="lang-id">ES</span>
@@ -399,7 +396,7 @@
 									</a>
 								</li>
 							</ul>
-						</li>
+						</li> -->
 						<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 						<!--End language selector-->
 
@@ -462,13 +459,13 @@
 									<div class="modal-content">
 										<div class="modal-header">
 											<button type="button" data-dismiss="modal" class="close"><span>×</span><span class="sr-only">Close</span></button>
-											<h4 class="modal-title">About HyperTask</h4>
+											<h4 class="modal-title">About Maestro</h4>
 										</div>
 					
 										<div class="modal-body">
 											<img id="aboutimglogo" class="img-center" src="/htvcenter/base/img/logo.png"/><br/>
-        <p>HyperTask is developed by HTBase Corp.<br/><br/>
-This source code is released under the HyperTask Server and Client License unless otherwise agreed with HTBase Corp. By using this software, you acknowledge having read this license and agree to be bound thereby.</p>
+        <p>Maestro is developed by HTBase Corp.<br/><br/>
+This source code is released under the Maestro Server and Client License unless otherwise agreed with HTBase Corp. By using this software, you acknowledge having read this license and agree to be bound thereby.</p>
       
 										</div>
 					
