@@ -8,7 +8,9 @@ plugins/collectd/*
 plugins/dhcpd/*
 plugins/dns/*
 plugins/local-server/*
+web/base/plugins/*
 web/base/designplugins/*
+web/base/server/storage/*
 plugins/kvm/web/kvm-stat/*
 .DS_Store
 web/action/*
