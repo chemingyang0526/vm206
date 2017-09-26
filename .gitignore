@@ -2,7 +2,12 @@
 *.rrd
 *.tgz
 *.bak
+*.jar
 logs/*
+plugins/cloud/cloud-fortis/web/novncjs/*
+plugins/hybrid-cloud/web/*
+storage/
+tftpboot/pxelinux.cfg/*
 plugins/chatbot/*
 plugins/collectd/*
 plugins/dhcpd/*
@@ -11,6 +16,7 @@ plugins/local-server/*
 web/base/plugins/*
 web/base/designplugins/*
 web/base/server/storage/*
+web/boot-service/*
 plugins/kvm/web/kvm-stat/*
 .DS_Store
 web/action/*
