@@ -8,3 +8,4 @@ plugins/dhcpd/*
 plugins/dns/*
 plugins/local-server/*
 plugins/kvm/web/kvm-stat/*
+.DS_Store
