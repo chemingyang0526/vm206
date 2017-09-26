@@ -20,3 +20,5 @@ web/boot-service/*
 plugins/kvm/web/kvm-stat/*
 .DS_Store
 web/action/*
+diff
+diff-full
