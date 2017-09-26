@@ -1153,19 +1153,14 @@ function newTreeMenu(
 				}
 
 
-				if ( $this->tree[$cnt]['parsed_href'] == 'index.php?plugin=hyperv&controller=hyperv-about
-') {
+				if ( $this->tree[$cnt]['parsed_href'] == 'index.php?plugin=hyperv&controller=hyperv-about') {
 						$skip = 1;
 				}
-
-
 
 				if ( $this->tree[$cnt]['parsed_href'] == 'index.php?plugin=collectd&collectd_about_action=bootservice&controller=collectd-about') {
 						$skip = 1;
 				}
 
-				
-				
 
 				if ( $this->tree[$cnt]['parsed_href'] == 'index.php?plugin=tftpd&controller=tftpd-about') {
 						$skip = 1;
@@ -1181,6 +1176,10 @@ function newTreeMenu(
 
 				if ( $this->tree[$cnt]['parsed_href'] == 'index.php?plugin=cloud&controller=cloud-mail') {
 						$addclass = 'mailmenulink';
+				}
+				
+				if ( $this->tree[$cnt]['parsed_href'] == 'index.php?plugin=role-administration&controller=role-administration-about') {
+						$addclass = 'role-admin-about';
 				}
 
 				if ( $this->tree[$cnt]['parsed_href'] == 'index.php?plugin=sshterm&controller=sshterm-about') {
@@ -1300,6 +1299,7 @@ function newTreeMenu(
 			//unset($son);
 			// vertical lines from higher levels
 			for ($i=0; $i<$this->tree[$cnt]['level']-1; $i++) {
+				$subn = '';
 				if ($levels[$i] == 1) {
 					$img = $img_vertline;
 					$alt = $alt_vertline;
@@ -1385,7 +1385,12 @@ function newTreeMenu(
 					case 'Cloud':
 						$faicon = 'fa-cloud';
 						$label = '';
-						$this->tree[$cnt]['text'] = 'Fortis';
+						$this->tree[$cnt]['text'] = 'Score';
+					break;
+					
+					case 'Clouds':
+						$faicon = 'fa-cloud';
+						$label = '';
 					break;
 
 					case 'NoVNC':
@@ -1432,6 +1437,12 @@ function newTreeMenu(
 					case 'Deployment':
 						$faicon = 'fa-cubes';
 						$label = '';
+					break;
+					
+					case 'Multi-Cloud':
+						$faicon = 'fa-cogs';
+						$label = '';
+						$this->tree[$cnt]['text'] = 'Multi Cloud';
 					break;
 
 

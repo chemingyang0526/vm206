@@ -20,6 +20,9 @@ if (!Array.prototype.map)
 
 $(document).ready(function(){
 	
+	console.log("running aa_server.js");
+
+
 	var seriesColors = ['#a6c600', '#177bbb', '#afd2f0', "#1fa67a",  "#ffd055", "#39aacb", "#cc6165", "#c2d5a0", "#579575", "#839557", "#958c12", "#953579", "#4b5de4", "#d8b83f", "#ff5800", "#0085cc"];
 			
 	// options for dummy donut charts
@@ -161,7 +164,7 @@ $(document).ready(function(){
 		var storage_values2 = [];
 		var deploment, deployment_list = [];
 		var hist = {};
-		console.log('here1');
+		//console.log('here1');
 		if(storage_list != false && $('#chartdiv-inventory-storage').length) {
 			console.log('here2');
 			try{
@@ -207,6 +210,8 @@ $(document).ready(function(){
 	 */
 	function updateLoadChart() {
 		var stats = htvcenter.get_datacenter_load();
+		//console.log("HTV");
+		//console.log(stats);
 		var dc_load = [[],[],[]];	
 		var xaxis_labels = []; 
 		var idx;
@@ -221,8 +226,9 @@ $(document).ready(function(){
 				dc_load[1].push( [idx, parseFloat(v['datacenter_load_server'] )] );
 				dc_load[2].push( [idx, parseFloat(v['datacenter_load_storage'] )] );
 			});
-		
-
+			
+		//console.log(dc_load[0]);
+			
 		if ( typeof(dc_load[0][59]) != 'undefined') {
 			var serverp = dc_load[1][59];
 			var storagep = dc_load[2][59];
@@ -310,6 +316,7 @@ $(document).ready(function(){
 
 		day_data.push({"elapsed": i, "value": first, "b":second});
 	}
+	
 	var chart = Morris.Area({
 		element: 'morris-chart-network',
 		data: day_data,
@@ -403,13 +410,13 @@ $(document).ready(function(){
 	
 	// Init refresh interval for datacenter load section and chart, 
 	// event list section
-	setInterval(function (){
+	// setInterval(function (){
 	
-		updateLoadChart();
-		updateLoadSection();
-		updateEventSection();
-		
-	}, 5000);
+	//	updateLoadChart();
+	//	updateLoadSection();
+	//	updateEventSection();
+	//	
+	// }, 5000);
 	
 	
 	// add refresh events to widget buttons

@@ -110,3 +110,7 @@
     -moz-box-shadow: 0 0 2px #F0EFE7;
     box-shadow: 0 0 2px #F0EFE7;
 }
+
+div.jcarousel ul#namespaces li div.panel div.panel-body {
+	padding-top: 20px;
+}

@@ -343,7 +343,7 @@ td.hyperv_pool_action a {
 }
 
 .shorto {
-     left: -4px;
+    left: -4px;
     position: relative;
     top: 28px;
     width: 70px !important;
@@ -1183,10 +1183,16 @@ h1.app {
 	min-width: 130px;
 }
 
-#showstoragesbtn, #showlizardbtn {
+#showlizardbtn {
 	cursor: pointer;
 	float: right;
 	margin-right: 40px;
+	width: 160px;
+}
+
+#showstoragesbtn {
+	cursor: pointer;
+	margin-right: 42px;
 	width: 160px;
 }
 
@@ -1628,20 +1634,20 @@ td.action {
 }
 
 .volumepopup3 {
-	top: 5% !important;
+	/*top: 5% !important;*/
 }
 
 .volumepopup3 textarea, .volumepopup4 textarea {
-	 border: 1px solid #e9e9e9;
+	border: 1px solid #e9e9e9;
     border-radius: 0;
     box-shadow: none;
-    float: right;
     font-size: 12px;
-    margin-bottom: -15px;
     padding: 6px;
     position: relative;
+	/*margin-bottom: -15px;
     top: -25px;
-    width: 420px !important;
+	float: right;
+    width: 420px !important;*/
 } 
 
 .volumepopup3 .bootstrap-select, .volumepopup4 .bootstrap-select {
@@ -1694,7 +1700,7 @@ td.kvm_identifier a {
 }
 
 .puppeto .left {
-	width: 400px !important;
+	/*width: 400px !important;*/
 }
 
 #cloud_usergroup_table a.edit {
@@ -1740,9 +1746,9 @@ td.kvm_identifier a {
 
 #step1 #comment_box textarea {
 	border: 1px solid #e9e9e9;
-    float: right;
-    margin-right: 69px;
-    width: 400px !important;
+    /*float: right;
+    margin-right: 69px;*/
+    width: 100% !important;
 }
 
 #integratepopupform h2 {
@@ -1824,12 +1830,82 @@ td.kvm_identifier a {
 }
 
 #volumepopup, #volumepopupvmf, #volumepopupwmware, #volumepopupmigr, #storageformkvm, #storageformkvmrem, #serverpopup, #volumepopupz, #volumepopuprem, #volumepopupzmail, #volumepopupnagios, #schedulerpopup, #trasherzconfirm, #trasherzconfirmhost, #poolservpopup, #schedulerconfirmpopup, #configpopup, #integratepopup, #volschedulerpopup, #volumepopupaddn {
-	width: 600px;
+	/*width: 600px;*/
+	width: 50%;
 	position: fixed;
-	top: 30%;
-	left: 30%;
+	top: 20%;
+	left: 25%;
 	display: none;
 	z-index: 999999999999 !important;
+}
+
+div#storageform div#form div.left,
+div#storageformaddn div#form div.left {
+	width: 30%;
+	float: left;
+	margin: 0;
+}
+
+div#storageform div#form div.left label,
+div#storageformaddn div#form div.left label {
+	width: 100%;
+}
+
+div#storageform div#form div.right,
+div#storageformaddn div#form div.right {
+	width: 69%;
+	float: left;
+	text-align: left;
+}
+
+div#storageformaddn div#form div#comment_box div.right {
+	width: 70%;
+	float: right;
+	text-align: left;
+}
+
+div#storageformaddn div#form div.right input[type="text"] {
+	width: 100%;
+	left: 0 !important;
+	margin-left: 0px;
+}
+
+div#storageform div#form div.right input[type="text"] {
+	width: 100%;
+	left: 0;
+}
+
+
+div#storageform div#form div.htmlobject_box,
+div#storageformaddn div#form div#name_box {
+	margin-bottom: 20px;
+}
+
+div#storageform div#form textarea {
+	margin: 0;
+	width: 100%;
+}
+
+div.puppeto div.left {
+	width: 50%;
+	float: left;
+	margin: 0;
+}
+
+div.puppeto div.right {
+	width: 49%;
+	float: left;
+	margin: 0;
+}
+
+div.puppeto div.htmlobject_box {
+	padding-bottom: 3px;
+	margin-bottom: 2px;
+	border-bottom: 1px dashed #ccc;
+}
+
+div#storageform div#form div.bootstrap-select{
+	left: 0;
 }
 
 #storageformz #buttons input {
@@ -1876,10 +1952,10 @@ td.kvm_identifier a {
 
 .longdialog #ip_mgmt_comment {
 	border: 1px solid #e9e9e9;
-	float: right;
 	width: 220px;
 	margin-right: 40px;
-    top: -35px;
+    /*top: -35px;
+	float: right;*/
     position: relative;
 }
 
@@ -2611,7 +2687,10 @@ td.pageturn_bottom, .pageturn_table , .pageturn_table td {
 }
 
 #desklbl {
-	min-width: 80px;
+	width: 20%;
+	display:block;
+	float: left;
+	margin: 0;
 }
 
 .resourceplan .btn {
@@ -2708,8 +2787,8 @@ input.namegenButton:hover, input.submit:hover {
 }
 
 #Tabelle, #cloud_users {
-	width: 95%;
-	margin-left: 20px;
+	width: 100%;
+	margin: auto;
 }
 
 #cloud_usergroup_name_box, #cloud_usergroup_description_box {
@@ -3689,8 +3768,8 @@ td.ha a {
 }
 
 .botpanel {
-	margin: 3px 15px !important;
-	width: 98% !important;
+	margin: 3px auto !important;
+	width: 100% !important;
 }
 
 .withchart {
@@ -3723,7 +3802,7 @@ td.ha a {
 }
 
 .aa_server h2.dash {
-	font-size: 20px !important;
+	font-size: 1.5vw !important;
 }
 
 .aa-server h3.dash {
@@ -3734,7 +3813,7 @@ td.ha a {
 
 .serverpanel .litli {
 	color: white !important;
-    font-size: 18px !important;
+    font-size: 1.25vw !important;
     height: 50px;
     margin-top: 19px !important;
     position: relative;
@@ -4321,11 +4400,21 @@ a.edit {
 
 #serverpanel {
 	width: 70% !important;
-	margin-left: 13%;
+	margin-left: 10px;
 }
 
-#menu1_4 {
-	display: none;
+div#btnsideee {
+	width: 28%;
+	float: right;
+	display: inline-block;
+	margin-top: 30px;
+	text-align: right;
+}
+
+#addnewdiskbtn{
+	cursor: pointer;
+	margin-right: 40px;
+	width: 160px;
 }
 
 #serverpanel .text-2x {
@@ -4351,7 +4440,7 @@ a.edit {
 }
 
 .storage_state {
-	width: 250px !important;
+	/*width: 250px !important;*/
 }
 
 .storage_state .appnamer {
@@ -4602,6 +4691,11 @@ a.edit {
 #resource_filter, #resource_type_filter {
 	position: relative;
 	left: 20px;
+}
+
+#Tabellerr div.sort_box input.refresh {
+	margin: 0px 0px 0px 0px;
+	top: -12px;
 }
 
 .borderchoose {
@@ -5020,11 +5114,20 @@ a.add:hover {
 	width: 200px;
 }
 
+div.head-tbl-data {
+	margin-bottom: 20px;
+}
+
 .head-tbl-data #events_filter .bootstrap-select {
 	position: relative;
 	top: 7px;
-	left: -115px;
-	width: 120px !important;
+	/*left: -115px;
+	width: 120px !important;*/
+	width: 60%;
+}
+
+.head-tbl-data #events_filter label {
+	width: 39%;
 }
 
 .head-tbl-data .pageturn_box {
@@ -5069,12 +5172,12 @@ div.lead {
 
 .head-tbl-data #events_filter {
 	float: left;
-	width: 400px;
+	width: 40%;
 }
 
 .head-tbl-data .pageturn_wrapper{
 	float: right;
-	width: 600px;
+	width: 59%;
 }
 #eventsSelectTable {
 	float: left;
@@ -5856,8 +5959,9 @@ td.description {
 
 .brand-icon {
 	width: auto !important;
-	margin-top: 8px !important;
-	margin-left: 50px !important;
+	/*margin-top: 8px !important;
+	margin-left: 50px !important;*/
+	margin: 8px auto 0 auto;
 }
 
 .smallogoview {
@@ -5901,7 +6005,7 @@ h2.dash {
 }
 
 .sizeroside b {
-	font-size: 12px !important;
+	font-size: .8vw !important;
 }
 
 .eventbox {
@@ -6109,7 +6213,6 @@ h2.dash {
 }
 
 #stvolumesbtn {
-	float: right;
     margin-right: 40px;
     margin-top: -20px;
     width: 160px;
@@ -6117,7 +6220,7 @@ h2.dash {
 
 
 #sparklineinfo {
-	 width: 120px;
+	width: 100%;
     position: relative;
     top: 58px;
     left: -30px;
@@ -6162,6 +6265,7 @@ h2.dash {
     position: relative;
     top: -31px;
     text-align: left !important;
+	font-size: 1vw;
 }
 
 .storage-list li {
@@ -6335,7 +6439,8 @@ tr.last .inalign {
 	left: 50px;
     position: relative;
     top: 50px;
-    width: 420px;
+    /* width: 420px; */
+	width: 98%; /* Set the with in % */
     left: 20px;
 }
 
@@ -6394,7 +6499,7 @@ span.error {
 }
 
 #storageareas .leftstorageblock {
-	font-size: 26px;
+	font-size: 1.25vw;
     left: 25px;
     position: relative;
     top: -3px;
@@ -6411,18 +6516,19 @@ span.error {
     position: relative;
     text-align: left;
     top: -8px;
-    width: 120px;
+    /* width: 120px; */
+	width: 42%;
     left: -15px;
+	font-size: 1vw;
 }
 
 #storageareas .esxileft b {
-	font-size: 26px;
+	font-size: 1.5vw;
 }
 
 
 .thetableee #requests_filter .selectpicker {
 	position: relative;
-	left: -100px;
 	top: 5px;
 }
 
@@ -6586,10 +6692,6 @@ span.error {
     left: -75px !important;
     width: 165px !important;
     }
-}
-
-.cloud #add_product .left {
-    width: 130px !important;
 }
 
 #cloud_selector_table td.description {
@@ -6780,3 +6882,4 @@ span.error {
 }
 
 
+/*  CSS Added to fix responsive behaviour */

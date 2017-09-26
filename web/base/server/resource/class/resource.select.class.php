@@ -278,21 +278,32 @@ var $lang = array();
 					$state_icon = '<span class="pill transition">transition</span>';
 					
 				}
-				if (($virtualization->type == 'kvm-vm-local') || ($virtualization->type == 'vmware-esx-vm-local') || ($virtualization->type == 'OCH-vm-local')  || ($virtualization->type == 'citrix-vm-local') || ($virtualization->type == 'hyperv-vm-local') || ($virtualization->type == 'xen-vm-local')) {
-					$a = $this->response->html->a();
-					$a->title = $this->lang['action_edit'].' IP';
-					$a->label = $resip;
-					$a->css   = 'edit editippopupo';
-					$a->href  = $this->response->get_url($this->actions_name, 'edit').'&resource_id='.$resid;
-					$resip = $a->get_string();
-				 }
+				
+				$ip_validity = preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\z/', $resip);
+				
+				if( $resip !== '0.0.0.0' && $ip_validity ){
+					if (($virtualization->type == 'kvm-vm-local') || ($virtualization->type == 'vmware-esx-vm-local') || ($virtualization->type == 'OCH-vm-local')  || ($virtualization->type == 'citrix-vm-local') || ($virtualization->type == 'hyperv-vm-local') || ($virtualization->type == 'xen-vm-local')) {
+						$a = $this->response->html->a();
+						$a->title = $this->lang['action_edit'].' IP';
+						$a->label = $resip;
+						$a->css   = 'edit editippopupo';
+						$a->href  = $this->response->get_url($this->actions_name, 'edit').'&resource_id='.$resid;
+						$resip = $a->get_string();
+				 	}
+			 	}
+				
+				$tempResIp = explode(".", $resip);
+				//echo count($tempResIp);
 
 				$data = '<div class="panel-body">';
 				
 				$data  = '<b>'.$this->lang['table_id'].'</b>: '.$resource_db["resource_id"].'<br>';
 				$data .= '<b>'.$this->lang['table_name'].'</b>: '.$name.'<br>';
 				$data .= '<b>'.$this->lang['table_mac'].'</b>: '.$resource_mac.'<br>';
-				$data .= '<b>'.$this->lang['table_ip'].'</b>: '.$resip.'<br>';
+				
+				if($resip !== '0.0.0.0' && $ip_validity){
+					$data .= '<b>'.$this->lang['table_ip'].'</b>: '.$resip.'<br>';
+				}
 				
 				$resource_type = str_replace('(localboot)', '', $resource_type);
 				if (strlen($resource_type) > 36) {
