@@ -1,12 +1,14 @@
 *.tar.gz
 *.rrd
 *.tgz
+*.bak
 logs/*
 plugins/chatbot/*
 plugins/collectd/*
 plugins/dhcpd/*
 plugins/dns/*
 plugins/local-server/*
+web/base/designplugins/*
 plugins/kvm/web/kvm-stat/*
 .DS_Store
 web/action/*
