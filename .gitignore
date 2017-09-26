@@ -16,8 +16,8 @@ plugins/local-server/*
 web/base/plugins/*
 web/base/designplugins/*
 web/base/server/storage/*
-web/base/server.cloud/*
-web/base/event/errors/*
+web/base/server/cloud/*
+web/base/server/event/errors/*
 web/boot-service/*
 plugins/kvm/web/kvm-stat/*
 .DS_Store
