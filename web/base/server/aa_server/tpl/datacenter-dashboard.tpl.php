@@ -46,6 +46,10 @@
 		text-align: center;
 		width: 31%;
 	}
+	.media-heading {
+		margin-top: 5px;
+		margin-bottom: 5px;
+	}
 </style>
 <script src="{baseurl}/js/c3/d3.v3.min.js" type="text/javascript"></script>
 <script src="{baseurl}/js/c3/c3.min.js" type="text/javascript"></script>
@@ -100,25 +104,36 @@
 			// --- end progress animation ---
 		// }
 
-		givedashboard(month, year);
+		// givedashboard(month, year);
 
 		var memtotal = parseFloat({memtotal}).toFixed(0);
 		var memused = parseFloat({memused}).toFixed(0);
-		var memfree = parseFloat(memtotal - memused).toFixed(0);
+		var memfree = (memtotal - memused).toFixed(0);
 
 		var stotal = parseFloat("{stotal}".split(" ")[0]).toFixed(1);
 		var sused =  parseFloat("{sused}".split(" ")[0]).toFixed(1);
-		var sfree = parseFloat(stotal - sused).toFixed(1);
+		var sfree = (stotal - sused).toFixed(1);
 
-		make_doughnut('disk', [["free",sfree],["used",sused],["total",stotal]], "GB");
-		make_doughnut('memory', [["free",memfree],["used",memused],["total",memtotal]], "MB");
-		make_doughnut('cpu', [["free",0],["used",0],["total",0]], "");
-		make_doughnut('network', [["free",0],["used",0],["total",0]], "");
+		var cputotal = parseInt({cpunumber});
+		var cpuload = parseFloat({cpuload});
+		var cpufree = (cputotal - cpuload).toFixed(2);
+
+		var vmtotal = parseInt({allvmcount});
+		var vmactive = parseInt({activeallvm});
+		var vminactive = parseInt({inactiveallvm});
+
+		make_c3('donut','disk', [["free",sfree],["used",sused],["total",stotal]], "GB");
+		make_c3('donut','memory', [["free",memfree],["used",memused],["total",memtotal]], "MB");
+		make_c3('donut','cpu', [["free",cpufree],["load",cpuload],["total",cputotal]], "");
+		make_c3('donut','network', [["free",0],["used",0],["total",0]], "");
 
 		get_event_status();
 		get_cloud_charge_back();
-	});
+		server_doughnut();
 
+		make_c3('pie','vm', [["inactive",vminactive],["active",vmactive],["total",vmtotal]],"");
+	});
+/*
 	function givedashboard(month, year, user) {
 		month = parseInt(month)
 
@@ -346,7 +361,7 @@
 		$('td.networking').text(category.network);
 		$('td.virtualisationb').text(category.virtualisation);
 	}
-
+*/
 	function get_event_status() {
 
 		$.ajax({
@@ -388,48 +403,83 @@
 		setTimeout("get_event_status()", 5000);
 	}
 
-	function make_doughnut(binding, donutdata, units) {
+	function make_c3(type, binding, donutdata, units) {
 	
-		var data = [donutdata[0], donutdata[1]];
+		var max_val = Math.max(donutdata[0][1],donutdata[1][1]);
+		var min_val = max_val / 18;
+		var data = [];
 
 		var bindto = "#chartdiv-inventory-" + binding; 
 		$('#chartdiv-inventory-'+binding).closest('.dashboard').find('.panel-title').text(binding);
-
 		// var legend = renderDonutLegend(data, units);
 		// $('#chartdiv-inventory-'+binding+'-legend').html('');
 		// $('#chartdiv-inventory-'+binding+'-legend').append(legend);
+		// [[donutdata[0][0],Math.max(donutdata[0][1],min_val)], [donutdata[1][0],Math.max(donutdata[1][1],min_val)]];
+		for (var i = 0; i < donutdata.length; i++) {
+			if (donutdata[i][0] != 'total') {
+				data.push([donutdata[i][0],Math.max(donutdata[i][1],min_val)]);
+			}
+		} 
 
 		var chart = c3.generate({
 			bindto: bindto,
 			data: {
 				columns: data,
-				type : 'donut',
+				type: type,
 				colors: {
 					free: seriesColors[0],
+					inactive: seriesColors[0],
 					used: seriesColors[1],
+					active: seriesColors[1],
+					load: seriesColors[1],
 					/* paused: seriesColors[2] */
 				},
 				onclick: function (d, i) { console.log("onclick", d, i); },
 				onmouseover: function (d, i) { 
-					// console.log("onmouseover", d, i); 
-					d3.select(bindto+' .c3-chart-arcs-title').node().innerHTML = d['id'] + ' ' + d['value'] + ' ' + units;
+					// console.log("onmouseover", d); 
+					d3.select(bindto+' .c3-chart-arcs-title').node().innerHTML = donutdata[d.index][0] + ' ' + donutdata[d.index][1] + ' ' + units;
 				},
 				onmouseout: function (d, i) {
 					// console.log("onmouseout", d, i); 
-					d3.select(bindto+' .c3-chart-arcs-title').node().innerHTML = donutdata[2][0] + ' ' + donutdata[2][1] + ' ' + units;
+					var last = donutdata.length - 1;
+					var def = null;
+					if (donutdata[last][0] == 'total') {
+						def = last
+					} else {
+						def = 0;
+					}
+					d3.select(bindto+' .c3-chart-arcs-title').node().innerHTML = donutdata[def][0] + ' ' + donutdata[def][1] + ' ' + units;
 				},
 			},
 			donut: {
 				title: donutdata[2][0] + ' ' + donutdata[2][1] + ' ' + units,
 				label: {
 					format: function (value, ratio, id) {
-						return value + ' ' + units; 
+						for (var k = 0; k < data.length; k++) {
+							if (donutdata[k][0] == id) {
+								return donutdata[k][1] + ' ' + units;
+							}
+						}
+						return '--'; 
+					}
+				}
+			},
+			pie: {
+				title: donutdata[2][0] + ' ' + donutdata[2][1] + ' ' + units,
+				label: {
+					format: function (value, ratio, id) {
+						for (var k = 0; k < data.length; k++) {
+							if (donutdata[k][0] == id) {
+								return donutdata[k][1] + ' ' + units;
+							}
+						}
+						return '--'; 
 					}
 				}
 			},
 			legend: {
 				show: true,
-				position: 'right'
+				position: 'bottom'
 			},
 			transition: {
 				duration: 1500
@@ -496,6 +546,43 @@
 			// current_year_monthly_spent("#current-year-monthly-spent", [column_x_yearly, total_monthly]);
 			current_year_monthly_spent_by_resource("#current-year-monthly-spent-by-resource", [column_x_yearly, cpu_monthly, storage_monthly, memory_monthly, virtual_monthly, network_monthly]);
 		});
+	}
+
+		/**
+	 * Build server donut chart. Does not use jqplots build-in 
+	 * legend due to lack of positioning options
+	 */
+	function server_doughnut() {
+		var server_list = htvcenter.get_server_list();
+		var server_values = [];
+		var virtualization, virtualization_list = [];
+		var hist = {};
+		
+		if(server_list != false && $('#chartdiv-inventory-server').length) {
+			
+			$.each(server_list, function(k,server){
+				virtualization_list.push(server['appliance_virtualization']);
+			});
+			virtualization_list.map( function (a) { if (a in hist) hist[a] ++; else hist[a] = 1; } );
+			$.each(hist, function(k,v){
+				if (k == 'KVM VM (localboot)' || k == 'KVM VM') {
+					k = 'OCH VM';
+				}
+
+				if (k == 'ESX VM (localboot)') {
+					k = 'ESX VM';
+				}
+				
+				if (k == 'KVM Host') {
+					k = 'OCH Host';
+				}
+
+				server_values.push([k ,v]);
+			});
+			//$.jqplot('chartdiv-inventory-server', [server_values], donutOptions);
+			var values = renderDonutLegend(server_values);
+			make_c3('donut','server', server_values, "");
+		}
 	}
 
 </script>
@@ -614,6 +701,8 @@
 											</div>
 											<div class="media-body">
 												<p class="h3 text-thin media-heading datacenterp"></p>
+											</div>
+											<div class="text-center">
 												<small class="text-uppercase signserv">Datacenter</small>
 											</div>
 										</div>
@@ -632,6 +721,8 @@
 											</div>
 											<div class="media-body">
 												<p class="h3 text-thin media-heading serverp"></p>
+											</div>
+											<div class="text-center">
 												<small class="text-uppercase signserv">Server Load</small>
 											</div>
 										</div>
@@ -650,8 +741,10 @@
 											</div>
 											<div class="media-body">
 												<p class="h3 text-thin media-heading storagep"></p>
-												<small class="text-uppercase signserv">Storage network</small>
 											</div>
+											<div class="text-center">
+												<small class="text-uppercase signserv">Storage network</small>
+ 											</div>
 										</div>
 										<!--Progress bar-->
 										<div class="progress progress-xs progress-dark-base mar-no">
@@ -764,7 +857,7 @@
 							<h3 class="panel-title">Services</h3>
 						</div>
 						<div class="row">
-							<div id="chartdiv-inventory-memory" class="c3-chart col-lg-12" style="height: 21.5rem;"></div>
+							<div id="chartdiv-inventory-memory" class="c3-chart col-lg-12 pad-no" style="height: 21.5rem;"></div>
 							<!-- <div id="chartdiv-inventory-memory-legend" class="donut-chart-legend col-lg-4"></div> -->
 						</div>
 					</div>
@@ -774,7 +867,7 @@
 							<h3 class="panel-title">Services</h3>
 						</div>
 						<div class="row">
-							<div id="chartdiv-inventory-cpu" class="c3-chart col-lg-12" style="height: 21.5rem;"></div>
+							<div id="chartdiv-inventory-cpu" class="c3-chart col-lg-12 pad-no" style="height: 21.5rem;"></div>
 							<!-- <div id="chartdiv-inventory-cpu-legend" class="donut-chart-legend col-lg-4"></div> -->
 						</div>
 					</div>
@@ -784,7 +877,7 @@
 							<h3 class="panel-title">Services</h3>
 						</div>
 						<div class="row">
-							<div id="chartdiv-inventory-disk" class="c3-chart col-lg-12" style="height: 21.5rem;"></div>
+							<div id="chartdiv-inventory-disk" class="c3-chart col-lg-12 pad-no" style="height: 21.5rem;"></div>
 							<!-- <div id="chartdiv-inventory-disk-legend" class="donut-chart-legend col-lg-4"></div> -->
 						</div>
 					</div>
@@ -794,7 +887,7 @@
 							<h3 class="panel-title">Services</h3>
 						</div>
 						<div class="row">
-							<div id="chartdiv-inventory-network" class="c3-chart col-lg-12" style="height: 21.5rem;"></div>
+							<div id="chartdiv-inventory-network" class="c3-chart col-lg-12 pad-no" style="height: 21.5rem;"></div>
 							<!-- div id="chartdiv-inventory-network-legend" class="donut-chart-legend col-lg-4"></div> -->
 						</div>
 					</div>
@@ -853,20 +946,30 @@
 					<h3 class="panel-title">Datacenter Summary</h3>
 				</div>
 				<div class="panel-body row" style="height: 27.6rem;">
-					<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 withchart">
-						<h3 class="dash">Hosts:</h3>
-					
-						<div id="chartdiv-inventory-server">
-						<div class="no-data-available">
-							<h3 >{no_data_available}</h3>
-							{link_server_management}
+					<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+						<div class="panel-heading">
+							<h3 class="panel-title">Hosts</h3>
 						</div>
+						<div class="row">
+							<div id="chartdiv-inventory-server" class="c3-chart col-lg-12 pad-no" style="height: 21.5rem;"></div>
+							<!-- <div id="chartdiv-inventory-cpu-legend" class="donut-chart-legend col-lg-4"></div> -->
 						</div>
-						<div style="height: 220px; display:none" id="server-donut"></div>
 					</div>
+					<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+						<div class="panel-heading">
+							<h3 class="panel-title">VM Summary</h3>
+						</div>
+						<div class="row">
+							<div id="chartdiv-inventory-vm" class="c3-chart col-lg-12 pad-no" style="height: 21.5rem;"></div>
+							<!-- <div id="chartdiv-inventory-cpu-legend" class="donut-chart-legend col-lg-4"></div> -->
+						</div>
+					</div>
+					<!--
 					<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 withlegend">
 						<div id="chartdiv-inventory-server-legend" class="donut-chart-legend"></div>	
 					</div>
+					-->
+					<!--
 					<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 withchart vm-summary-chart">
 						<div class="panel panel-bordered-primary allvmmain">
 							<div class="panel-heading"><h3 class="panel-title">VM Summary </h3></div>
@@ -887,7 +990,8 @@
 					</div>
 					<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 withlegend vm-summary-legend">
 						<div id="chartdiv-inventory-server-storage" class="donut-chart-legend"></div>
-					</div>
+					</div> -->
+
 				</div>
 			</div>
 		</div>

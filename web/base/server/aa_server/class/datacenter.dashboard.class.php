@@ -510,13 +510,15 @@ $d = array();
 			
 			$resource = new resource();
 			$resource->get_instance_by_id($storage->resource_id);
-			
+
 			$deployment = new deployment();
 			$deployment->get_instance_by_id($storage->type);
 			
 			$cpumodel = str_replace('QEMU', 'OCH', $resource->cpumodel);
 
 			$d['cpu'] = $cpumodel;
+			$d['cpunumber'] = $resource->cpunumber;
+			$d['cpuload'] = $resource->load;
  			$d['memtotal'] = $resource->memtotal;
  			$d['memused'] = $resource->memused;
  			$d['swaptotal'] = $resource->swaptotal;
@@ -568,6 +570,8 @@ $d = array();
 			$cpumodel = str_replace('QEMU', 'OCH', $resource->cpumodel);
 			
 			$d['cpu'] = $cpumodel;
+			$d['cpunumber'] = $resource->cpunumber;
+			$d['cpuload'] = $resource->load;
  			$d['memtotal'] = $resource->memtotal;
  			$d['memused'] = $resource->memused;
  			$d['swaptotal'] = $resource->swaptotal;

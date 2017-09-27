@@ -19,12 +19,10 @@ if (!Array.prototype.map)
 
 
 $(document).ready(function(){
-	
-	console.log("running aa_server.js");
-
+	// console.log("running aa_server.js");
 
 	var seriesColors = ['#a6c600', '#177bbb', '#afd2f0', "#1fa67a",  "#ffd055", "#39aacb", "#cc6165", "#c2d5a0", "#579575", "#839557", "#958c12", "#953579", "#4b5de4", "#d8b83f", "#ff5800", "#0085cc"];
-			
+
 	// options for dummy donut charts
 	var donutOptions = {
 		height: 200,
@@ -55,7 +53,6 @@ $(document).ready(function(){
 			rendererOptions: {}
 		}
 	};
-	
 
 	function renderDonutLegend(values) {
 		var legend = [];
@@ -73,7 +70,6 @@ $(document).ready(function(){
 		return legend;
 	}
 
-
 	function renderDonutLabelsLegend(values) {
 		var legend = $('<ul>');
 		$.each(values, function(k,v) {
@@ -85,73 +81,6 @@ $(document).ready(function(){
 			);
 		})
 		return legend;
-	}
-
-
-	/**
-	 * Build server donut chart. Does not use jqplots build-in 
-	 * legend due to lack of positioning options
-	 */
-	function server_donut() {
-		var server_list = htvcenter.get_server_list();
-		var server_values = [];
-		var server_values2 = [];
-		var virtualization, virtualization_list = [];
-		var hist = {};
-		
-		if(server_list != false && $('#chartdiv-inventory-server').length) {
-			try{
-				// remove "no data" message
-				$('#chartdiv-inventory-server .no-data-available').remove();
-			
-				donutOptions.title.text = lang_inventory_servers;
-			
-				$.each(server_list, function(k,server){
-					virtualization_list.push(server['appliance_virtualization']);
-				});
-				virtualization_list.map( function (a) { if (a in hist) hist[a] ++; else hist[a] = 1; } );
-				$.each(hist, function(k,v){
-					if (k == 'KVM VM (localboot)') {
-						k = 'KVM VM';
-					}
-
-					if (k == 'ESX VM (localboot)') {
-						k = 'ESX VM';
-					}
-					server_values.push([k ,v]);
-					if (k == 'KVM Host') {
-						k = 'OCH Host';
-					}
-
-					if (k == 'KVM VM') {
-						k = 'OCH VM';
-					}
-					server_values2.push([k + ' (' +v+ ')',v]);
-				})
-				//$.jqplot('chartdiv-inventory-server', [server_values], donutOptions);
-				var legend = renderDonutLegend(server_values);
-				var legend2 = renderDonutLabelsLegend(server_values2);
-				$('#server-donut').show();
-	Morris.Donut({
-		element: 'server-donut',
-		data: legend,
-		colors: [
-			'#a6c600',
-			'#177bbb',
-			'#afd2f0',
-			"#1fa67a", "#ffd055", "#39aacb", "#cc6165", "#c2d5a0", "#579575", "#839557", "#958c12", "#953579", "#4b5de4", "#d8b83f", "#ff5800", "#0085cc"
-		],
-		resize:true
-	});
-
-
-
-	//console.log(server_values);
-
-
-				$('#chartdiv-inventory-server-legend').append(legend2);
-			} catch(e) { }
-		}
 	}
 
 	/**
@@ -400,7 +329,7 @@ $(document).ready(function(){
 		}
 	}
 
-	server_donut();
+	// server_donut();
 	storage_donut();
 
 	updateLoadChart();
