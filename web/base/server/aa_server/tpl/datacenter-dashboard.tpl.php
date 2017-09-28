@@ -897,52 +897,6 @@
 					</div>
 				</div>
 			</div>
-			<!--===================================================-->
-			<!--End network line chart-->
-			<div class="panel">
-				<div class="panel-heading">
-					<h3 class="panel-title">Cloud Charge Back</h3>
-				</div>
-
-				<div class="panel-body row" style="height: 27.6rem;">
-					<div id="current-year-monthly-spent-by-resource" style="height: 24rem;"></div>
-				<!--
-					<div class="mainuserdash text-center row">
-						<div class="col-xs-4 col-sm-4 col-lg-4 col-md-4 text-center">
-						<select id="reportuserdashmain">
-							{hidenuser}
-						</select>
-						</div>
-						<div class="col-xs-4 col-sm-4 col-lg-4 col-md-4 text-center">
-							<select id="reportmonthdashmain">
-								<option value="0">January</option>
-								<option value="1">February</option>
-								<option value="2">March</option>
-								<option value="3">April</option>
-								<option value="4">May</option>
-								<option value="5">June</option>
-								<option value="6">July</option>
-								<option value="7">August</option>
-								<option value="8">September</option>
-								<option value="9">October</option>
-								<option value="10">November</option>
-								<option value="11">December</option>
-							</select>
-						</div>
-						 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4 text-center">
-								 <select id="reportyeardashmain">{reportyear}</select>
-						 </div>
-					</div>
-					<div class="maindonutrenderrr">
-						<div id="donutrendermaino">
-						</div>
-						<div id="totalamauntmain">
-							<b>Total Amount:</b> <span id="mval"></span>
-						</div>
-					</div>
-					-->
-				</div>
-			</div>
 
 			<!-- Start: Inventory overview -->
 			<div class="panel">
@@ -998,6 +952,54 @@
 
 				</div>
 			</div>
+
+			<!--===================================================-->
+			<!--End network line chart-->
+			<div class="panel">
+				<div class="panel-heading">
+					<h3 class="panel-title">Cloud Charge Back</h3>
+				</div>
+
+				<div class="panel-body row" style="height: 27.6rem;">
+					<div id="current-year-monthly-spent-by-resource" style="height: 24rem;"></div>
+				<!--
+					<div class="mainuserdash text-center row">
+						<div class="col-xs-4 col-sm-4 col-lg-4 col-md-4 text-center">
+						<select id="reportuserdashmain">
+							{hidenuser}
+						</select>
+						</div>
+						<div class="col-xs-4 col-sm-4 col-lg-4 col-md-4 text-center">
+							<select id="reportmonthdashmain">
+								<option value="0">January</option>
+								<option value="1">February</option>
+								<option value="2">March</option>
+								<option value="3">April</option>
+								<option value="4">May</option>
+								<option value="5">June</option>
+								<option value="6">July</option>
+								<option value="7">August</option>
+								<option value="8">September</option>
+								<option value="9">October</option>
+								<option value="10">November</option>
+								<option value="11">December</option>
+							</select>
+						</div>
+						 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4 text-center">
+								 <select id="reportyeardashmain">{reportyear}</select>
+						 </div>
+					</div>
+					<div class="maindonutrenderrr">
+						<div id="donutrendermaino">
+						</div>
+						<div id="totalamauntmain">
+							<b>Total Amount:</b> <span id="mval"></span>
+						</div>
+					</div>
+					-->
+				</div>
+			</div>
+
 		</div>
 
 		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" style="display:none">

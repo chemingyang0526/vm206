@@ -333,7 +333,10 @@ $(document).ready(function(){
 	storage_donut();
 
 	updateLoadChart();
+	setInterval(updateLoadChart, 10000);
+	
 	updateLoadSection();
+
 	updateEventSection();
 
 	
