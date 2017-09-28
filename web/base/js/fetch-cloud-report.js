@@ -46,6 +46,8 @@ function current_year_monthly_spent_by_resource(bindto, data) {
             }
         }
     });
+
+    return chart2;
 }
 
 function get_daily_data(year_str, month_str, day_str, type) {

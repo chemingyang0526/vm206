@@ -68,6 +68,7 @@
 	var monthlastname = '';
 	var yearcurrent = '';
 	var yearold = '';
+	var charts = [];
 
 	var chartColors = {
 		red: 'rgb(255, 99, 132)',
@@ -493,6 +494,7 @@
 				*/
 			}
 		});
+		charts.push(chart);
 	}
 
 	function renderDonutLegend(values,units) {
@@ -544,7 +546,9 @@
 			}
 
 			// current_year_monthly_spent("#current-year-monthly-spent", [column_x_yearly, total_monthly]);
-			current_year_monthly_spent_by_resource("#current-year-monthly-spent-by-resource", [column_x_yearly, cpu_monthly, storage_monthly, memory_monthly, virtual_monthly, network_monthly]);
+			var chart = current_year_monthly_spent_by_resource("#current-year-monthly-spent-by-resource", [column_x_yearly, cpu_monthly, storage_monthly, memory_monthly, virtual_monthly, network_monthly]);
+			
+			charts.push(chart);
 		});
 	}
 
