@@ -462,7 +462,11 @@
 				onclick: function (d, i) { console.log("onclick", d, i); },
 				onmouseover: function (d, i) { 
 					// console.log("onmouseover", d); 
-					d3.select(bindto+' .c3-chart-arcs-title').node().innerHTML = donutdata[d.index][0] + ' ' + donutdata[d.index][1] + ' ' + units;
+					for (var k = 0; k < donutdata.length; k++) {
+						if (donutdata[k][0] == d.name) {
+							d3.select(bindto+' .c3-chart-arcs-title').node().innerHTML = donutdata[k][0] + ' ' + donutdata[k][1] + ' ' + units;
+						}
+					}
 				},
 				onmouseout: function (d, i) {
 					// console.log("onmouseout", d, i); 
@@ -502,12 +506,11 @@
 				duration: 1500
 			},
 			tooltip: {
-				show: false
-				/*
+				show: false,
+				/*  data onmouseout and data onmouseout is doing similar things already
 				format: {
 					value: function (value, ratio, id, index) { return value + ' ' + units; }
-				}
-				*/
+				} */
 			},
 			padding: {
 				left: 100 // add 100px for some spacing
