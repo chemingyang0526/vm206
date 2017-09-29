@@ -50,6 +50,16 @@
 		margin-top: 5px;
 		margin-bottom: 5px;
 	}
+	.media-left {
+		padding-right: 0px;
+	}
+	#container .row .table {
+		margin-bottom: 0px;
+	}
+	#container .row .table tr td {
+		border-top: 0px;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+	}
 </style>
 <script src="{baseurl}/js/c3/d3.v3.min.js" type="text/javascript"></script>
 <script src="{baseurl}/js/c3/c3.min.js" type="text/javascript"></script>
@@ -106,7 +116,6 @@
 		// }
 
 		// givedashboard(month, year);
-
 		var memtotal = parseFloat({memtotal}).toFixed(0);
 		var memused = parseFloat({memused}).toFixed(0);
 		var memfree = (memtotal - memused).toFixed(0);
@@ -123,16 +132,22 @@
 		var vmactive = parseInt({activeallvm});
 		var vminactive = parseInt({inactiveallvm});
 
-		make_c3('donut','disk', [["free",sfree],["used",sused],["total",stotal]], "GB");
-		make_c3('donut','memory', [["free",memfree],["used",memused],["total",memtotal]], "MB");
-		make_c3('donut','cpu', [["free",cpufree],["load",cpuload],["total",cputotal]], "");
-		make_c3('donut','network', [["free",0],["used",0],["total",0]], "");
+		var allfiles = parseInt({allfiles});
+		var healthfiles = parseInt({healthfiles});
+		var endangeredfiles = parseInt({endangeredfiles});
+		var missingfiles = parseInt({missingfiles});
+
+		make_c3('donut','disk', [["total",stotal],["free",sfree],["used",sused]], "GB");
+		make_c3('donut','memory', [["total",memtotal],["free",memfree],["used",memused]], "MB");
+		make_c3('donut','cpu', [["total",cputotal],["free",cpufree],["load",cpuload]], "");
+		make_c3('donut','network', [["total",0],["free",0],["used",0]], "");
 
 		get_event_status();
 		get_cloud_charge_back();
 		server_doughnut();
 
-		make_c3('pie','vm', [["inactive",vminactive],["active",vmactive],["total",vmtotal]],"");
+		make_c3('pie','vm',[["total",vmtotal],["inactive",vminactive],["active",vmactive]],"");
+		make_c3('donut','storage',[["total files", allfiles],["health files",healthfiles],["endangered files",endangeredfiles],["missing files", missingfiles]],"");
 	});
 /*
 	function givedashboard(month, year, user) {
@@ -405,22 +420,24 @@
 	}
 
 	function make_c3(type, binding, donutdata, units) {
-	
 		var max_val = Math.max(donutdata[0][1],donutdata[1][1]);
 		var min_val = max_val / 18;
 		var data = [];
-
+		var values = [];
 		var bindto = "#chartdiv-inventory-" + binding; 
+
 		$('#chartdiv-inventory-'+binding).closest('.dashboard').find('.panel-title').text(binding);
-		// var legend = renderDonutLegend(data, units);
-		// $('#chartdiv-inventory-'+binding+'-legend').html('');
-		// $('#chartdiv-inventory-'+binding+'-legend').append(legend);
-		// [[donutdata[0][0],Math.max(donutdata[0][1],min_val)], [donutdata[1][0],Math.max(donutdata[1][1],min_val)]];
+
 		for (var i = 0; i < donutdata.length; i++) {
 			if (donutdata[i][0] != 'total') {
 				data.push([donutdata[i][0],Math.max(donutdata[i][1],min_val)]);
+				values.push(donutdata[i][1]);
 			}
 		} 
+
+		if (Math.max.apply(null, values) == 0) { // force drawing a %100 pie or dunut when all values are zero
+			data[0][1] = 1;
+		}
 
 		var chart = c3.generate({
 			bindto: bindto,
@@ -433,6 +450,13 @@
 					used: seriesColors[1],
 					active: seriesColors[1],
 					load: seriesColors[1],
+					'total files': seriesColors[0],
+					'Cloud Host': seriesColors[1],
+					'OCH Host': seriesColors[2],
+					'OCH VM': seriesColors[3],
+					'health files': seriesColors[1],
+					'endangered files': seriesColors[2],
+					'missing files': seriesColors[3]
 					/* paused: seriesColors[2] */
 				},
 				onclick: function (d, i) { console.log("onclick", d, i); },
@@ -442,21 +466,14 @@
 				},
 				onmouseout: function (d, i) {
 					// console.log("onmouseout", d, i); 
-					var last = donutdata.length - 1;
-					var def = null;
-					if (donutdata[last][0] == 'total') {
-						def = last
-					} else {
-						def = 0;
-					}
-					d3.select(bindto+' .c3-chart-arcs-title').node().innerHTML = donutdata[def][0] + ' ' + donutdata[def][1] + ' ' + units;
+					d3.select(bindto+' .c3-chart-arcs-title').node().innerHTML = donutdata[0][0] + ' ' + donutdata[0][1] + ' ' + units;
 				},
 			},
 			donut: {
-				title: donutdata[2][0] + ' ' + donutdata[2][1] + ' ' + units,
+				title: donutdata[0][0] + ' ' + donutdata[0][1] + ' ' + units,
 				label: {
 					format: function (value, ratio, id) {
-						for (var k = 0; k < data.length; k++) {
+						for (var k = 0; k < donutdata.length; k++) {
 							if (donutdata[k][0] == id) {
 								return donutdata[k][1] + ' ' + units;
 							}
@@ -466,10 +483,9 @@
 				}
 			},
 			pie: {
-				title: donutdata[2][0] + ' ' + donutdata[2][1] + ' ' + units,
 				label: {
 					format: function (value, ratio, id) {
-						for (var k = 0; k < data.length; k++) {
+						for (var k = 0; k < donutdata.length; k++) {
 							if (donutdata[k][0] == id) {
 								return donutdata[k][1] + ' ' + units;
 							}
@@ -492,8 +508,18 @@
 					value: function (value, ratio, id, index) { return value + ' ' + units; }
 				}
 				*/
-			}
+			},
+			padding: {
+				left: 100 // add 100px for some spacing
+			},
 		});
+
+		/* code to customize legend
+		d3.select(bindto).selectAll('.c3-legend-item').select('text').each(function () {
+			var legend = d3.select(this);
+			legend.text(legend.text().replace("_"," "));
+		}); */
+
 		charts.push(chart);
 	}
 
@@ -581,7 +607,7 @@
 					k = 'OCH Host';
 				}
 
-				server_values.push([k ,v]);
+				server_values.push([k,v]);
 			});
 			//$.jqplot('chartdiv-inventory-server', [server_values], donutOptions);
 			var values = renderDonutLegend(server_values);
@@ -596,9 +622,21 @@
 		<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
 			<div class="panel">
 				<div class="panel-heading">
-					<h3 class="panel-title">Maestro Server</h3>
+					<h3 class="panel-title">Maestro Storage</h3>
 				</div>
 				<div class="panel-body" style="height: 27.6rem;">
+					
+					<div class="row">
+						<table class="table" style="margin-bottom: 0;">
+							<tr><td>Total Files</td><td>{allfiles}</td><td>Health Files</td><td>{healthfiles}</td></tr>
+							<tr><td>Endangered Files</td><td>{endangeredfiles}</td><td>Missing Files</td><td>{missingfiles}</td></tr>
+						</table>
+					</div>
+					<div class="row">
+						<div id="chartdiv-inventory-storage" class="c3-chart col-lg-12 pad-no" style="height: 19.5rem;"></div>
+					</div>
+
+					<!--
 					<h4><i class="fa fa-cogs"></i> CPU & memory:</h4>
 					<ul class="storage-list">
 						<li><b>CPU:</b> {cpu}</li>
@@ -619,6 +657,7 @@
 							<span class="sr-only">{swappercent}% used</span>
 						</div>
 					</div>
+					-->
 				</div>
 			</div>
 			<!--

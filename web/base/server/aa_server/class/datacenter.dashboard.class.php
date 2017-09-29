@@ -176,6 +176,9 @@ var $lang = array();
 		$data = $this->storagetaken();
 		$t->add($data);
 
+		$data = $this->storagefiles();
+		$t->add($data);
+
 		$year = date('Y');
 				$yearm1 = $year - 1;
 				$yearm2 = $year - 2;
@@ -2220,6 +2223,20 @@ function storagetaken() {
 	$b['sused']= $usedarr[0].' '.$usedarr[1];;
 	$b['spercent'] = $percent;
 	
+	return $b;
+}
+
+function storagefiles() {
+	$lizurl = 'http://'.$_SERVER['SERVER_NAME'].':9425/mfs.cgi?sections=CH';
+	$lizard = file_get_contents($lizurl);
+
+	preg_match_all('/\<p class\=\"text-2x mar-no text-thin\"\>(.+)\<\/p\>/',$lizard,$matches);
+
+	$b['allfiles']			= ($matches[1][0] == '-' ? 0 : $matches[1][0]);
+	$b['healthfiles']		= ($matches[1][1] == '-' ? 0 : $matches[1][1]);
+	$b['endangeredfiles']	= ($matches[1][2] == '-' ? 0 : $matches[1][2]);
+	$b['missingfiles']		= ($matches[1][3] == '-' ? 0 : $matches[1][3]);
+
 	return $b;
 }
 
