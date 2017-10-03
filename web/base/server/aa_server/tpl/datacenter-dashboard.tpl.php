@@ -631,7 +631,6 @@
 					<h3 class="panel-title">Maestro Storage</h3>
 				</div>
 				<div class="panel-body" style="height: 27.6rem;">
-					
 					<div class="row">
 						<table class="table" style="margin-bottom: 0;">
 							<tr><td>Total Files</td><td>{allfiles}</td><td>Health Files</td><td>{healthfiles}</td></tr>
@@ -641,29 +640,30 @@
 					<div class="row">
 						<div id="chartdiv-inventory-storage" class="c3-chart col-lg-12 pad-no" style="height: 19.5rem;"></div>
 					</div>
-
-					<!--
-					<h4><i class="fa fa-cogs"></i> CPU & memory:</h4>
-					<ul class="storage-list">
-						<li><b>CPU:</b> {cpu}</li>
-						<li><b>Memory used:</b> {memused}</li>
-						<li><b>Memory total:</b> {memtotal}</li>
-					</ul>
-					<div class="progress memoryprogress">
-						<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {mempercent}%;">
-							<span class="sr-only">{mempercent}% used</span>
+					<div style="display: none;">
+						<h4><i class="fa fa-cogs"></i> CPU & memory:</h4>
+						<ul class="storage-list">
+							<li><b>CPU:</b> {cpu}</li>
+							<li><b>Memory used:</b> {memused}</li>
+							<li><b>Memory total:</b> {memtotal}</li>
+						</ul>
+						<div class="progress memoryprogress">
+							<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {mempercent}%;">
+								<span class="sr-only">{mempercent}% used</span>
+							</div>
 						</div>
-					</div>
-					<ul class="storage-list">
-						<li><b>Swap used:</b> {swapused}</li>
-						<li><b>Swap total:</b> {swaptotal}</li>
-					</ul>
-					<div class="progress memoryprogress swapprogress">
-						<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {swappercent}%;">
-							<span class="sr-only">{swappercent}% used</span>
+						<!--
+						<ul class="storage-list">
+							<li><b>Swap used:</b> {swapused}</li>
+							<li><b>Swap total:</b> {swaptotal}</li>
+						</ul>
+						<div class="progress memoryprogress swapprogress">
+							<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {swappercent}%;">
+								<span class="sr-only">{swappercent}% used</span>
+							</div>
 						</div>
+						-->
 					</div>
-					-->
 				</div>
 			</div>
 			<!--
@@ -695,39 +695,33 @@
 						</div>
 				
 			</div>
-			<div class="panel storagespanel">
+			-->
+			<div class="panel storagespanel" style="display: none;">
 				<h2 class="dash"><i class="fa fa-hdd-o"></i> Maestro Storage</h2>
 				<div id="storageareas">
-						
 					<div class="onestorage">
-					
-					<div class="row">
-					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-						<div class="esxileft leftstorageblock">
-
-							{sfree}<br>
-							<span>free (physical)</span>
+						<div class="row">
+							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+								<div class="esxileft leftstorageblock">
+									{sfree}<br>
+									<span>free (physical)</span>
+								</div>
+							</div>
+							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 esxright sizeroside">
+								<div class="totalinfor">
+									<b>Used:</b> {sused}<br>
+									<b>Total:</b> {stotal} <br>
+								</div>
+							</div>
+							<div class="progress hddprogress nutanixprogress">
+								<div style="width: {spercent}%;" aria-valuemax="100" aria-valuemin="0" aria-valuenow="60" role="progressbar" class="progress-bar">
+									<span class="sr-only">{spercent}% used</span>
+								</div>
+							</div>
 						</div>
-					</div>
-					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 esxright sizeroside">
-						<div class="totalinfor">
-							<b>Used:</b> {sused}<br>
-							<b>Total:</b> {stotal} <br>
-						</div>
-
-					</div>
-
-
-						<div class="progress hddprogress nutanixprogress">
-						  <div style="width: {spercent}%;" aria-valuemax="100" aria-valuemin="0" aria-valuenow="60" role="progressbar" class="progress-bar">
-							<span class="sr-only">{spercent}% used</span>
-						  </div>
-						</div>
-					</div>
 					</div>
 				</div>
 			</div>
-			-->
 			<div id="demo-panel-network" class="panel">
 				<div class="panel-heading">
 					<h3 class="panel-title">Datacenter Load</h3>
