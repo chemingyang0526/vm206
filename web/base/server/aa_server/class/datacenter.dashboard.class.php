@@ -1505,7 +1505,7 @@ foreach ($hostsid as $hoste) {
 
 		$table = $this->response->html->tablebuilder('events', $this->response->get_array($this->actions_name, 'select'));
 		$table->offset = 0;
-		$table->limit = 100;
+		$table->limit = -1; /* disable the arbitrary $table->limit = 100 */
 		$table->sort = 'event_time';
 		$table->order = 'DESC';
 
@@ -1697,7 +1697,7 @@ foreach ($hostsid as $hoste) {
 		$counterrors = 0;
 		$allcountwarnings = 0;
 
-		//var_dump(count($allerr)); die();
+		// var_dump(count($allerr)); die();
 
 		foreach ($allerr as $row) {
 		unset($buf);

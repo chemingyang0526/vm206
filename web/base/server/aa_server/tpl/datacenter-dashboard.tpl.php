@@ -63,6 +63,43 @@
 	.progress-bar-light {
 		background: transparent;
 	}
+	.row {
+		margin-left: -12px;
+		margin-right: -12px;
+	}
+	hr { 
+		display: block;
+		margin-top: 0.5em;
+		margin-bottom: 0.5em;
+		margin-left: auto;
+		margin-right: auto;
+		border-style: solid;
+		border-width: 2px;
+		width:24px;
+	}
+    hr.total-files {
+        border-color: #dfdfdf;
+    }
+
+    hr.health-files {
+        border-color: #41bee9 ;
+    }
+
+    hr.endangered-files {
+        border-color: rgb(255, 99, 132);
+    }
+
+    hr.missing-files {
+        border-color: rgb(255, 205, 86);
+    }
+
+    hr.networking {
+        border-color: rgb(75, 192, 192);
+    }
+
+    hr.total {
+        border-color: rgb(153, 102, 255);
+    }
 </style>
 <script src="{baseurl}/js/c3/d3.v3.min.js" type="text/javascript"></script>
 <script src="{baseurl}/js/c3/c3.min.js" type="text/javascript"></script>
@@ -140,17 +177,17 @@
 		var endangeredfiles = parseInt({endangeredfiles});
 		var missingfiles = parseInt({missingfiles});
 
-		make_c3('donut','disk', [["total",stotal],["free",sfree],["used",sused]], "GB");
-		make_c3('donut','memory', [["total",memtotal],["free",memfree],["used",memused]], "MB");
-		make_c3('donut','cpu', [["total",cputotal],["free",cpufree],["load",cpuload]], "");
-		make_c3('donut','network', [["total",0],["free",0],["used",0]], "");
+		make_c3('donut','disk', [["total",stotal],["free",sfree],["used",sused]], "GB", true);
+		make_c3('donut','memory', [["total",memtotal],["free",memfree],["used",memused]], "MB", true);
+		make_c3('donut','cpu', [["total",cputotal],["free",cpufree],["load",cpuload]], "", true);
+		make_c3('donut','network', [["total",0],["free",0],["used",0]], "", true);
 
 		get_event_status();
 		get_cloud_charge_back();
 		server_doughnut();
 
-		make_c3('pie','vm',[["total",vmtotal],["inactive",vminactive],["active",vmactive]],"");
-		make_c3('donut','storage',[["total files", allfiles],["health files",healthfiles],["endangered files",endangeredfiles],["missing files", missingfiles]],"");
+		make_c3('pie','vm',[["total",vmtotal],["inactive",vminactive],["active",vmactive]],"", false);
+		make_c3('donut','storage',[["total files", allfiles],["health files",healthfiles],["endangered files",endangeredfiles],["missing files", missingfiles]],"", false);
 	});
 /*
 	function givedashboard(month, year, user) {
@@ -422,7 +459,7 @@
 		setTimeout("get_event_status()", 5000);
 	}
 
-	function make_c3(type, binding, donutdata, units) {
+	function make_c3(type, binding, donutdata, units, showlegend) {
 		var max_val = Math.max(donutdata[0][1],donutdata[1][1]);
 		var min_val = max_val / 18;
 		var data = [];
@@ -502,7 +539,7 @@
 				}
 			},
 			legend: {
-				show: true,
+				show: showlegend,
 				position: 'bottom'
 			},
 			transition: {
@@ -519,13 +556,11 @@
 				left: 100 // add 100px for some spacing
 			},
 		});
-
 		/* code to customize legend
 		d3.select(bindto).selectAll('.c3-legend-item').select('text').each(function () {
 			var legend = d3.select(this);
 			legend.text(legend.text().replace("_"," "));
 		}); */
-
 		charts.push(chart);
 	}
 
@@ -617,7 +652,7 @@
 			});
 			//$.jqplot('chartdiv-inventory-server', [server_values], donutOptions);
 			var values = renderDonutLegend(server_values);
-			make_c3('donut','server', server_values, "");
+			make_c3('donut','server', server_values, "", false);
 		}
 	}
 
@@ -631,14 +666,22 @@
 					<h3 class="panel-title">Maestro Storage</h3>
 				</div>
 				<div class="panel-body" style="height: 27.6rem;">
-					<div class="row">
-						<table class="table" style="margin-bottom: 0;">
-							<tr><td>Total Files</td><td>{allfiles}</td><td>Health Files</td><td>{healthfiles}</td></tr>
-							<tr><td>Endangered Files</td><td>{endangeredfiles}</td><td>Missing Files</td><td>{missingfiles}</td></tr>
-						</table>
+					<div class="panel-heading">
 					</div>
 					<div class="row">
-						<div id="chartdiv-inventory-storage" class="c3-chart col-lg-12 pad-no" style="height: 19.5rem;"></div>
+						<div class="col-xs-6">
+							<div id="chartdiv-inventory-storage" class="c3-chart col-lg-12 pad-no" style="height: 19.5rem;"></div>
+						</div>
+						<div class="col-xs-6">
+							<table class="table table-bordered table-hover table-stripped" style="margin-bottom: 0;">
+								<tbody>
+									<tr><td>Total Files<hr class="total-files"></td><td>{allfiles}</td></tr>
+									<tr><td>Health Files<hr class="health-files"></td><td>{healthfiles}</td></tr>
+									<tr><td>Endangered Files<hr class="endangered-files"></td><td>{endangeredfiles}</td></tr>
+									<tr><td>Missing Files<hr class="missing-files"></td><td>{missingfiles}</td></tr>
+								</tbody>
+							</table>
+						</div>
 					</div>
 					<div style="display: none;">
 						<h4><i class="fa fa-cogs"></i> CPU & memory:</h4>
@@ -936,62 +979,33 @@
 					</div>
 				</div>
 			</div>
-
 			<!-- Start: Inventory overview -->
-			<div class="panel">
-				<div class="panel-heading">
-					<h3 class="panel-title">Datacenter Summary</h3>
-				</div>
-				<div class="panel-body row" style="height: 27.6rem;">
-					<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+			<div class="row">
+				<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+					<div class="panel">
 						<div class="panel-heading">
-							<h3 class="panel-title">Hosts</h3>
+							<h3 class="panel-title">Datacenter Summary</h3>
 						</div>
-						<div class="row">
-							<div id="chartdiv-inventory-server" class="c3-chart col-lg-12 pad-no" style="height: 21.5rem;"></div>
-							<!-- <div id="chartdiv-inventory-cpu-legend" class="donut-chart-legend col-lg-4"></div> -->
-						</div>
-					</div>
-					<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-						<div class="panel-heading">
-							<h3 class="panel-title">VM Summary</h3>
-						</div>
-						<div class="row">
-							<div id="chartdiv-inventory-vm" class="c3-chart col-lg-12 pad-no" style="height: 21.5rem;"></div>
-							<!-- <div id="chartdiv-inventory-cpu-legend" class="donut-chart-legend col-lg-4"></div> -->
-						</div>
-					</div>
-					<!--
-					<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 withlegend">
-						<div id="chartdiv-inventory-server-legend" class="donut-chart-legend"></div>	
-					</div>
-					-->
-					<!--
-					<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 withchart vm-summary-chart">
-						<div class="panel panel-bordered-primary allvmmain">
-							<div class="panel-heading"><h3 class="panel-title">VM Summary </h3></div>
-							<div class="panel-body">
-								<div class="row">
-									<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-										<div class="esxileft"><b>{allvmcount}</b> <br><span>VMs</span></div>
-									</div>
-									<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 esxiright">
-										<div class="vmsside">
-											<span class="roundbullet greenbullet"></span><b>{activeallvm}</b> active<br>
-											<a href="index.php?report=report_inactive"><span class="roundbullet yellowbullet"></span><b>{inactiveallvm}</b> inactive</a><br>
-										</div>
-									</div>
-								</div>
+						<div class="panel-body" style="height: 27.6rem;">
+							<div class="row">
+								<div id="chartdiv-inventory-server" class="c3-chart col-lg-12 pad-no" style="height: 21.5rem;"></div>
 							</div>
 						</div>
 					</div>
-					<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 withlegend vm-summary-legend">
-						<div id="chartdiv-inventory-server-storage" class="donut-chart-legend"></div>
-					</div> -->
-
+				</div>
+				<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+					<div class="panel">
+						<div class="panel-heading">
+							<h3 class="panel-title">VM Summary</h3>
+						</div>
+						<div class="panel-body" style="height: 27.6rem;">
+							<div class="row">
+								<div id="chartdiv-inventory-vm" class="c3-chart col-lg-12 pad-no" style="height: 21.5rem;"></div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
-
 			<!--===================================================-->
 			<!--End network line chart-->
 			<div class="panel">
