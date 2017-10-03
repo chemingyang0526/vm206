@@ -60,6 +60,9 @@
 		border-top: 0px;
 		border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 	}
+	.progress-bar-light {
+		background: transparent;
+	}
 </style>
 <script src="{baseurl}/js/c3/d3.v3.min.js" type="text/javascript"></script>
 <script src="{baseurl}/js/c3/c3.min.js" type="text/javascript"></script>
@@ -739,7 +742,7 @@
 								<div class="row"> -->
 									<div class="col-xs-4 col-md-4 col-sm-4 col-lg-4 pad-no">
 										<!--Datacenter stat-->
-										<div class="pad-ver media">
+										<div class="pad-ver media" style="height: 8.9rem;">
 											<div class="media-left">
 												<span class="icon-wrap icon-wrap-xs">
 													<i class="fa fa-building-o fa-2x"></i>
@@ -759,7 +762,7 @@
 									</div>
 									<div class="col-xs-4 col-md-4 col-sm-4 col-lg-4 pad-no">
 										<!--Server stat-->
-										<div class="pad-ver media">
+										<div class="pad-ver media" style="height: 8.9rem;">
 											<div class="media-left">
 												<span class="icon-wrap icon-wrap-xs">
 													<i class="fa fa-server fa-2x"></i>
@@ -779,7 +782,7 @@
 									</div>
 									<div class="col-xs-4 col-md-4 col-sm-4 col-lg-4 pad-no">
 										<!--Datacenter stat-->
-										<div class="pad-ver media">
+										<div class="pad-ver media" style="height: 8.9rem;">
 											<div class="media-left">
 												<span class="icon-wrap icon-wrap-xs">
 													<i class="fa fa-hdd-o fa-2x"></i>
