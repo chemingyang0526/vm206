@@ -93,9 +93,9 @@ $(document).ready(function(){
 		var storage_values2 = [];
 		var deploment, deployment_list = [];
 		var hist = {};
-		//console.log('here1');
+		
 		if(storage_list != false && $('#chartdiv-inventory-storage').length) {
-			console.log('here2');
+	
 			try{
 				// remove "no data" message
 				$('#chartdiv-inventory-storage .no-data-available').remove();

@@ -68,11 +68,11 @@
 		margin-right: -12px;
 	}
 	hr { 
-		display: block;
+		display: inline-block;
 		margin-top: 0.5em;
 		margin-bottom: 0.5em;
-		margin-left: auto;
-		margin-right: auto;
+		margin-left: 0.5em;
+		margin-right: ;
 		border-style: solid;
 		border-width: 2px;
 		width:24px;
@@ -80,23 +80,18 @@
     hr.total-files {
         border-color: #dfdfdf;
     }
-
-    hr.health-files {
+    hr.health-files, hr.cloud-host {
         border-color: #41bee9 ;
     }
-
-    hr.endangered-files {
+    hr.endangered-files, hr.och-host {
         border-color: rgb(255, 99, 132);
     }
-
-    hr.missing-files {
+    hr.missing-files, hr.och-vm {
         border-color: rgb(255, 205, 86);
     }
-
     hr.networking {
         border-color: rgb(75, 192, 192);
     }
-
     hr.total {
         border-color: rgb(153, 102, 255);
     }
@@ -619,10 +614,6 @@
 		});
 	}
 
-		/**
-	 * Build server donut chart. Does not use jqplots build-in 
-	 * legend due to lack of positioning options
-	 */
 	function server_doughnut() {
 		var server_list = htvcenter.get_server_list();
 		var server_values = [];
@@ -650,8 +641,18 @@
 
 				server_values.push([k,v]);
 			});
-			//$.jqplot('chartdiv-inventory-server', [server_values], donutOptions);
-			var values = renderDonutLegend(server_values);
+
+			for (i = 0; i < server_values.length; i++ ) {
+				$("#datacenter-tbl tr").each(function() {
+					var loop = server_values[i];
+
+					if ($(this).find('td:first-of-type').text() == loop[0]) {
+						$(this).find('td:nth-of-type(2)').text(loop[1]);
+					}
+				});
+			}
+
+			// var values = renderDonutLegend(server_values);
 			make_c3('donut','server', server_values, "", false);
 		}
 	}
@@ -665,22 +666,26 @@
 				<div class="panel-heading">
 					<h3 class="panel-title">Maestro Storage</h3>
 				</div>
-				<div class="panel-body" style="height: 27.6rem;">
+				<div class="panel-body" style="min-height: 27.6rem;">
 					<div class="panel-heading">
 					</div>
 					<div class="row">
-						<div class="col-xs-6">
-							<div id="chartdiv-inventory-storage" class="c3-chart col-lg-12 pad-no" style="height: 19.5rem;"></div>
+						<div class="col-sm-12 col-md-7">
+							<div class="row">
+								<div id="chartdiv-inventory-storage" class="c3-chart pad-no" style="height: 19.5rem;"></div>
+							</div>
 						</div>
-						<div class="col-xs-6">
-							<table class="table table-bordered table-hover table-stripped" style="margin-bottom: 0;">
-								<tbody>
-									<tr><td>Total Files<hr class="total-files"></td><td>{allfiles}</td></tr>
-									<tr><td>Health Files<hr class="health-files"></td><td>{healthfiles}</td></tr>
-									<tr><td>Endangered Files<hr class="endangered-files"></td><td>{endangeredfiles}</td></tr>
-									<tr><td>Missing Files<hr class="missing-files"></td><td>{missingfiles}</td></tr>
-								</tbody>
-							</table>
+						<div class="col-ss-12 col-md-5">
+							<div class="row">
+								<table class="table table-bordered table-hover table-stripped">
+									<tbody>
+										<tr><td>Total Files<hr class="total-files"></td><td>{allfiles}</td></tr>
+										<tr><td>Health Files<hr class="health-files"></td><td>{healthfiles}</td></tr>
+										<tr><td>Endangered Files<hr class="endangered-files"></td><td>{endangeredfiles}</td></tr>
+										<tr><td>Missing Files<hr class="missing-files"></td><td>{missingfiles}</td></tr>
+									</tbody>
+								</table>
+							</div>
 						</div>
 					</div>
 					<div style="display: none;">
@@ -765,7 +770,7 @@
 					</div>
 				</div>
 			</div>
-			<div id="demo-panel-network" class="panel">
+			<div class="panel">
 				<div class="panel-heading">
 					<h3 class="panel-title">Datacenter Load</h3>
 				</div>
@@ -777,7 +782,7 @@
 						<div class="row">
 							<!-- <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12">
 								<div class="row"> -->
-									<div class="col-xs-4 col-md-4 col-sm-4 col-lg-4 pad-no">
+									<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 pad-no">
 										<!--Datacenter stat-->
 										<div class="pad-ver media" style="height: 8.9rem;">
 											<div class="media-left">
@@ -797,7 +802,7 @@
 											<div class="progress-bar progress-bar-light datacenterpbar"></div>
 										</div>
 									</div>
-									<div class="col-xs-4 col-md-4 col-sm-4 col-lg-4 pad-no">
+									<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 pad-no">
 										<!--Server stat-->
 										<div class="pad-ver media" style="height: 8.9rem;">
 											<div class="media-left">
@@ -817,7 +822,7 @@
 											<div class="progress-bar progress-bar-light serverpbar"></div>
 										</div>
 									</div>
-									<div class="col-xs-4 col-md-4 col-sm-4 col-lg-4 pad-no">
+									<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 pad-no">
 										<!--Datacenter stat-->
 										<div class="pad-ver media" style="height: 8.9rem;">
 											<div class="media-left">
@@ -850,20 +855,20 @@
 					<h3 class="panel-title">{events_headline}</h3>
 				</div>
 				<a>
-					<div id="eventsboxes" class="panel-body row" style="height: 27.6rem;">
-						<div id="warningeventbox" class="eventbox col-xs-12 col-md-4 col-sm-4 col-lg-4" style="min-height: 13rem;">
+					<div id="eventsboxes" class="panel-body row" style="min-height: 27.6rem;">
+						<div id="warningeventbox" class="eventbox col-sm-12 col-md-4 col-lg-4" style="min-height: 13rem;">
 							<span class="eventcount" id="events_active"></span>
 							<i class="fa fa-envelope eventico"></i>
 							<span class="eventword">messages</span>
 						</div>
 
-						<div id="erroreventbox" class="eventbox col-xs-12 col-md-4 col-sm-4 col-lg-4" style="min-height: 13rem;">
+						<div id="erroreventbox" class="eventbox col-sm-12 col-md-4 col-lg-4" style="min-height: 13rem;">
 							<span class="eventcount" id="events_critical"></span>
 							<i class="fa fa-exclamation-triangle eventico"></i>
 							<span class="eventword">&nbsp;errors&nbsp;</span>
 						</div>
 
-						<div id="messageeventbox" class="eventbox col-xs-12 col-md-4 col-sm-4 col-lg-4" style="min-height: 13rem;">
+						<div id="messageeventbox" class="eventbox col-sm-12 col-md-4 col-lg-4" style="min-height: 13rem;">
 							<span class="eventcount" id="events_messages"></span>
 							<i class="fa fa-bell eventico"></i>
 							<span class="eventword">all events</span>
@@ -871,25 +876,11 @@
 					</div>
 				</a>
 			</div>
-
+			<!--
 			<div class="panel" style="display:none;">
-				<!-- Start: Quicklink section -->
-				<!--
-					{quicklinks_headline}
-					{quicklinks}
-				//-->
-			
-				<!-- Start: Datacenter load current -->
 				<h2 class="dash">
 					{load_headline}
 					<small>{load_current}</small>
-				<!--
-				<span class="pull-right">
-					<a class="widget-action refresh-load-current" href="#">
-						<span class="halflings-icon refresh"><i></i></span>
-					</a>
-				</span>
-				-->
 				</h2>
 				<table class="table">
 					<tr>
@@ -926,7 +917,8 @@
 						</td>
 					</tr>
 				</table>
-			</div>
+			</div
+			-->
 		</div>
 
 		<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
@@ -943,7 +935,7 @@
 							<h3 class="panel-title">Services</h3>
 						</div>
 						<div class="row">
-							<div id="chartdiv-inventory-memory" class="c3-chart col-lg-12 pad-no" style="height: 21.5rem;"></div>
+							<div id="chartdiv-inventory-memory" class="c3-chart pad-no" style="height: 21.5rem;"></div>
 							<!-- <div id="chartdiv-inventory-memory-legend" class="donut-chart-legend col-lg-4"></div> -->
 						</div>
 					</div>
@@ -953,7 +945,7 @@
 							<h3 class="panel-title">Services</h3>
 						</div>
 						<div class="row">
-							<div id="chartdiv-inventory-cpu" class="c3-chart col-lg-12 pad-no" style="height: 21.5rem;"></div>
+							<div id="chartdiv-inventory-cpu" class="c3-chart pad-no" style="height: 21.5rem;"></div>
 							<!-- <div id="chartdiv-inventory-cpu-legend" class="donut-chart-legend col-lg-4"></div> -->
 						</div>
 					</div>
@@ -963,7 +955,7 @@
 							<h3 class="panel-title">Services</h3>
 						</div>
 						<div class="row">
-							<div id="chartdiv-inventory-disk" class="c3-chart col-lg-12 pad-no" style="height: 21.5rem;"></div>
+							<div id="chartdiv-inventory-disk" class="c3-chart pad-no" style="height: 21.5rem;"></div>
 							<!-- <div id="chartdiv-inventory-disk-legend" class="donut-chart-legend col-lg-4"></div> -->
 						</div>
 					</div>
@@ -973,7 +965,7 @@
 							<h3 class="panel-title">Services</h3>
 						</div>
 						<div class="row">
-							<div id="chartdiv-inventory-network" class="c3-chart col-lg-12 pad-no" style="height: 21.5rem;"></div>
+							<div id="chartdiv-inventory-network" class="c3-chart pad-no" style="height: 21.5rem;"></div>
 							<!-- div id="chartdiv-inventory-network-legend" class="donut-chart-legend col-lg-4"></div> -->
 						</div>
 					</div>
@@ -981,26 +973,57 @@
 			</div>
 			<!-- Start: Inventory overview -->
 			<div class="row">
-				<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+				<div class="col-sm-12 col-md-6 col-lg-6">
 					<div class="panel">
 						<div class="panel-heading">
 							<h3 class="panel-title">Datacenter Summary</h3>
 						</div>
-						<div class="panel-body" style="height: 27.6rem;">
+						<div class="panel-body" style="min-height: 27.6rem;">
+							<div class="panel-heading">
+							</div>
 							<div class="row">
-								<div id="chartdiv-inventory-server" class="c3-chart col-lg-12 pad-no" style="height: 21.5rem;"></div>
+								<div class="col-sm-12 col-md-7">
+									<div class="row">
+										<div id="chartdiv-inventory-server" class="c3-chart pad-no" style="height: 21.5rem;"></div>
+									</div>
+								</div>
+								<div class="col-sm-12 col-md-5">
+									<table id="datacenter-tbl" class="table table-bordered table-hover table-stripped">
+										<tbody>
+											<tr><td>Cloud Host<hr class="cloud-host"></td><td></td></tr>
+											<tr><td>OCH Host<hr class="och-host"></td><td></td></tr>
+											<tr><td>OCH VM<hr class="och-vm"></td><td></td></tr>
+										</tbody>
+									</table>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+
+				<div class="col-sm-12 col-md-6 col-lg-6">
 					<div class="panel">
 						<div class="panel-heading">
 							<h3 class="panel-title">VM Summary</h3>
 						</div>
-						<div class="panel-body" style="height: 27.6rem;">
+						<div class="panel-body" style="min-height: 27.6rem;">
+							<div class="panel-heading">
+							</div>
 							<div class="row">
-								<div id="chartdiv-inventory-vm" class="c3-chart col-lg-12 pad-no" style="height: 21.5rem;"></div>
+								<div class="col-sm-12 col-md-7">
+									<div class="row">
+										<div id="chartdiv-inventory-vm" class="c3-chart pad-no" style="height: 21.5rem;"></div>
+									</div>
+								</div>
+								<div class="col-sm-12 col-md-5">
+									<table class="table table-bordered table-hover table-stripped">
+										<tbody>
+											<tr><td>Inactive<hr class="total-files"></td><td>{inactiveallvm}</td></tr>
+											<tr><td>Active<hr class="health-files"></td><td>{activeallvm}</td></tr>
+											<!-- <tr><td>Inactive<hr class="endangered-files"></td><td></td></tr> -->
+										</tbody>
+									</table>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -1055,7 +1078,7 @@
 
 		</div>
 
-		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" style="display:none">
+		<div class="col-sm-12 col-md-6 col-lg-6" style="display:none">
 			<div class="panel">
 			<!-- Start: Datacenter load chart -->
 			<h2 class="dash">{load_headline}
