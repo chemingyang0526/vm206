@@ -77,10 +77,10 @@
 		border-width: 2px;
 		width:24px;
 	}
-    hr.total-files {
+    hr.total, hr.health-files {
         border-color: #dfdfdf;
     }
-    hr.health-files, hr.cloud-host {
+    hr.cloud-host {
         border-color: #41bee9 ;
     }
     hr.endangered-files, hr.och-host {
@@ -92,7 +92,7 @@
     hr.networking {
         border-color: rgb(75, 192, 192);
     }
-    hr.total {
+    hr.nextthing {
         border-color: rgb(153, 102, 255);
     }
 </style>
@@ -182,7 +182,7 @@
 		server_doughnut();
 
 		make_c3('pie','vm',[["total",vmtotal],["inactive",vminactive],["active",vmactive]],"", false);
-		make_c3('donut','storage',[["total files", allfiles],["health files",healthfiles],["endangered files",endangeredfiles],["missing files", missingfiles]],"", false);
+		make_c3('donut','storage',[["total", allfiles],["health files",healthfiles],["endangered files",endangeredfiles],["missing files", missingfiles]],"", false);
 	});
 /*
 	function givedashboard(month, year, user) {
@@ -485,11 +485,10 @@
 					used: seriesColors[1],
 					active: seriesColors[1],
 					load: seriesColors[1],
-					'total files': seriesColors[0],
 					'Cloud Host': seriesColors[1],
 					'OCH Host': seriesColors[2],
 					'OCH VM': seriesColors[3],
-					'health files': seriesColors[1],
+					'health files': seriesColors[0],
 					'endangered files': seriesColors[2],
 					'missing files': seriesColors[3]
 					/* paused: seriesColors[2] */
@@ -679,7 +678,7 @@
 							<div class="row">
 								<table class="table table-bordered table-hover table-stripped">
 									<tbody>
-										<tr><td>Total Files<hr class="total-files"></td><td>{allfiles}</td></tr>
+										<!-- <tr><td>Total Files<hr class="total-files"></td><td>{allfiles}</td></tr> -->
 										<tr><td>Health Files<hr class="health-files"></td><td>{healthfiles}</td></tr>
 										<tr><td>Endangered Files<hr class="endangered-files"></td><td>{endangeredfiles}</td></tr>
 										<tr><td>Missing Files<hr class="missing-files"></td><td>{missingfiles}</td></tr>

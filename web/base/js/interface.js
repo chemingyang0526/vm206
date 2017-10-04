@@ -4587,7 +4587,7 @@ if (notpicker != true) {
 
 	// hddprogress and memoryprogress in header
 
-		var hddp = $('#storagearea .progress-bar').attr('style');
+		var hddp = $('#storageareas .progress-bar').attr('style');
 
 		var mmp = $('.memoryprogress .progress-bar').attr('style');
 
