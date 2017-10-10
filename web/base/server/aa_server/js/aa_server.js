@@ -156,8 +156,10 @@ $(document).ready(function(){
 				dc_load[2].push( [idx, parseFloat(v['datacenter_load_storage'] )] );
 			});
 			
-		//console.log(dc_load[0]);
-			
+		// console.log(dc_load[0]);
+		// console.log(dc_load[1]);
+		// console.log(dc_load[2]);
+		
 		if ( typeof(dc_load[0][59]) != 'undefined') {
 			var serverp = dc_load[1][59];
 			var storagep = dc_load[2][59];
@@ -233,25 +235,32 @@ $(document).ready(function(){
 		//console.log(dc_load[0][i][1]);
 		var first = 0;
 		var second = 0;
-		 if ( typeof dc_load[0][i] !== 'undefined') {
+		var third = 0;
+		if ( typeof dc_load[0][i] !== 'undefined') {
 			if ( typeof dc_load[0][i][1] !== 'undefined') {
 				first = dc_load[0][i][1];
 			}
 
+			if ( typeof dc_load[1][i][1] !== 'undefined') {
+				second = dc_load[1][i][1];
+			}
+
 			if ( typeof dc_load[2][i][1] !== 'undefined') {
-				second = dc_load[2][i][1];
+				third = dc_load[2][i][1];
 			}
 		 }
 
-		day_data.push({"elapsed": i, "value": first, "b":second});
+		day_data.push({"elapsed": i, "value": first, "a": second, "b":third});
 	}
-	
+	// console.log(day_data);
+	// console.log(dc_load);
+
 	var chart = Morris.Area({
 		element: 'morris-chart-network',
 		data: day_data,
 		axes:false,
 		xkey: 'elapsed',
-		ykeys: ['value', 'b'],
+		ykeys: ['value', 'a', 'b'],
 		//labels: ['Load', 'Minute'],
 		//yLabelFormat :function (y) { return y.toString() + ' minutes'; },
 		gridEnabled: false,
@@ -330,14 +339,14 @@ $(document).ready(function(){
 	}
 
 	// server_donut();
-	storage_donut();
+	// storage_donut();
 
-	updateLoadChart();
-	setInterval(updateLoadChart, 10000);
+	// updateLoadChart();
+	// setInterval(updateLoadChart, 10000);
 	
-	updateLoadSection();
+	//updateLoadSection();
 
-	updateEventSection();
+	//updateEventSection();
 
 	
 	// Init refresh interval for datacenter load section and chart, 

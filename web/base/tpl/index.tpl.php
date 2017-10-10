@@ -219,9 +219,7 @@ function get_info_box() {
 				</div>
 				<!--================================-->
 				<!--End brand logo & name-->
-
 {top}
-
 			</div>
 		</header>
 		<!--===================================================-->
@@ -486,7 +484,7 @@ function get_info_box() {
 	
 	<!-- SETTINGS - DEMO PURPOSE ONLY -->
 	<!--===================================================-->
-	<div id="demo-set" class="demo-set">
+	<div id="demo-set" class="demo-set" style="display: none;">
 		<div class="demo-set-body bg-dark">
 			<div id="demo-set-alert"></div>
 			<div class="demo-set-content clearfix">
@@ -796,11 +794,11 @@ function get_info_box() {
 
 
 	<!--Demo script [ DEMONSTRATION ]-->
-	<script src="{baseurl}/js/demo/nifty-demo.js"></script>
+	<!-- <script src="{baseurl}/js/demo/nifty-demo.js"></script> -->
 
 
 	<!--Specify page [ SAMPLE ]-->
-	<script src="{baseurl}/js/demo/dashboard.js"></script>
+	<!-- <script src="{baseurl}/js/demo/dashboard.js"></script> -->
 
 		{jstranslation}
 	{script}
@@ -818,9 +816,9 @@ function get_info_box() {
 	
 <script src="{baseurl}/js/htvcenter-ui.js" type="text/javascript"></script>
 <script src="{baseurl}/designplugins/gauge-js/gauge.min.js"></script>
-
+<!--
 <script src="{baseurl}/js/demo/charts.js" type="text/javascript"></script>
-
+-->
 <link href="{baseurl}/designplugins/bootstrap-datepicker/bootstrap-datepicker.css" rel="stylesheet">
 	<script src="{baseurl}/designplugins/bootstrap-datepicker/bootstrap-datepicker.js"></script>
 

@@ -6121,11 +6121,11 @@ h2.dash {
 }
 
 #warningeventbox, .orangero {
-	background-color: #ebaa4b !important;
+	background-color: rgb(255, 225, 86) !important; /*#ebaa4b*/
 }
 
 #messageeventbox {
-	background-color: #5fa2dd !important;
+	background-color: #41bee9 !important; /*#5fa2dd*/
 }
 
 .eventdescr {
@@ -6134,7 +6134,7 @@ h2.dash {
 }
 
 #erroreventbox {
-	background-color: #f76c51 !important;
+	background-color: rgb(255, 0, 0) !important; /*#f76c51*/
 }
 
 .redero {
