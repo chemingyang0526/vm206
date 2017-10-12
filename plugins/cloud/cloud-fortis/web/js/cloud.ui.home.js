@@ -17,6 +17,7 @@ if (!Array.prototype.map)
 	};
 }
 
+/*
 var seriesColors = [
 	'#dfdfdf',
 	'#41bee9',
@@ -25,6 +26,7 @@ var seriesColors = [
 	chartColors.green,
 	chartColors.orange
 	];
+*/
 
 function get_limits() {
 	var this_month = new Date();
@@ -88,21 +90,24 @@ function make_current_monthly_billing(binding, data, units) {
 	var min = max / 8;
 	var normalized_numbers = [Math.max(numbers[0],min), Math.max(numbers[1],min), Math.max(numbers[2],min), Math.max(numbers[3],min), Math.max(numbers[4],min)];
 	var legend_arr = [[data.cpu,"cpu"],[data.storage,"storage"],[data.memory,"memory"],[data.virtualization,"virtualization"],[data.networking,"networking"]];
-	var legend = renderDonutLegend(legend_arr, binding);
+	var color = Chart.helpers.color;
+	var colors = [
+			color(seriesColors[0]).rgbString(),
+			color(seriesColors[1]).rgbString(),
+			color(seriesColors[3]).rgbString(),
+			color(seriesColors[5]).rgbString(),
+			color(seriesColors[4]).rgbString()
+		];
+
+	var legend = renderDonutLegend(legend_arr, binding, colors);
 	$('#chartdiv-inventory-'+binding+'-legend').html('');
 	$('#chartdiv-inventory-'+binding+'-legend').append(legend);
-	var color = Chart.helpers.color;
+	
 	var config = {
 		data: {
 			datasets: [{
 				data: normalized_numbers,
-				backgroundColor: [
-					color(seriesColors[0]).rgbString(),
-					color(seriesColors[1]).rgbString(),
-					color(seriesColors[2]).rgbString(),
-					color(seriesColors[3]).rgbString(),
-					color(seriesColors[4]).rgbString()
-				],
+				backgroundColor: colors,
 				label: 'dollars ($)' // for legend
 			}],
 			labels: labels
@@ -161,7 +166,13 @@ function make_monthly_chart(binding, monthlydata, units) {
 	var bindto = "#chartdiv-inventory-" + binding; 
 	var x_column = ['x'];
 	var y_column = ['cost'];
-	var legend_arr = []
+	var legend_arr = [];
+	var color = Chart.helpers.color;
+	var colors = [
+			color(seriesColors[3]).rgbString(),
+			color(seriesColors[4]).rgbString(),
+			color(seriesColors[5]).rgbString(),
+		];
 
 	for (var i = 0; i < monthlydata.length; i++) {
 		x_column.push(monthlydata[i][0]);
@@ -169,7 +180,7 @@ function make_monthly_chart(binding, monthlydata, units) {
 		legend_arr.push(['$'+monthlydata[i][1], parseDate(monthlydata[i][0], "mon")+' '+parseDate(monthlydata[i][0], "Y")+" "]);
 	}
 
-	var legend = renderDonutLegend(legend_arr, binding);
+	var legend = renderDonutLegend(legend_arr, binding, colors);
 	$('#chartdiv-inventory-'+binding+'-legend').html('');
 	$('#chartdiv-inventory-'+binding+'-legend').append(legend);
 
@@ -184,7 +195,7 @@ function make_monthly_chart(binding, monthlydata, units) {
 			],
 			type: 'bar',
 			color: function (color, d) {
-				return seriesColors[d.index];
+				return seriesColors[d.index + 3];
 			}
 		},
 		axis: {
@@ -235,7 +246,7 @@ function renderValue(v,binding) {
 }
 
 
-function renderDonutLegend(values,binding) {
+function renderDonutLegend(values,binding,colors) {
 	var legend = $('<ul>').addClass((binding == "monthlybilling" ? "center" : ""));
 	var size = '';
 
@@ -243,7 +254,7 @@ function renderDonutLegend(values,binding) {
 
 		legend.append(
 			$('<li>').append(
-				$('<div>').addClass('legend-tile').attr('style', 'background:' + seriesColors[k])
+				$('<div>').addClass('legend-tile').attr('style', 'background:' + colors[k])
 			).append(renderValue(v,binding) + ' ' + v[0])
 		);
 	});
@@ -278,8 +289,14 @@ function make_gauge(binding, values, units) {
 	var titlo = eval(lang);
 	$('#chartdiv-inventory-'+binding).closest('.dashboard').find('.panel-title').text(titlo);
 	var max_val = values[0][1] + values[1][1];
+	var color = Chart.helpers.color;
+	var colors = [
+			color(seriesColors[0]).rgbString(),
+			color(seriesColors[1]).rgbString(),
+		];
 
-	var legend = renderDonutLegend([values[0],values[1]], binding);
+
+	var legend = renderDonutLegend([values[0],values[1]], binding, colors);
 	$('#chartdiv-inventory-'+binding+'-legend').html('');
 	$('#chartdiv-inventory-'+binding+'-legend').append(legend);
 
@@ -330,8 +347,14 @@ function make_doughnut(binding, donutdata, units) {
 	lang = 'lang_'+binding;
 	var titlo = eval(lang);
 	$('#chartdiv-inventory-'+binding).closest('.dashboard').find('.panel-title').text(titlo);
+	var color = Chart.helpers.color;
+	var colors = [
+			color(seriesColors[0]).rgbString(),
+			color(seriesColors[1]).rgbString(),
+			color(seriesColors[2]).rgbString()
+		];
 
-	var legend = renderDonutLegend(donutdata, binding);
+	var legend = renderDonutLegend(donutdata, binding, colors);
 	$('#chartdiv-inventory-'+binding+'-legend').html('');
 	$('#chartdiv-inventory-'+binding+'-legend').append(legend);
 

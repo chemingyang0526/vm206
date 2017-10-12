@@ -6094,6 +6094,7 @@ h2.dash {
     position: relative;
     text-align: center;
     top: 12px;
+    font-size: 15px;
 }
 
 .eventtime {
@@ -6110,7 +6111,7 @@ h2.dash {
 }
 .eventcount {
 	color: white;
-	font-size: 50px !important;
+	font-size: 30px;
 	position: relative;
 	top: 12px;
 }
@@ -6120,12 +6121,18 @@ h2.dash {
     width: 80%;
 }
 
-#warningeventbox, .orangero {
-	background-color: rgb(255, 225, 86) !important; /*#ebaa4b*/
+#warningeventbox {
+	background-color: rgb(72, 204, 132) !important;
+	cursor: pointer;
+}
+
+.orangero {
+	background-color: rgb(255, 225, 86) !important;
 }
 
 #messageeventbox {
 	background-color: #41bee9 !important; /*#5fa2dd*/
+	cursor: pointer;
 }
 
 .eventdescr {
@@ -6134,7 +6141,8 @@ h2.dash {
 }
 
 #erroreventbox {
-	background-color: rgb(255, 0, 0) !important; /*#f76c51*/
+	background-color: rgb(251, 67, 74) !important; /*#f76c51*/
+	cursor: pointer;
 }
 
 .redero {

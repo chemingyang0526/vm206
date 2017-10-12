@@ -16,7 +16,8 @@ function current_year_monthly_spent_by_resource(bindto, data) {
             },
             groups: [
                 ['cpu','storage','memory','virtualization','networking']
-            ]
+            ],
+            order: null,
         },
         axis: {
             x:  {

@@ -25,15 +25,15 @@
     }
 
     hr.memory {
-        border-color: rgb(255, 99, 132);
+        border-color: rgb(255, 225, 86);
     }
 
     hr.virtualization {
-        border-color: rgb(255, 205, 86);
+        border-color: rgb(255, 159, 64);
     }
 
     hr.networking {
-        border-color: rgb(75, 192, 192);
+        border-color: rgb(75, 204, 132);
     }
 
     hr.total {

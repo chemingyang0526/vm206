@@ -7,8 +7,8 @@
 	<title>Maestro Enterprise Ultimate</title>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8">
 
-	<link rel="icon" href="{baseurl}/img/favicon.ico" type="image/x-icon">
-	<link rel="shortcut icon" href="{baseurl}/img/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="{baseurl}/img/favicon.ico?v=2" type="image/x-icon">
+	<link rel="shortcut icon" href="{baseurl}/img/favicon.ico?v=2" type="image/x-icon">
 
 
 	<!--STYLESHEET-->

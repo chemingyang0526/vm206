@@ -45,6 +45,9 @@
 		display: table-cell;
 		padding: 0 5px;
 	}
+	#eventsboxes span i {
+		margin-left: 15px;
+	}
 	.eventcount {
 		top: 0px;
 		display:block;
@@ -132,7 +135,7 @@
 	var charts = [];
 
 	var chartColors = {
-		red: 'rgb(255, 0, 0)',
+		red: 'rgb(251, 67, 74)',
 		orange: 'rgb(255, 159, 64)',
 		yellow: 'rgb(255, 225, 86)',
 		green: 'rgb(72, 204, 132)',
@@ -170,17 +173,17 @@
 		// }
 
 		// givedashboard(month, year);
-		var memtotal = parseFloat({memtotal}).toFixed(0);
-		var memused = parseFloat({memused}).toFixed(0);
-		var memfree = (memtotal - memused).toFixed(0);
+		var memfree = parseInt({memavailable});
+		var memused = parseInt({memconsumed});
+		var memtotal = memfree + memused;
 
 		var stotal = parseFloat("{stotal}".split(" ")[0]).toFixed(1);
 		var sused =  parseFloat("{sused}".split(" ")[0]).toFixed(1);
 		var sfree = (stotal - sused).toFixed(1);
 
-		var cputotal = parseInt({cpunumber});
-		var cpuload = parseFloat({cpuload});
-		var cpufree = (cputotal - cpuload).toFixed(2);
+		var cputotal = parseInt({cpuavailable});
+		var cpuload = parseInt({cpuconsumed});
+		var cpufree = cputotal - cpuload;
 
 		var vmtotal = parseInt({allvmcount});
 		var vmactive = parseInt({activeallvm});
@@ -535,6 +538,7 @@
 						</div>
 						-->
 					</div>
+					<!--
 					<div style="display: none;">
 						<h4><i class="fa fa-cogs"></i> CPU & memory:</h4>
 						<ul class="storage-list">
@@ -547,7 +551,6 @@
 								<span class="sr-only">{mempercent}% used</span>
 							</div>
 						</div>
-						<!--
 						<ul class="storage-list">
 							<li><b>Swap used:</b> {swapused}</li>
 							<li><b>Swap total:</b> {swaptotal}</li>
@@ -557,8 +560,8 @@
 								<span class="sr-only">{swappercent}% used</span>
 							</div>
 						</div>
-						-->
 					</div>
+					-->
 				</div>
 			</div>
 
@@ -607,29 +610,29 @@
 				</div>
 				<a>
 					<div id="eventsboxes" class="panel-body row" style="min-height: 27.6rem;">
-						<div id="warningeventbox" class="col-lg-12" style="height: 7.7rem; margin: 0.3rem auto;">
-							<div class="col-xs-2">
-								<span><i class="fa fa-envelope eventico fa-3x"></i></span>
+						<div id="warningeventbox" style="height: 7.5rem; margin: 1rem;">
+							<div class="col-xs-2 pad-no">
+								<span><i class="fa fa-envelope eventico fa-2x"></i></span>
 							</div>
-							<div class="col-xs-10">
+							<div class="col-xs-10 pad-no">
 								<span class="eventcount" id="events_active"></span>
 								<span class="eventword">messages</span>
 							</div>
 						</div>
-						<div id="erroreventbox" class="col-lg-12" style="height: 7.7rem; margin: 0.3rem auto;">
-							<div class="col-xs-2">
-								<span><i class="fa fa-exclamation-triangle eventico fa-3x"></i></span>
+						<div id="erroreventbox" style="height: 7.5rem; margin: 1rem;">
+							<div class="col-xs-2 pad-no">
+								<span><i class="fa fa-exclamation-triangle eventico fa-2x"></i></span>
 							</div>
-							<div class="col-xs-10">
+							<div class="col-xs-10 pad-no">
 								<span class="eventcount" id="events_critical"></span>
 								<span class="eventword">errors</span>
 							</div>
 						</div>
-						<div id="messageeventbox" class="col-lg-12" style="height: 7.7rem; margin: 0.3rem auto;">
-							<div class="col-xs-2">
-								<span><i class="fa fa-bell eventico fa-3x"></i></span>
+						<div id="messageeventbox" style="height: 7.5rem; margin: 1rem;">
+							<div class="col-xs-2 pad-no">
+								<span><i class="fa fa-bell eventico fa-2x"></i></span>
 							</div>
-							<div class="col-xs-10">
+							<div class="col-xs-10 pad-no">
 								<span class="eventcount" id="events_messages"></span>
 								<span class="eventword">all events</span>
 							</div>

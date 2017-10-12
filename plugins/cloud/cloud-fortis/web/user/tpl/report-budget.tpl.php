@@ -1,4 +1,4 @@
-<style>
+c<style>
 	#project_tab_ui { display: none; }  /* hack for tabmenu issue */
 	/*
 	#budgets {
@@ -479,7 +479,7 @@ $(document).ready(function() {
 				columns: data,
 				type: 'spline',
 				colors: {
-					budgeted: seriesColors[2],
+					budgeted: seriesColors[3],
 					spent: seriesColors[1]
 				},
 			},

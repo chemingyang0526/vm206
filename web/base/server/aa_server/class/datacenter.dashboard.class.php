@@ -179,6 +179,11 @@ var $lang = array();
 		$data = $this->storagefiles();
 		$t->add($data);
 
+		// $hosts = $this->gethosts();
+
+		// die(var_export($hosts));
+
+
 		$year = date('Y');
 				$yearm1 = $year - 1;
 				$yearm2 = $year - 2;
@@ -512,13 +517,13 @@ $d = array();
 			$storage->get_instance_by_id($value["storage_id"]);
 			
 			$resource = new resource();
+
 			$resource->get_instance_by_id($storage->resource_id);
 
 			$deployment = new deployment();
 			$deployment->get_instance_by_id($storage->type);
 			
 			$cpumodel = str_replace('QEMU', 'OCH', $resource->cpumodel);
-
 			$d['cpu'] = $cpumodel;
 			$d['cpunumber'] = $resource->cpunumber;
 			$d['cpuload'] = $resource->load;
@@ -526,6 +531,9 @@ $d = array();
  			$d['memused'] = $resource->memused;
  			$d['swaptotal'] = $resource->swaptotal;
  			$d['swapused'] = $resource->swapused;
+
+
+
 
  			$mem = $d['memused']/($d['memtotal']/100);
  			$d['mempercent'] = round($mem);
@@ -565,6 +573,34 @@ $d = array();
 		$storage_list .= '</ul>';
 
 		$resource = new resource();
+
+		/* get number of cpu used and number of cpu available */
+		$resource_list = $resource->get_list();
+		$cpu_avail = 0;
+		$cpu_used = 0;
+		$mem_avail = 0;
+		$mem_used = 0;
+
+		foreach ($resource_list as $arr) {
+			$resource->get_instance($arr['resource_id']);
+
+			if ($resource->ip <> 1) {
+				if ($resource->ip == $resource->htvcenterserver) {
+					$cpu_avail += intval($resource->cpunumber);
+					$mem_avail += intval($resource->memtotal) - intval($resource->memused);
+				} else {
+					$cpu_used += intval($resource->cpunumber);
+					$mem_used += intval($resource->memtotal);
+				}
+			}
+		}
+
+		$d['memavailable'] = $mem_avail;
+		$d['memconsumed'] = $mem_used;
+		$d['cpuavailable'] = $cpu_avail;
+		$d['cpuconsumed'] = $cpu_used;
+		/* end get number of cpu used and number of cpu available */
+
 		$resource->get_instance_by_id(0);
 			
 			$deployment = new deployment();
@@ -2260,11 +2296,31 @@ function gethumanvalue($size) {
    	return $res;
 
 }
+/*
+function gethosts() {
+	$virtualization = new virtualization();
+	$virtlist = $virtualization->get_list();
+	$resource = new resource();
+	$hosts = array();
+
+	foreach ($virtlist as $v) {
+		if (strrpos($v['virtualization_name'], 'Host') !== false) {
+			
+			die(var_export())
 
 
+			$res_ids = $resource->get_instance_ids_by_virtualization_id($v['virtualization_id']);
+			array_push([$v['virtualization_name'],count($res_ids)]);
+		}
+	}
 
+	return $hosts;
+}
 
+function getvms() {
 
+}
+*/
 
 
 }
