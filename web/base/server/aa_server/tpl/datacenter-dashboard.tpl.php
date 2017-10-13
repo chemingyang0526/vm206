@@ -160,9 +160,9 @@
 
 	$(document).ready(function(){
 
-		var flagmain = true;
-		var sizes = ["{mempercent}%", "{swappercent}%", "{hddpercent}%"];
-		var esxstorages = "{esxstoragespercent}";
+		// var flagmain = true;
+		// var sizes = ["{mempercent}%", "{swappercent}%", "{hddpercent}%"];
+		// var esxstorages = "{esxstoragespercent}";
 		// index page actions:	
 		//if (flagmain == true) {
 		//	 $('.progress-bar').each(function(i) {
@@ -173,6 +173,10 @@
 		// }
 
 		// givedashboard(month, year);
+
+		var hosts = {hosts};
+		var vms = {vms};
+
 		var memfree = parseInt({memavailable});
 		var memused = parseInt({memconsumed});
 		var memtotal = memfree + memused;
@@ -201,11 +205,11 @@
 
 		get_event_status();
 		get_cloud_charge_back();
-		server_doughnut();
-		/*
-		make_c3('donut','vm',[["total",vmtotal],["inactive",vminactive],["active",vmactive]],"", true);
-		*/
+		make_c3('donut','server', hosts, "", 'right');
 		make_c3('donut','storage',[["total", allfiles],["health files",healthfiles],["endangered files",endangeredfiles],["missing files", missingfiles]],"", 'right');
+
+		make_vmstable(vmactive, vminactive, vms);
+
 		datacenter_load();
 		setInterval(datacenter_load, 10000);
 	});
@@ -302,7 +306,6 @@
 				},
 				onclick: function (d, i) { console.log("onclick", d, i); },
 				onmouseover: function (d, i) { 
-					// console.log("onmouseover", d); 
 					for (var k = 0; k < donutdata.length; k++) {
 						if (donutdata[k][0] == d.name) {
 							d3.select(bindto+' .c3-chart-arcs-title').node().innerHTML = format_label([donutdata[k][1], unit]);
@@ -310,7 +313,6 @@
 					}
 				},
 				onmouseout: function (d, i) {
-					// console.log("onmouseout", d, i); 
 					d3.select(bindto+' .c3-chart-arcs-title').node().innerHTML = format_label([donutdata[0][1], unit]);
 				},
 			},
@@ -363,6 +365,28 @@
 			legend.text(legend.text().replace("_"," "));
 		}); */
 		charts.push(chart);
+	}
+
+	function parse_label(str) {
+		return str.replace("KVM", "OCH").replace(" (localboot)","").replace(" (networkboot)","");
+	}
+
+	function make_vmstable(vmactive, vminactive, vms) {
+		var html = '<tr><td>Active<hr class="active"></td><td>'+vmactive+'</td><td>Inactive<hr class="inactive"></td><td>'+vminactive+'</td></tr>';
+		
+		for (var i = 0; i < (vms.length + 1) % 2; i++) {
+			var label = parse_label(vms[i * 2][0]);
+			html += '<tr><td>'+label+'<hr class="' + label + '"></td><td>' + vms[i * 2][1] + '</td>';
+			
+			if (i * 2 + 1 <= vms.length - 1) { 
+				label =  parse_label(vms[i * 2 + 1][0]);
+				html += '<td>'+label+'<hr class="' + label + '"></td><td>' + vms[i * 2 + 1][1] + '</td>';
+			} else {
+				html += '<td></td>';
+			}
+			html += '</tr>';
+		}
+		$("#vmstable tbody").append(html);
 	}
 
 	function datacenter_load() {
@@ -467,48 +491,6 @@
 			
 			charts.push(chart);
 		});
-	}
-
-	function server_doughnut() {
-		var server_list = htvcenter.get_server_list();
-		var server_values = [];
-		var virtualization, virtualization_list = [];
-		var hist = {};
-		
-		if(server_list != false && $('#chartdiv-inventory-server').length) {
-			$.each(server_list, function(k,server){
-				virtualization_list.push(server['appliance_virtualization']);
-			});
-			virtualization_list.map( function (a) { if (a in hist) hist[a] ++; else hist[a] = 1; } );
-			
-			$.each(hist, function(k,v){
-				if (k == 'KVM VM (localboot)' || k == 'KVM VM') {
-					k = 'OCH VM';
-				}
-
-				if (k == 'ESX VM (localboot)') {
-					k = 'ESX VM';
-				}
-				
-				if (k == 'KVM Host') {
-					k = 'OCH Host';
-				}
-
-				server_values.push([k,v]);
-			});
-
-			for (i = 0; i < server_values.length; i++ ) {
-				$("#datacenter-tbl tr").each(function() {
-					var loop = server_values[i];
-
-					if ($(this).find('td:first-of-type').text() == loop[0]) {
-						$(this).find('td:nth-of-type(2)').text(loop[1]);
-					}
-				});
-			}
-			// var values = renderDonutLegend(server_values);
-			make_c3('donut','server', server_values, "", 'right');
-		}
 	}
 </script>
 
@@ -774,14 +756,17 @@
 							<div class="panel-heading">
 							</div>
 							<div class="row">
+								<!--
 								<div class="col-sm-12 col-md-7 pad-no">
 									<div id="chartdiv-inventory-vm" class="c3-chart pad-no" style="height: 21.5rem;"></div>
 								</div>
-								<div class="col-sm-12 col-md-5 pad-no">
-									<table class="table table-bordered table-hover table-stripped" style="width: 100%;">
+								-->
+								<div class="col-xs-12">
+									<table id="vmstable" class="table table-bordered table-hover table-stripped" style="width: 100%;">
 										<tbody>
+										<!--
 											<tr><td>Inactive<hr class="inactive"></td><td>{inactiveallvm}</td></tr>
-											<tr><td>Active<hr class="active"></td><td>{activeallvm}</td></tr>
+											<tr><td>Active<hr class="active"></td><td>{activeallvm}</td></tr> -->
 											<!-- <tr><td>Inactive<hr class="endangered-files"></td><td></td></tr> -->
 										</tbody>
 									</table>
@@ -800,41 +785,6 @@
 
 				<div class="panel-body row" style="height: 27.6rem;">
 					<div id="current-year-monthly-spent-by-resource" style="height: 26.6rem;"></div>
-				<!--
-					<div class="mainuserdash text-center row">
-						<div class="col-xs-4 col-sm-4 col-lg-4 col-md-4 text-center">
-						<select id="reportuserdashmain">
-							{hidenuser}
-						</select>
-						</div>
-						<div class="col-xs-4 col-sm-4 col-lg-4 col-md-4 text-center">
-							<select id="reportmonthdashmain">
-								<option value="0">January</option>
-								<option value="1">February</option>
-								<option value="2">March</option>
-								<option value="3">April</option>
-								<option value="4">May</option>
-								<option value="5">June</option>
-								<option value="6">July</option>
-								<option value="7">August</option>
-								<option value="8">September</option>
-								<option value="9">October</option>
-								<option value="10">November</option>
-								<option value="11">December</option>
-							</select>
-						</div>
-						 <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4 text-center">
-								 <select id="reportyeardashmain">{reportyear}</select>
-						 </div>
-					</div>
-					<div class="maindonutrenderrr">
-						<div id="donutrendermaino">
-						</div>
-						<div id="totalamauntmain">
-							<b>Total Amount:</b> <span id="mval"></span>
-						</div>
-					</div>
-					-->
 				</div>
 			</div>
 		</div>

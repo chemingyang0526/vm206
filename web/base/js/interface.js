@@ -4584,7 +4584,7 @@ if (notpicker != true) {
 	});
 	// --- end language select ---
 
-
+/*
 	// hddprogress and memoryprogress in header
 
 		var hddp = $('#storageareas .progress-bar').attr('style');
@@ -4665,7 +4665,7 @@ if (notpicker != true) {
 	}
 
 	// --- end hddprogress and memoryprogress in header ---
-
+*/
 
 
 	// esx main page content

@@ -179,10 +179,11 @@ var $lang = array();
 		$data = $this->storagefiles();
 		$t->add($data);
 
-		// $hosts = $this->gethosts();
+		$data = $this->gethosts();
+		$t->add($data);
 
-		// die(var_export($hosts));
-
+		$data = $this->getvms();
+		$t->add($data);
 
 		$year = date('Y');
 				$yearm1 = $year - 1;
@@ -1110,10 +1111,8 @@ function calculationesxsummary($rezdata) {
 			$counted[] = $host;
 
 			$percent = $used/($capacity/100);
-			//var_dump($percent); die();
+			
 			$percent = round($percent);
-
-			//var_dump($percent); die();
 
 			$used = round($used, 2);
 			
@@ -1202,7 +1201,6 @@ $importcnt = 0;
 foreach ($hostsid as $hoste) {
 		$imported = 0;
 		$appliance_id = $hoste["appliance_id"];
-		//var_dump($appliance_id); die();
 		$virtualization	= new virtualization();
 		$appliance		= new appliance();
 		$resource		= new resource();
@@ -1266,7 +1264,6 @@ foreach ($hostsid as $hoste) {
 			#$a->handler = 'onclick="wait();"';
 			#$a->href    = $this->response->get_url($this->actions_name, "import");
 			#$d['import_existing_vms']   = $a->get_string();
-			//var_dump($resource->ip); die();
 			$body = array();
 			$file = $this->htvcenter->get('webdir').'/plugins/vmware-esx/vmware-esx-stat/'.$resource->ip.'.vm_list';
 			$identifier_disabled = array();
@@ -1732,8 +1729,6 @@ foreach ($hostsid as $hoste) {
 		$countwarnings = 0;
 		$counterrors = 0;
 		$allcountwarnings = 0;
-
-		// var_dump(count($allerr)); die();
 
 		foreach ($allerr as $row) {
 		unset($buf);
@@ -2296,32 +2291,40 @@ function gethumanvalue($size) {
    	return $res;
 
 }
-/*
+
 function gethosts() {
 	$virtualization = new virtualization();
 	$virtlist = $virtualization->get_list();
 	$resource = new resource();
 	$hosts = array();
+	$rtrn = array();
 
-	foreach ($virtlist as $v) {
-		if (strrpos($v['virtualization_name'], 'Host') !== false) {
-			
-			die(var_export())
-
-
+	foreach ($virtlist as $idx => $v) {
+		if (strrpos($v['virtualization_name'],' Host') !== false) {
 			$res_ids = $resource->get_instance_ids_by_virtualization_id($v['virtualization_id']);
-			array_push([$v['virtualization_name'],count($res_ids)]);
+			array_push($hosts, [$v['virtualization_name'],count($res_ids)]);
 		}
 	}
-
-	return $hosts;
+	$rtrn['hosts'] = json_encode($hosts);
+	return $rtrn;
 }
 
 function getvms() {
+	$virtualization = new virtualization();
+	$virtlist = $virtualization->get_list();
+	$resource = new resource();
+	$vms = array();
+	$rtrn = array();
 
+	foreach ($virtlist as $idx => $v) {
+		if (strrpos($v['virtualization_name'],' VM') !== false) {
+			$res_ids = $resource->get_instance_ids_by_virtualization_id($v['virtualization_id']);
+			array_push($vms, [$v['virtualization_name'],count($res_ids)]);
+		}
+	}
+	$rtrn['vms'] = json_encode($vms);
+	return $rtrn;
 }
-*/
-
 
 }
 ?>
