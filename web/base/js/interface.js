@@ -4096,7 +4096,6 @@ $('#resource_tab0 .submit').click(function(e){
   	});
   // --- end new storage popup ---
 
-
   // volumepopup:
   	$('#volumepopupbtn a').click(function(e){
   		e.preventDefault();
@@ -4415,6 +4414,7 @@ if (notpicker != true) {
 	});
 
 	// --- end close event sidebar ---
+
 	// events and right sidebar
 
 	$('#warningeventbox').click(function(){
@@ -4474,6 +4474,7 @@ if (notpicker != true) {
 	$('#sidebarallerrors').html(eventserror);
 
 	// --- end events and right sidebar ---
+
 	// todo list
 
 	$('#addtask').click(function(){
@@ -4584,26 +4585,26 @@ if (notpicker != true) {
 	});
 	// --- end language select ---
 
-/*
+
 	// hddprogress and memoryprogress in header
 
 		var hddp = $('#storageareas .progress-bar').attr('style');
-
 		var mmp = $('.memoryprogress .progress-bar').attr('style');
+
+		// console.log(hddp);
+		// console.log(mmp);
+
 
 		if (typeof(hddp) == 'undefined') {
 			$('#ajaxbuf').load('/htvcenter/base/index.php?base=aa_server&controller=datacenter .memoryprogress', function(){
 						mmp = $('.memoryprogress .progress-bar').attr('style');
 						$('#ajaxbuf').load('/htvcenter/base/index.php?base=aa_server&controller=datacenter .hddprogress', function(){
 							hddp = $('.hddprogress .progress-bar').attr('style');
-							//console.log(hddp);
-							//console.log(mmp);
 							$('#ajaxbuf').remove();
 							headprogress(hddp, mmp);
 						});
 						
 			});
-	
 		} else {
 			headprogress(hddp, mmp);
 		}
@@ -4665,7 +4666,7 @@ if (notpicker != true) {
 	}
 
 	// --- end hddprogress and memoryprogress in header ---
-*/
+
 
 
 	// esx main page content

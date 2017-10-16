@@ -140,10 +140,10 @@ function remove_by_type($type) {
 // returns a list of all virtualization names
 function get_list() {
 	global $VIRTUALIZATION_INFO_TABLE;
-	$db=htvcenter_get_db_connection();
 	$query = "select virtualization_id, virtualization_name from $VIRTUALIZATION_INFO_TABLE";
-	$virtualization_array = $db->GetAll($query);
-	return $virtualization_array;
+	$virtualization_name_array = array();
+	$virtualization_name_array = htvcenter_db_get_result_double ($query);
+	return $virtualization_name_array;
 }
 
 // returns the virtualization plugin name

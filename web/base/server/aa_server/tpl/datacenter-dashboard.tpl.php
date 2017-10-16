@@ -102,10 +102,10 @@
     hr.cloud-host, hr.active {
         border-color: #41bee9 ;
     }
-    hr.endangered-files, hr.och-host {
+    hr.missing-files, hr.och-host {
         border-color: rgb(255, 99, 132);
     }
-    hr.missing-files, hr.och-vm {
+    hr.endangered-files, hr.och-vm {
         border-color: rgb(255, 205, 86);
     }
     hr.networking {
@@ -160,14 +160,14 @@
 
 	$(document).ready(function(){
 
-		// var flagmain = true;
-		// var sizes = ["{mempercent}%", "{swappercent}%", "{hddpercent}%"];
-		// var esxstorages = "{esxstoragespercent}";
-		// index page actions:	
+		//var flagmain = true;
+		//var sizes = ["{mempercent}%", "{swappercent}%", "{hddpercent}%"];
+		//var esxstorages = "{esxstoragespercent}";
+		
 		//if (flagmain == true) {
 		//	 $('.progress-bar').each(function(i) {
 		//		 i.target.css('width', sizes[i]);
-		//		//$(this).css('width', sizes[i]);
+			//$(this).css('width', sizes[i]);
 		//	 });
 			// --- end progress animation ---
 		// }
@@ -181,9 +181,12 @@
 		var memused = parseInt({memconsumed});
 		var memtotal = memfree + memused;
 
-		var stotal = parseFloat("{stotal}".split(" ")[0]).toFixed(1);
-		var sused =  parseFloat("{sused}".split(" ")[0]).toFixed(1);
-		var sfree = (stotal - sused).toFixed(1);
+		var stotal = parseInt({stotal});
+		var sused = parseInt({sused});
+		var sfree = parseInt({sfree});
+		// var stotal = parseFloat("{stotal}".split(" ")[0]).toFixed(1);
+		// var sused =  parseFloat("{sused}".split(" ")[0]).toFixed(1);
+		// var sfree = (stotal - sused).toFixed(1);
 
 		var cputotal = parseInt({cpuavailable});
 		var cpuload = parseInt({cpuconsumed});
@@ -198,7 +201,7 @@
 		var endangeredfiles = parseInt({endangeredfiles});
 		var missingfiles = parseInt({missingfiles});
 
-		make_c3('donut','Disk', [["total",stotal],["free",sfree],["used",sused]], "GB", true);
+		make_c3('donut','Disk', [["total",stotal],["free",sfree],["used",sused]], "B", true);
 		make_c3('donut','Memory', [["total",memtotal],["free",memfree],["used",memused]], "MB", true);
 		make_c3('donut','CPU', [["total",cputotal],["free",cpufree],["load",cpuload]], "", true);
 		make_c3('donut','Network', [["total",0],["free",0],["used",0]], "", true);
@@ -256,14 +259,21 @@
 	}
 
 	function format_label(data) {
-		var units = ['TB','GB','MB'];
-		var idx = units.indexOf(data[1]);
 
-		if (data[0] > 1024 && idx > 0) {
-			return parseFloat(data[0] / 1024).toFixed(1) + " " + units[idx - 1];
-		} else {
-			return data[0] + " " + data[1];
+		var units = ['TB','GB','MB','KB','B'];
+		var idx = units.indexOf(data[1]);
+		var val = data[0];
+
+		while (val > 1024 && idx > 0) {
+			val = val / 1024;
+			idx = idx - 1;
 		}
+
+		if (!data[1]) {
+			return data[0];
+		} else {
+			return val.toFixed(1) + " " + units[idx];
+ 		}
 	}
 
 	function make_c3(type, binding, donutdata, unit, showlegend) {
@@ -300,11 +310,10 @@
 					'OCH Host': seriesColors[4],
 					'OCH VM': seriesColors[3],
 					'health files': seriesColors[4],
-					'endangered files': seriesColors[2],
-					'missing files': seriesColors[3]
+					'endangered files': seriesColors[3],
+					'missing files': seriesColors[2]
 					/* paused: seriesColors[2] */
 				},
-				onclick: function (d, i) { console.log("onclick", d, i); },
 				onmouseover: function (d, i) { 
 					for (var k = 0; k < donutdata.length; k++) {
 						if (donutdata[k][0] == d.name) {
@@ -367,22 +376,18 @@
 		charts.push(chart);
 	}
 
-	function parse_label(str) {
-		return str.replace("KVM", "OCH").replace(" (localboot)","").replace(" (networkboot)","");
-	}
-
 	function make_vmstable(vmactive, vminactive, vms) {
 		var html = '<tr><td>Active<hr class="active"></td><td>'+vmactive+'</td><td>Inactive<hr class="inactive"></td><td>'+vminactive+'</td></tr>';
-		
-		for (var i = 0; i < (vms.length + 1) % 2; i++) {
-			var label = parse_label(vms[i * 2][0]);
+
+		for (var i = 0; i < Math.floor((vms.length + 1) / 2); i++) {
+			var label = vms[i * 2][0];
 			html += '<tr><td>'+label+'<hr class="' + label + '"></td><td>' + vms[i * 2][1] + '</td>';
 			
 			if (i * 2 + 1 <= vms.length - 1) { 
-				label =  parse_label(vms[i * 2 + 1][0]);
+				label =  vms[i * 2 + 1][0];
 				html += '<td>'+label+'<hr class="' + label + '"></td><td>' + vms[i * 2 + 1][1] + '</td>';
 			} else {
-				html += '<td></td>';
+				html += '<td></td><td></td>';
 			}
 			html += '</tr>';
 		}
@@ -429,11 +434,17 @@
 				x: {
 					label: {
 						text: 'mins last hour'
+					},
+					tick: {
+						format: d3.format('.1f')
 					}
 				},
 				y: {
 					label: {
 						text: 'loading'
+					},
+					tick: {
+						format: d3.format('.2f')
 					}
 				}
 			},
@@ -520,7 +531,6 @@
 						</div>
 						-->
 					</div>
-					<!--
 					<div style="display: none;">
 						<h4><i class="fa fa-cogs"></i> CPU & memory:</h4>
 						<ul class="storage-list">
@@ -543,7 +553,6 @@
 							</div>
 						</div>
 					</div>
-					-->
 				</div>
 			</div>
 

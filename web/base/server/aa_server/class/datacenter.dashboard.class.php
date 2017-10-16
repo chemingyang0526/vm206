@@ -585,8 +585,8 @@ $d = array();
 		foreach ($resource_list as $arr) {
 			$resource->get_instance($arr['resource_id']);
 
-			if ($resource->ip <> 1) {
-				if ($resource->ip == $resource->htvcenterserver) {
+			if ($resource->id <> 0) {
+				if ($resource->id == $resource->vhostid) {
 					$cpu_avail += intval($resource->cpunumber);
 					$mem_avail += intval($resource->memtotal) - intval($resource->memused);
 				} else {
@@ -2249,11 +2249,13 @@ function storagetaken() {
 	$totalarr = $this->gethumanvalue($total);
 	$usedarr = $this->gethumanvalue($used);
 
-	$b['sfree']= '<b>'.$freearr[0].'</b> '.$freearr[1];
-	$b['stotal']= $totalarr[0].' '.$totalarr[1];
-	$b['sused']= $usedarr[0].' '.$usedarr[1];;
+	//$b['sfree']= '<b>'.$freearr[0].'</b> '.$freearr[1];
+	//$b['stotal']= $totalarr[0].' '.$totalarr[1];
+	//$b['sused']= $usedarr[0].' '.$usedarr[1];;
+	$b['sfree'] = $free;
+	$b['stotal'] = $total;
+	$b['sused'] = $used; 
 	$b['spercent'] = $percent;
-	
 	return $b;
 }
 
@@ -2292,6 +2294,8 @@ function gethumanvalue($size) {
 
 }
 
+
+
 function gethosts() {
 	$virtualization = new virtualization();
 	$virtlist = $virtualization->get_list();
@@ -2300,9 +2304,9 @@ function gethosts() {
 	$rtrn = array();
 
 	foreach ($virtlist as $idx => $v) {
-		if (strrpos($v['virtualization_name'],' Host') !== false) {
-			$res_ids = $resource->get_instance_ids_by_virtualization_id($v['virtualization_id']);
-			array_push($hosts, [$v['virtualization_name'],count($res_ids)]);
+		if (strrpos($v['label'],' Host') !== false) {
+			$res_ids = $resource->get_instance_ids_by_virtualization_id($v['value']);
+			array_push($hosts, [str_replace("KVM","OCH",$v['label']),count($res_ids)]);
 		}
 	}
 	$rtrn['hosts'] = json_encode($hosts);
@@ -2314,15 +2318,27 @@ function getvms() {
 	$virtlist = $virtualization->get_list();
 	$resource = new resource();
 	$vms = array();
+	$arr = array();
 	$rtrn = array();
 
 	foreach ($virtlist as $idx => $v) {
-		if (strrpos($v['virtualization_name'],' VM') !== false) {
-			$res_ids = $resource->get_instance_ids_by_virtualization_id($v['virtualization_id']);
-			array_push($vms, [$v['virtualization_name'],count($res_ids)]);
+		if (strrpos($v['label'],' VM') !== false) {
+			$res_ids = $resource->get_instance_ids_by_virtualization_id($v['value']);
+			$label = str_replace("KVM","OCH",explode(" (",$v['label'])[0]);
+
+			if (isset($vms[$label])) {
+				$vms[$label] += count($res_ids);
+			} else {
+				$vms[$label] = count($res_ids);
+			}
 		}
 	}
-	$rtrn['vms'] = json_encode($vms);
+
+	foreach ($vms as $i => $v) {
+		array_push($arr, [$i, $v]);
+	}
+
+	$rtrn['vms'] = json_encode($arr);
 	return $rtrn;
 }
 
