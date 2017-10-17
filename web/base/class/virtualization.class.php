@@ -137,6 +137,8 @@ function remove_by_type($type) {
 	$rs = $db->Execute("delete from $VIRTUALIZATION_INFO_TABLE where virtualization_type='$type'");
 }
 
+
+
 // returns a list of all virtualization names
 function get_list() {
 	global $VIRTUALIZATION_INFO_TABLE;
@@ -145,6 +147,7 @@ function get_list() {
 	$virtualization_name_array = htvcenter_db_get_result_double ($query);
 	return $virtualization_name_array;
 }
+
 
 // returns the virtualization plugin name
 function get_plugin_name() {

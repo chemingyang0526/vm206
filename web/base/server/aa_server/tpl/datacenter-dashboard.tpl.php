@@ -84,35 +84,45 @@
 	}
 	hr { 
 		display: inline-block;
-		margin-top: 0.5em;
-		margin-bottom: 0.5em;
-		margin-left: 0.3em;
+		margin-top: 0.6em;
+		margin-bottom: 0.4em;
+		margin-left: 0.2em;
 		margin-right: 0;
 		border-style: solid;
-		border-width: 2px;
+		border-width: 0px;
+		height: 3px;
 		width: 24px;
 		float: right;
 	}
     hr.health-files {
-        border-color: rgb(72, 204, 132);
+        background-color: rgb(72, 204, 132);
     }
     hr.total, hr.health-files, hr.inactive {
-        border-color: #dfdfdf;
+        background-color: #dfdfdf;
     }
     hr.cloud-host, hr.active {
-        border-color: #41bee9 ;
+        background-color: #41bee9 ;
     }
-    hr.missing-files, hr.och-host {
-        border-color: rgb(255, 99, 132);
+    hr.missing-files {
+        background-color: rgb(255, 99, 132);
     }
-    hr.endangered-files, hr.och-vm {
-        border-color: rgb(255, 205, 86);
+    hr.endangered-files, hr.OCH.VM {
+        background-color: rgb(255, 205, 86);
     }
-    hr.networking {
-        border-color: rgb(75, 192, 192);
+    hr.networking, hr.ESX.VM {
+        background-color: rgb(75, 192, 192);
     }
-    hr.nextthing {
-        border-color: rgb(153, 102, 255);
+    hr.vSphere.VM {
+        background-color: rgb(153, 102, 255);
+    }
+    hr.Cloud.VM {
+        background-color: rgb(172,205,236);
+    }
+    hr.AWS.EC2 {
+        background-color: rgb(255, 159, 64);
+    }
+    hr.Azure.VM {
+        background-color: rgb(167,182,27);
     }
 </style>
 <script src="{baseurl}/js/c3/d3.v3.min.js" type="text/javascript"></script>
@@ -215,7 +225,66 @@
 
 		datacenter_load();
 		setInterval(datacenter_load, 10000);
+	
+		get_aws_vm_count();
+		get_azure_vm_count();
+
 	});
+
+	function append_to_table(bind, label, count, active, inactive) {
+		var tds = $(bind).find('tr:last td');
+
+		var active_count = parseInt($("#vmactive").text());
+		var inactive_count = parseInt($("#vminactive").text());
+
+		active_count += active;
+		inactive_count += inactive;
+
+		$("#vmactive").text(active_count);
+		$("#vminactive").text(inactive_count);
+
+		if (tds.length == 4) {
+			$(bind).append("<tr><td>"+label+"<hr class='" + label + "'></td><td>"+count+"</td></tr>");
+		} else {
+			$(bind).find('tr:last').append("<td>"+label+"<hr class='" + label + "'></td><td>"+count+"</td>");
+		}
+	}
+
+	function get_aws_vm_count() {
+		var deferred = $.ajax({
+			url: "api.php?action=get_aws_vm_count",
+			cache: false,
+			async: true,
+			dataType: "html"
+		});
+
+		$.when(deferred).done(function (v) {
+			var data = JSON.parse(v);
+			var active = parseInt(data[0]);
+			var inactive = parseInt(data[1]);
+			var total_aws_vms = active + inactive;
+
+			append_to_table("#vmstable tbody", "AWS EC2", total_aws_vms, active, inactive);
+		});
+	}
+
+	function get_azure_vm_count() {
+		var deferred = $.ajax({
+			url: "api.php?action=get_azure_vm_count",
+			cache: false,
+			async: true,
+			dataType: "html",
+		});
+	
+		$.when(deferred).done(function (v) {
+			var data = JSON.parse(v);
+			var active = parseInt(data[0]);
+			var inactive = parseInt(data[1]);
+			var total_azure_vms = active + inactive;
+
+			append_to_table("#vmstable tbody", "Azure VM", total_azure_vms, active, inactive);
+		});
+	}
 
 	function get_event_status() {
 
@@ -377,7 +446,7 @@
 	}
 
 	function make_vmstable(vmactive, vminactive, vms) {
-		var html = '<tr><td>Active<hr class="active"></td><td>'+vmactive+'</td><td>Inactive<hr class="inactive"></td><td>'+vminactive+'</td></tr>';
+		var html = '<tr><td>Active<hr class="active"></td><td id="vmactive">'+vmactive+'</td><td>Inactive<hr class="inactive"></td><td id="vminactive">'+vminactive+'</td></tr>';
 
 		for (var i = 0; i < Math.floor((vms.length + 1) / 2); i++) {
 			var label = vms[i * 2][0];
@@ -386,9 +455,9 @@
 			if (i * 2 + 1 <= vms.length - 1) { 
 				label =  vms[i * 2 + 1][0];
 				html += '<td>'+label+'<hr class="' + label + '"></td><td>' + vms[i * 2 + 1][1] + '</td>';
-			} else {
+			} /* else {
 				html += '<td></td><td></td>';
-			}
+			} */
 			html += '</tr>';
 		}
 		$("#vmstable tbody").append(html);
