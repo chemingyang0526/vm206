@@ -15,10 +15,6 @@
 -->
 <link type="text/css" href="{baseurl}/css/c3/c3.min.css" rel="stylesheet">
 <style>
-	.row {
-		margin-left: -12px;
-		margin-right: -12px;
-	}
 	#demo-set-btn {
 		display: none;
 	}
@@ -46,7 +42,7 @@
 		padding: 0 5px;
 	}
 	#eventsboxes span i {
-		margin-left: 15px;
+		margin-left: 12px;
 	}
 	.eventcount {
 		top: 0px;
@@ -123,6 +119,19 @@
     }
     hr.Azure.VM {
         background-color: rgb(167,182,27);
+    }
+    .after-right {
+        clear: auto;
+    }
+    @media (min-width: 992px) and (max-width: 1199px) { 
+        .donuts-row {
+            height: 62.6rem;
+        }
+    }
+    @media (min-width: 1200px) { 
+        .after-right {
+            clear: both;
+        }
     }
 </style>
 <script src="{baseurl}/js/c3/d3.v3.min.js" type="text/javascript"></script>
@@ -576,7 +585,7 @@
 
 <div id="prenutanix">
 	<div class="row">
-		<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+		<div class="col-xs-12 col-sm-6 col-md-5 col-lg-4">
 			<div class="panel">
 				<div class="panel-heading">
 					<h3 class="panel-title">Maestro Storage</h3>
@@ -585,20 +594,9 @@
 					<div class="panel-heading">
 					</div>
 					<div class="row">
-						<div class="col-lg-12 pad-no">
+						<div class="col-lg-12">
 							<div id="chartdiv-inventory-storage" class="c3-chart pad-no" style="height: 19.5rem;"></div>
 						</div>
-						<!--
-						<div class="col-ss-12 col-md-5 pad-no">
-							<table class="table table-bordered table-hover table-stripped" style="width: 100%;">
-								<tbody>
-									<tr><td>Health Files<hr class="health-files"></td><td>{healthfiles}</td></tr>
-									<tr><td>Endangered Files<hr class="endangered-files"></td><td>{endangeredfiles}</td></tr>
-									<tr><td>Missing Files<hr class="missing-files"></td><td>{missingfiles}</td></tr>
-								</tbody>
-							</table>
-						</div>
-						-->
 					</div>
 					<div style="display: none;">
 						<h4><i class="fa fa-cogs"></i> CPU & memory:</h4>
@@ -624,136 +622,14 @@
 					</div>
 				</div>
 			</div>
-
-			<div class="panel storagespanel" style="display: none;">
-				<h2 class="dash"><i class="fa fa-hdd-o"></i> Maestro Storage</h2>
-				<div id="storageareas">
-					<div class="onestorage">
-						<div class="row">
-							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-								<div class="esxileft leftstorageblock">
-									{sfree}<br>
-									<span>free (physical)</span>
-								</div>
-							</div>
-							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 esxright sizeroside">
-								<div class="totalinfor">
-									<b>Used:</b> {sused}<br>
-									<b>Total:</b> {stotal} <br>
-								</div>
-							</div>
-							<div class="progress hddprogress nutanixprogress">
-								<div style="width: {spercent}%;" aria-valuemax="100" aria-valuemin="0" aria-valuenow="60" role="progressbar" class="progress-bar">
-									<span class="sr-only">{spercent}% used</span>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div class="panel">
-				<div class="panel-heading">
-					<h3 class="panel-title">Datacenter Load</h3>
-				</div>
-				<div class="panel-body" style="height:27.6rem;">
-					<div class="row">
-						<div id="datacenter-loading" class="c3-chart pad-no" style="height: 26.6rem;"></div>
-					</div>
-				</div>
-			</div>
-
-			<div class="panel">
-				<!-- Start: Event table -->
-				<div class="panel-heading">
-					<h3 class="panel-title">{events_headline}</h3>
-				</div>
-				<a>
-					<div id="eventsboxes" class="panel-body row" style="min-height: 27.6rem;">
-						<div id="warningeventbox" style="height: 7.5rem; margin: 1rem;">
-							<div class="col-xs-2 pad-no">
-								<span><i class="fa fa-envelope eventico fa-2x"></i></span>
-							</div>
-							<div class="col-xs-10 pad-no">
-								<span class="eventcount" id="events_active"></span>
-								<span class="eventword">messages</span>
-							</div>
-						</div>
-						<div id="erroreventbox" style="height: 7.5rem; margin: 1rem;">
-							<div class="col-xs-2 pad-no">
-								<span><i class="fa fa-exclamation-triangle eventico fa-2x"></i></span>
-							</div>
-							<div class="col-xs-10 pad-no">
-								<span class="eventcount" id="events_critical"></span>
-								<span class="eventword">errors</span>
-							</div>
-						</div>
-						<div id="messageeventbox" style="height: 7.5rem; margin: 1rem;">
-							<div class="col-xs-2 pad-no">
-								<span><i class="fa fa-bell eventico fa-2x"></i></span>
-							</div>
-							<div class="col-xs-10 pad-no">
-								<span class="eventcount" id="events_messages"></span>
-								<span class="eventword">all events</span>
-							</div>
-						</div>
-					</div>
-				</a>
-			</div>
-			<!--
-			<div class="panel" style="display:none;">
-				<h2 class="dash">
-					{load_headline}
-					<small>{load_current}</small>
-				</h2>
-				<table class="table">
-					<tr>
-						<td class="width0">{datacenter_load_overall}</td>
-						<td>
-							<div class="bar-01 chart-bar ">
-								<div class="bar">
-									<label>0.43</label>
-								</div>
-								
-							</div>
-						</td>
-					</tr>
-					<tr>
-						<td>{appliance_load_overall}</td>
-						<td>
-							<div class="bar-02 chart-bar">
-								<div class="peak"></div>
-								<div class="bar">
-									<label>0.43</label>
-								</div>
-							</div>
-						</td>
-					</tr>
-					<tr>
-						<td>{storage_load_overall}</td>
-						<td>
-							<div class="bar-03 chart-bar">
-								<div class="peak"></div>
-								<div class="bar">
-									<label>0.43</label>
-								</div>
-							</div>
-						</td>
-					</tr>
-				</table>
-			</div
-			-->
 		</div>
 
-		<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
-			<!--Network Line Chart-->
-			<!--===================================================-->
-			<!-- <div id="demo-panel-network" class="panel" style="min-height: 34.7rem;">  -->
+		<div class="col-xs-12 col-sm-6 col-md-7 col-lg-8 pull-right">
 			<div class="panel">
 				<div class="panel-heading">
 					<h3 class="panel-title">Resource Consumption</h3>
 				</div>
-				<div class="panel-body row" style="min-height: 27.6rem;">
+				<div class="panel-body row donuts-row">
 					<div class="col-sm-12 col-md-6 col-lg-3 dashboard pull-left">
 						<div class="panel-heading">
 							<h3 class="panel-title">Services</h3>
@@ -795,67 +671,99 @@
 					</div>
 				</div>
 			</div>
-			<!-- Start: Inventory overview -->
-			<div class="row">
-				<div class="col-sm-12 col-md-6 col-lg-6">
-					<div class="panel">
-						<div class="panel-heading">
-							<h3 class="panel-title">Host Summary</h3>
-						</div>
-						<div class="panel-body" style="min-height: 27.6rem;">
-							<div class="panel-heading">
-							</div>
-							<div class="row">
-								<div class="col-sm-12 col-md-12 pad-no">
-									<div id="chartdiv-inventory-server" class="c3-chart pad-no" style="height: 21.5rem;"></div>
-								</div>
-								<!--
-								<div class="col-sm-12 col-md-5 pad-no">
-									<table id="datacenter-tbl" class="table table-bordered table-hover table-stripped" style="width: 100%;">
-										<tbody>
-											<tr><td>Cloud Host<hr class="cloud-host"></td><td></td></tr>
-											<tr><td>OCH Host<hr class="och-host"></td><td></td></tr>
-											<tr><td>OCH VM<hr class="och-vm"></td><td></td></tr>
-										</tbody>
-									</table>
-								</div>
-								-->
-							</div>
-						</div>
+		</div>
+
+		<div class="col-xs-12 col-sm-6 col-md-5 col-lg-4 after-right">
+			<div class="panel ">
+				<div class="panel-heading">
+					<h3 class="panel-title">Datacenter Load</h3>
+				</div>
+				<div class="panel-body" style="height:27.6rem;">
+					<div class="row">
+						<div id="datacenter-loading" class="c3-chart pad-no" style="height: 26.6rem;"></div>
 					</div>
 				</div>
+			</div>
+		</div>
 
-				<div class="col-sm-12 col-md-6 col-lg-6">
-					<div class="panel">
-						<div class="panel-heading">
-							<h3 class="panel-title">VM Summary</h3>
-						</div>
-						<div class="panel-body" style="min-height: 27.6rem;">
-							<div class="panel-heading">
-							</div>
-							<div class="row">
-								<!--
-								<div class="col-sm-12 col-md-7 pad-no">
-									<div id="chartdiv-inventory-vm" class="c3-chart pad-no" style="height: 21.5rem;"></div>
-								</div>
-								-->
-								<div class="col-xs-12">
-									<table id="vmstable" class="table table-bordered table-hover table-stripped" style="width: 100%;">
-										<tbody>
-										<!--
-											<tr><td>Inactive<hr class="inactive"></td><td>{inactiveallvm}</td></tr>
-											<tr><td>Active<hr class="active"></td><td>{activeallvm}</td></tr> -->
-											<!-- <tr><td>Inactive<hr class="endangered-files"></td><td></td></tr> -->
-										</tbody>
-									</table>
-								</div>
-							</div>
+		<div class="col-xs-12 col-sm-6 col-md-5 col-lg-4">
+			<div class="panel ">
+				<div class="panel-heading">
+					<h3 class="panel-title">Host Summary</h3>
+				</div>
+				<div class="panel-body" style="min-height: 27.6rem;">
+					<div class="panel-heading">
+					</div>
+					<div class="row">
+						<div class="col-sm-12 col-md-12">
+							<div id="chartdiv-inventory-server" class="c3-chart pad-no" style="height: 21.5rem;"></div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<!--===================================================-->
-			<!--End network line chart-->
+		</div>
+
+		<div class="col-xs-12 col-sm-6 col-md-7 col-lg-4">
+			<div class="panel">
+				<div class="panel-heading">
+					<h3 class="panel-title">VM Summary</h3>
+				</div>
+				<div class="panel-body" style="min-height: 27.6rem;">
+					<div class="panel-heading">
+					</div>
+					<div class="row">
+						<div class="col-xs-12">
+							<table id="vmstable" class="table table-bordered table-hover table-stripped" style="width: 100%;">
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-xs-12 col-sm-6 col-md-5 col-lg-4">
+			<div class="panel">
+				<!-- Start: Event table -->
+				<div class="panel-heading">
+					<h3 class="panel-title">{events_headline}</h3>
+				</div>
+				<a>
+					<div id="eventsboxes" class="panel-body row" style="min-height: 27.6rem;">
+						<div id="warningeventbox" style="height: 7.5rem; margin: 1rem;">
+							<div class="col-xs-2 pad-no">
+								<span><i class="fa fa-envelope eventico fa-2x"></i></span>
+							</div>
+							<div class="col-xs-10 pad-no">
+								<span class="eventcount" id="events_active"></span>
+								<span class="eventword">messages</span>
+							</div>
+						</div>
+						<div id="erroreventbox" style="height: 7.5rem; margin: 1rem;">
+							<div class="col-xs-2 pad-no">
+								<span><i class="fa fa-exclamation-triangle eventico fa-2x"></i></span>
+							</div>
+							<div class="col-xs-10 pad-no">
+								<span class="eventcount" id="events_critical"></span>
+								<span class="eventword">errors</span>
+							</div>
+						</div>
+						<div id="messageeventbox" style="height: 7.5rem; margin: 1rem;">
+							<div class="col-xs-2 pad-no">
+								<span><i class="fa fa-bell eventico fa-2x"></i></span>
+							</div>
+							<div class="col-xs-10 pad-no">
+								<span class="eventcount" id="events_messages"></span>
+								<span class="eventword">all events</span>
+							</div>
+						</div>
+					</div>
+				</a>
+			</div>
+		</div>
+
+		<div class="col-xs-12 col-sm-12 col-md-7 col-lg-8">
 			<div class="panel">
 				<div class="panel-heading">
 					<h3 class="panel-title">Cloud Charge Back</h3>
@@ -866,23 +774,35 @@
 				</div>
 			</div>
 		</div>
-<!--
-		<div class="col-sm-12 col-md-6 col-lg-6">
-			<div class="panel">
-			<h2 class="dash">{load_headline}
-				<small>{load_last_hour}</small>
-				<span class="pull-right">
-					<a class="widget-action refresh-load-chart" href="#">
-						<span class="halflings-icon refresh"><i></i></span>
-					</a>
-				</span>
-			</h2>
-			<div id="chartdiv-load" style="height:220px; width:100%;"></div>
+
+		<div class="panel storagespanel" style="display: none;">
+			<h2 class="dash"><i class="fa fa-hdd-o"></i> Maestro Storage</h2>
+			<div id="storageareas">
+				<div class="onestorage">
+					<div class="row">
+						<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+							<div class="esxileft leftstorageblock">
+								{sfree}<br>
+								<span>free (physical)</span>
+							</div>
+						</div>
+						<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 esxright sizeroside">
+							<div class="totalinfor">
+								<b>Used:</b> {sused}<br>
+								<b>Total:</b> {stotal} <br>
+							</div>
+						</div>
+						<div class="progress hddprogress nutanixprogress">
+							<div style="width: {spercent}%;" aria-valuemax="100" aria-valuemin="0" aria-valuenow="60" role="progressbar" class="progress-bar">
+								<span class="sr-only">{spercent}% used</span>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
--->
-	</div> <!-- <div class="row"> -->
-</div> <!-- <div id="prenutanix"> -->
+	</div>
+</div>
 
 <div id="nutanix">
 	<h2 id="closenutanix"><i class="fa fa-close"></i> CLOSE</h2>
