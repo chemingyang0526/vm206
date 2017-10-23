@@ -231,13 +231,10 @@
 		make_c3('donut','storage',[["total", allfiles],["health files",healthfiles],["endangered files",endangeredfiles],["missing files", missingfiles]],"", 'right');
 
 		make_vmstable(vmactive, vminactive, vms);
-
 		datacenter_load();
 		setInterval(datacenter_load, 10000);
-	
-		get_aws_vm_count();
-		get_azure_vm_count();
-
+		get_vm_count("aws", "AWS EC2");
+		get_vm_count("azure", "Azure VM");
 	});
 
 	function append_to_table(bind, label, count, active, inactive) {
@@ -259,9 +256,9 @@
 		}
 	}
 
-	function get_aws_vm_count() {
+	function get_vm_count(type, label) {
 		var deferred = $.ajax({
-			url: "api.php?action=get_aws_vm_count",
+			url: "api.php?action=get_" + type + "_vm_count",
 			cache: false,
 			async: true,
 			dataType: "html"
@@ -271,27 +268,11 @@
 			var data = JSON.parse(v);
 			var total = parseInt(data[0]);
 			var active = parseInt(data[1]);
+			if (isNaN(total)) { total = 0; }
+			if (isNaN(active)) { active = 0; } 
 			var inactive = total - active;
 
-			append_to_table("#vmstable tbody", "AWS EC2", total, active, inactive);
-		});
-	}
-
-	function get_azure_vm_count() {
-		var deferred = $.ajax({
-			url: "api.php?action=get_azure_vm_count",
-			cache: false,
-			async: true,
-			dataType: "html",
-		});
-	
-		$.when(deferred).done(function (v) {
-			var data = JSON.parse(v);
-			var total = parseInt(data[0]);
-			var active = parseInt(data[1]);
-			var inactive = total - active;
-
-			append_to_table("#vmstable tbody", "Azure VM", total, active, inactive);
+			append_to_table("#vmstable tbody", label, total, active, inactive); // label = "AWS EC2"
 		});
 	}
 
