@@ -2294,21 +2294,22 @@ function gethumanvalue($size) {
 
 }
 
-
-
 function gethosts() {
 	$virtualization = new virtualization();
 	$virtlist = $virtualization->get_list();
 	$resource = new resource();
 	$hosts = array();
 	$rtrn = array();
+	$total_count = 0;
 
 	foreach ($virtlist as $idx => $v) {
 		if (strrpos($v['label'],' Host') !== false) {
 			$res_ids = $resource->get_instance_ids_by_virtualization_id($v['value']);
+			$total_count += count($res_ids);
 			array_push($hosts, [str_replace("KVM","OCH",$v['label']),count($res_ids)]);
 		}
 	}
+	array_unshift($hosts, ['total',$total_count]);
 	$rtrn['hosts'] = json_encode($hosts);
 	return $rtrn;
 }

@@ -97,16 +97,22 @@
         background-color: #dfdfdf;
     }
     hr.cloud-host, hr.active {
-        background-color: #41bee9 ;
+        background-color: rgb(72, 204, 132) ;
     }
     hr.missing-files {
         background-color: rgb(255, 99, 132);
     }
-    hr.endangered-files, hr.OCH.VM {
+    hr.endangered-files {
         background-color: rgb(255, 205, 86);
     }
-    hr.networking, hr.ESX.VM {
+    hr.OCH.VM {
+        background-color: #41bee9;
+    }
+    hr.networking {
         background-color: rgb(75, 192, 192);
+    }
+    hr.ESX.VM {
+        background-color: rgb(137, 197, 61);
     }
     hr.vSphere.VM {
         background-color: rgb(153, 102, 255);
@@ -118,7 +124,7 @@
         background-color: rgb(255, 159, 64);
     }
     hr.Azure.VM {
-        background-color: rgb(167,182,27);
+        background-color: rgb(31,119,180);
     }
     .after-right {
         clear: auto;
@@ -162,7 +168,9 @@
 		purple: 'rgb(153, 102, 255)',
 		grey: 'rgb(201, 203, 207)',
 		teal: 'rgb(172,205,236)',
-		moss: 'rgb(167,182,27)'
+		moss: 'rgb(167,182,27)',
+		darkblue: 'rgb(31,119,180)',
+		grass: 'rgb(137, 197, 61)'
 	};
 
 	var seriesColors = [
@@ -174,7 +182,9 @@
 		chartColors.orange,
 		chartColors.purple,
 		chartColors.moss,
-		chartColors.teal
+		chartColors.teal,
+		chartColors.darkblue,
+		chartColors.grass
 	];
 
 	$(document).ready(function(){
@@ -222,7 +232,7 @@
 
 		make_c3('donut','Disk', [["total",stotal],["free",sfree],["used",sused]], "B", true);
 		make_c3('donut','Memory', [["total",memtotal],["free",memfree],["used",memused]], "MB", true);
-		make_c3('donut','CPU', [["total",cputotal],["free",cpufree],["load",cpuload]], "", true);
+		make_c3('donut','CPU', [["total",cputotal],["free",cpufree],["used",cpuload]], "", true);
 		make_c3('donut','Network', [["total",0],["free",0],["used",0]], "", true);
 
 		get_event_status();
@@ -233,8 +243,8 @@
 		make_vmstable(vmactive, vminactive, vms);
 		datacenter_load();
 		setInterval(datacenter_load, 10000);
-		get_vm_count("aws", "AWS EC2");
-		get_vm_count("azure", "Azure VM");
+		get_vm_count("aws", "AWS EC2", hosts);
+		get_vm_count("azure", "Azure VM", hosts);
 	});
 
 	function append_to_table(bind, label, count, active, inactive) {
@@ -256,7 +266,7 @@
 		}
 	}
 
-	function get_vm_count(type, label) {
+	function get_vm_count(type, label, hosts) {
 		var deferred = $.ajax({
 			url: "api.php?action=get_" + type + "_vm_count",
 			cache: false,
@@ -273,6 +283,11 @@
 			var inactive = total - active;
 
 			append_to_table("#vmstable tbody", label, total, active, inactive); // label = "AWS EC2"
+		
+			// add azure and aws vm count to hosts
+			hosts[0][1] = parseInt(hosts[0][1]) + total;
+			hosts.push([label, total])
+			make_c3('donut','server', hosts, "", 'right');
 		});
 	}
 
@@ -365,12 +380,15 @@
 					used: seriesColors[1],
 					active: seriesColors[1],
 					load: seriesColors[1],
-					'Cloud Host': seriesColors[1],
-					'OCH Host': seriesColors[4],
+					'Cloud Host': seriesColors[0],
+					'OCH Host': seriesColors[1],
 					'OCH VM': seriesColors[3],
 					'health files': seriesColors[4],
 					'endangered files': seriesColors[3],
-					'missing files': seriesColors[2]
+					'missing files': seriesColors[2],
+					'Azure VM': seriesColors[9],
+					'AWS EC2': seriesColors[5],
+					'ESX Host': seriesColors[10]
 					/* paused: seriesColors[2] */
 				},
 				onmouseover: function (d, i) { 
