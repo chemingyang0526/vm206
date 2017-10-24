@@ -205,6 +205,7 @@
 
 		var hosts = {hosts};
 		var vms = {vms};
+		var networkips = {networkips};
 
 		var memfree = parseInt({memavailable});
 		var memused = parseInt({memconsumed});
@@ -233,7 +234,7 @@
 		make_c3('donut','Disk', [["total",stotal],["free",sfree],["used",sused]], "B", true);
 		make_c3('donut','Memory', [["total",memtotal],["free",memfree],["used",memused]], "MB", true);
 		make_c3('donut','CPU', [["total",cputotal],["free",cpufree],["used",cpuload]], "", true);
-		make_c3('donut','Network', [["total",0],["free",0],["used",0]], "", true);
+		make_c3('donut','Network', networkips, "", true);
 
 		get_event_status();
 		get_cloud_charge_back();

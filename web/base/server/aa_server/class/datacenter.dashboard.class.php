@@ -185,6 +185,9 @@ var $lang = array();
 		$data = $this->getvms();
 		$t->add($data);
 
+		$data = $this->getnetworkips();
+		$t->add($data);
+
 		$year = date('Y');
 				$yearm1 = $year - 1;
 				$yearm2 = $year - 2;
@@ -2292,6 +2295,29 @@ function gethumanvalue($size) {
 
    	return $res;
 
+}
+
+function getnetworkips() {
+	$file = $this->htvcenter->get('webdir')."/plugins/ip-mgmt/class/ip-mgmt.class.php";
+	require_once $file;
+	$this->ip_mgmt = new ip_mgmt();
+	$networks = $this->ip_mgmt->get_list();
+	$network_apps = array();
+
+	foreach ($networks as $name => $v) {
+		$ids = $this->ip_mgmt->get_ips_by_name($name);
+
+		foreach($ids as $k => $id) {
+			$data = $this->ip_mgmt->get_instance('id', $id);
+			$network_apps[$data['ip_mgmt_address']] = $data['ip_mgmt_appliance_id'];
+		}
+	}
+
+	$total = count($network_apps);
+	$used  = count(array_filter($network_apps));
+	$free = $total - $used;
+	$rtrn['networkips'] = json_encode([['total',$total],['used',$used],['free',$free]]);
+	return $rtrn;
 }
 
 function gethosts() {
