@@ -1,5 +1,5 @@
 <?php
-header('Access-Control-Allow-Origin: *');
+/* parse_str(implode('&', array_slice($argv, 1)), $_GET); */
 
 if (isset($_GET['label'])) {
 	
@@ -7,13 +7,13 @@ if (isset($_GET['label'])) {
 
 	$file = file_get_contents($filenamepath);
 	$matches = array();
-	$pattern = '/^\s*(#)?\s*(LABEL =)+\s*(.*)?$/m';
+	$pattern = '/^\s*#?\s*(LABEL =)+\s*.*?$/m';
 
 	preg_match($pattern, $file, $matches);
 
 	if (count($matches) > 0) {
 		$newlabel = $_GET['label'];
-		$replacement = '$2 '.$newlabel;
+		$replacement = '$1 '.$newlabel;
 		$file = preg_replace($pattern, $replacement, $file);
 		$write_success = file_put_contents($filenamepath, $file, LOCK_EX);
 	} else {
@@ -21,17 +21,17 @@ if (isset($_GET['label'])) {
 	}
 
 	if ($write_success) {
-		$run_success = shell_exec('sudo /etc/init.d/lizardfs-chunkserver restart 2>&1');
+		$run_success = shell_exec('sudo /etc/init.d/lizardfs-chunkserver reload');
 		
 		if ($run_success) {
-			echo json_encode('server restarted');
+			echo json_encode('server reloaded').PHP_EOL;
 		} else {
-			echo json_encode('restart failed');
+			echo json_encode('restart failed').PHP_EOL;
 		}
 	} else {
-		echo json_encode('write failed');
+		echo json_encode('write failed').PHP_EOL;
 	}
 } else {
-	echo json_encode("invalid label");
+	echo json_encode("fetch label failed").PHP_EOL;
 }
 ?>
