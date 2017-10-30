@@ -14,8 +14,6 @@
     Copyright 2014, htvcenter Enterprise GmbH <info@htvcenter-enterprise.com>
 */
 //-->
-<script src="/htvcenter/base/mfs/jquery-quickedit.js" type="text/javascript"></script>
-<script src="/htvcenter/base/mfs/mfschunkeditor.js" type="text/javascript"></script>
 <h2 class="inner">{label}</h2>
 
 <div id="btnsideee">
@@ -90,15 +88,6 @@
 </div>
 
 <div class="row">
-
-<div>
-<table>
-	<tr>
-		<td class="LEFT">ABCD</td>
-	</tr>
-</table>
-</div>
-
 
 <div id="lizardside">
     <iframe src="{iframeurl}"></iframe>

@@ -14,7 +14,7 @@ $(document).ready(function() {
 		submit: function (dom, newValue) {
 			var thisip = document.domain;
 			dom.text('updating...');
-			var url = 'http://' + thisip +'/htvcenter/base/mfs/chunk.php?label='+newValue;
+			var url = 'http://' + thisip +'/htvcenter/chunk.php?label='+newValue;
 			// var url = 'http://' + thisip +':9425/chunk.cgi?label='+newValue;
 			// var url = 'http://' + thisip +'/htvcenter/base/api.php?action=get_aws_vm_count';
 
@@ -30,6 +30,7 @@ $(document).ready(function() {
 				*/
 			})
 			.done(function( data ) {
+				
 				if ( console && console.log ) {
 					console.log(data.slice(0, 100));
 				}
