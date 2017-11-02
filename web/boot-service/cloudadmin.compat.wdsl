@@ -1,8 +1,8 @@
 <?xml version ='1.0' encoding ='UTF-8' ?>
 <definitions name='Cloud'
-  targetNamespace='http://192.168.0.241/htvcenter/boot-service/cloudadmin.wdsl'
+  targetNamespace='http://192.168.0.206/htvcenter/boot-service/cloudadmin.wdsl'
   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-  xmlns:tns='http://192.168.0.241/htvcenter/boot-service/cloudadmin.wdsl'
+  xmlns:tns='http://192.168.0.206/htvcenter/boot-service/cloudadmin.wdsl'
   xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/'
   xmlns='http://schemas.xmlsoap.org/wsdl/'>
 
@@ -915,7 +915,7 @@
 
 <service name='CloudService'>
   <port name='CloudPort' binding='tns:CloudBinding'>
-    <soap:address location='http://192.168.0.241/htvcenter/base/plugins/cloud/soap/cloudadmin-soap.php'/>
+    <soap:address location='http://192.168.0.206/htvcenter/base/plugins/cloud/soap/cloudadmin-soap.php'/>
   </port>
 </service>
 </definitions>

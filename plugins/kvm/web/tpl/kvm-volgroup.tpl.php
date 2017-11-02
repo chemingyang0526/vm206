@@ -61,6 +61,7 @@
 
 <script>
 $(document).ready(function(){
+	
 	$('#treefiles').jstree({"plugins" : [ "wholerow", "checkbox", "types" ],
 	"types" : {
 	      "default" : {
@@ -70,7 +71,7 @@ $(document).ready(function(){
 	        "icon" : "fa fa-folder fa-2x treefa"
 	      }
 	    },
-});
+	});
 
 	var width = $(window).width();
 
@@ -129,7 +130,25 @@ $(document).ready(function(){
 			  }
 		});
 	});
+	
 });
+
+
+function volGroupValidate(){
+	nameArray = [];
+	$("div#treefiles span.ende").each(function() {
+		nameArray.push($(this).text());
+	});
+	$("#volumepopup #storageform #volgroupid #name_box .right .errormsg").remove();
+	var nameText = $("#volumepopup #storageform #volgroupid #name_box #name").val();
+	if (nameArray.includes(nameText)){
+		alert(nameText + " can not be used");
+		$("#volumepopup #storageform #volgroupid #name_box .right").append("<div class='errormsg'>Logical volume "+nameText+" already exists</div>");
+		return (false);
+	} else {
+		return (true);
+	}
+}
 </script>
 
 <div id="nodisplay"></div>
@@ -180,4 +199,3 @@ $(document).ready(function(){
 					
 							</div>
 </div>
-

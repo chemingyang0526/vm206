@@ -14,7 +14,27 @@
     Copyright 2014, htvcenter Enterprise GmbH <info@htvcenter-enterprise.com>
 */
 //-->
-<h2>{label}<span class="pull-right">{add}</span></h2>
+<h2>{label}<span id="add-new-role" class="pull-right">{add}</span></h2>
 
 
 {table}
+
+<script>
+	$('span#add-new-role').click(function(){
+		//e.preventDefault();
+		$('.lead').hide();
+		var storagelink = $(this).find('a.add').attr('href');
+		$('#storageformaddn').load(storagelink + ' #role_administration_tab1', function() {
+			$('.lead').hide();
+			$('#storageformaddn select').selectpicker();
+			$('#storageformaddn select').hide();
+			$('#volumepopupaddn').find('ul li a').text("Add a new role");
+			$('#storageformaddn').find('h2').remove();
+			$('#volumepopupaddn').show();
+		});
+		return false;
+	});
+	$('#volumepopupcloseaddn').click(function(){
+		$('#volumepopupaddn').hide();
+	});
+</script>

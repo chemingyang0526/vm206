@@ -62,9 +62,64 @@ var lang_network = "{lang_network}";
 <!-- <div class="col-sm-12 col-sm-9 col-md-10 col-lg-10 windows_plane"> -->
 <div class="cat__content">
 	<cat-page>
+	<!--
+	<section class="card">	
+	<div class="card-header">
+        <span class="cat__core__title">
+            <strong>Dashboard</strong>
+        </span>
+    </div>
+	-->
 	<div class="row">
 		<!-- left column -->
 		<div class="col-sm-12 col-lg-4">
+			<!--
+			<div class="row">
+				<div class="col-sm-12 dashboard">
+					<section class="card">	
+						<div class="card-header">
+					        <span class="cat__core__title">
+					            <strong>Score Overview</strong>
+					        </span>
+					    </div>
+					    <div class="card-block half">
+					    	<div class="panel-heading">
+								<div class="panel-control">
+								</div>
+								<h3 class="panel-title">IP Management</h3>
+							</div>
+							<div>
+								<p><b>VLAN Name: </b>{ip_mgmt_name}</p>
+								<p><b>VLAN ID: </b>{ip_mgmt_name}</p>
+								<p><b>IP Range: </b>{ip_mgmt_range_start} ~ {ip_mgmt_range_end}</p>
+							</div>
+						</div>
+					</section>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12 dashboard">
+					<section class="card">	
+						<div class="card-header">
+					        <span class="cat__core__title">
+					            <strong>Events</strong>
+					        </span>
+					    </div>
+					    <div class="card-block half">
+					    	<div class="panel-heading">
+								<div class="panel-control">
+								</div>
+								<h3 class="panel-title">&nbsp;</h3>
+							</div>
+							<div>
+								<p><b>Error: </b>0</p>
+								<p><b>Info: </b>0</p>
+							</div>
+						</div>
+					</section>
+				</div>
+			</div>
+			-->
 			<div class="row">
 				<div class="col-sm-12 col-md-6 col-lg-12 dashboard">
 					<section class="card">

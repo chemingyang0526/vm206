@@ -61,7 +61,7 @@ function ip_mgmt_start() {
 #		if [ "$htvcenter_INTERFACE" == "" ]; then
 #			htvcenter_INTERFACE="bond0"
 #		fi
-		EXTERNAL_INTERFACES_LIST=`ifconfig -a | grep bond | awk {' print $1 '} | sort`
+		EXTERNAL_INTERFACES_LIST=`ifconfig -a | grep eth | awk {' print $1 '} | sort`
 		NIC_COUNT=1
 		unset IPADDRESS
 		for INTERFACE in $EXTERNAL_INTERFACES_LIST; do

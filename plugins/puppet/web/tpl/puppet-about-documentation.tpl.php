@@ -46,6 +46,9 @@
 					<li>
 						<a href="#demo-lft-tab-6" data-toggle="tab">{tested_title}</a>
 					</li>
+					<li>
+						<a href="#demo-lft-tab-7" data-toggle="tab">{create_node_title}</a>
+					</li>
  				</ul>
 
 
@@ -80,19 +83,13 @@
 			<h3>{tested_title}</h3>
 			{tested_content}
 		</div>
+		
+		<div class="tab-pane fade " id="demo-lft-tab-7">
+			<h3>{create_node_title}</h3>
+			{create_node_content}
+		</div>
 
 	</div>
-		
-	
-		
-	
-		
-	
-		
-
-
-
-
 </div>
 </div>
 

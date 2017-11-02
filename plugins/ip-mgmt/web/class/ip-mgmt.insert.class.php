@@ -171,7 +171,9 @@ var $lang;
 					$group .= "\tmax-lease-time 7200;\n";
 					$group .= "\toption routers $gateway;\n";
 					$group .= "\toption subnet-mask $mask;\n";
-					$group .= "\toption domain-name-servers $dns1";
+					if(!empty($dns1)){
+						$group .= "\toption domain-name-servers $dns1";
+					}
 					if(!empty($dns2)){
 						$group .= ", $dns2";
 					}
@@ -183,13 +185,14 @@ var $lang;
 					$group .= "\n";
 					$group .= "}\n";
 					$group .= "# end_vlan_$vlan\n";
+					
 					file_put_contents("/usr/share/htvcenter/plugins/dhcpd/etc/dhcpd.conf", $group.PHP_EOL, FILE_APPEND);
-                                        $dhcpdvlanfile = file_get_contents("/usr/share/htvcenter/plugins/dhcpd/etc/htvcenter-plugin-dhcpd.conf");
-                                        $dhcpdvlanfile = preg_replace("/htvcenter_PLUGIN_DHCPD_INTERFACES=\"(.*?)\"/sm", "htvcenter_PLUGIN_DHCPD_INTERFACES=\"$1 brvlan$vlan\"", $dhcpdvlanfile);
-                                        file_put_contents("/usr/share/htvcenter/plugins/dhcpd/etc/htvcenter-plugin-dhcpd.conf", $dhcpdvlanfile.PHP_EOL);
+					$dhcpdvlanfile = file_get_contents("/usr/share/htvcenter/plugins/dhcpd/etc/htvcenter-plugin-dhcpd.conf");
+                    $dhcpdvlanfile = preg_replace("/htvcenter_PLUGIN_DHCPD_INTERFACES=\"(.*?)\"/sm", "htvcenter_PLUGIN_DHCPD_INTERFACES=\"$1 brvlan$vlan\"", $dhcpdvlanfile);
+                    file_put_contents("/usr/share/htvcenter/plugins/dhcpd/etc/htvcenter-plugin-dhcpd.conf", $dhcpdvlanfile.PHP_EOL);
 					$manageVlan = "sudo /usr/share/htvcenter/plugins/dhcpd/bin/perl/manageVlan.pl add $vlan $net3 $mask";
 					$htvcenter_server = new htvcenter_server();
-                                        $htvcenter_server->send_command($manageVlan, NULL, true);
+                    $htvcenter_server->send_command($manageVlan, NULL, true);
 					// END DHCP
 
 					// success msg
@@ -269,7 +272,7 @@ var $lang;
 		#$d['ip_mgmt_broadcast']['object']['attrib']['name']  = 'ip_mgmt_broadcast';
 
 		$d['ip_mgmt_gateway']['label']                     = $this->lang['ip_mgmt_gateway'];
-		$d['ip_mgmt_gateway']['validate']['regex']         = $regex_ip;
+		//$d['ip_mgmt_gateway']['validate']['regex']         = $regex_ip;
 		$d['ip_mgmt_gateway']['validate']['errormsg']      = 'Gateway must be 0.0.0.0';
 		$d['ip_mgmt_gateway']['object']['type']            = 'htmlobject_input';
 		$d['ip_mgmt_gateway']['object']['attrib']['type']  = 'text';
@@ -283,6 +286,7 @@ var $lang;
 		$d['ip_mgmt_dns1']['object']['attrib']['type']  = 'text';
 		$d['ip_mgmt_dns1']['object']['attrib']['id']    = 'ip_mgmt_dns1';
 		$d['ip_mgmt_dns1']['object']['attrib']['name']  = 'ip_mgmt_dns1';
+		$d['ip_mgmt_dns1']['required']                  = true;
 
 		$d['ip_mgmt_dns2']['label']                     = $this->lang['ip_mgmt_dns2'];
 		$d['ip_mgmt_dns2']['validate']['regex']         = $regex_ip;
@@ -300,6 +304,7 @@ var $lang;
 		$d['ip_mgmt_domain']['object']['attrib']['id']    = 'ip_mgmt_domain';
 		$d['ip_mgmt_domain']['object']['attrib']['name']  = 'ip_mgmt_domain';
 		$d['ip_mgmt_domain']['object']['attrib']['maxlength'] = 255;
+		$d['ip_mgmt_domain']['required']                  = true;
 
 		$d['ip_mgmt_vlan_id']['label']                     = $this->lang['ip_mgmt_vlan_id'];
 		$d['ip_mgmt_vlan_id']['validate']['regex']         = '/^[0-9]+$/i';
@@ -308,6 +313,7 @@ var $lang;
 		$d['ip_mgmt_vlan_id']['object']['attrib']['type']  = 'text';
 		$d['ip_mgmt_vlan_id']['object']['attrib']['id']    = 'ip_mgmt_vlan_id';
 		$d['ip_mgmt_vlan_id']['object']['attrib']['name']  = 'ip_mgmt_vlan_id';
+		$d['ip_mgmt_vlan_id']['required']                  = true;
 
 		$d['ip_mgmt_comment']['label']                     = $this->lang['ip_mgmt_comment'];
 		$d['ip_mgmt_comment']['object']['type']            = 'htmlobject_textarea';

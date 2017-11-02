@@ -1374,7 +1374,10 @@ function newTreeMenu(
 						$faicon = 'fa-dashboard';
 						$label = '<span class="label label-success pull-right">Top</span>';
 					break;
-
+					case 'Compose':
+						$faicon = 'fa-music';
+						$label = '';
+					break;
 					case 'Server':
 						if ( $this->tree[$cnt]['parsed_href'] != 'index.php?plugin=nagios3') {
 							$faicon = 'fa-server';
@@ -1419,7 +1422,7 @@ function newTreeMenu(
 					break;
 
 					case 'Misc':
-						$faicon = 'fa-ellipsis-h';
+						$faicon = 'fa-qrcode';
 						$label = '';
 					break;
 
@@ -1440,7 +1443,7 @@ function newTreeMenu(
 					break;
 					
 					case 'Multi-Cloud':
-						$faicon = 'fa-cogs';
+						$faicon = 'fa-object-group';
 						$label = '';
 						$this->tree[$cnt]['text'] = 'Multi Cloud';
 					break;

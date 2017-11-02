@@ -61,12 +61,6 @@ var $rootdir;
 			case 'get_top_status':
 				$this->get_top_status();
 			break;
-			case 'get_aws_vm_count':
-				$this->get_vm_count("aws");
-			break;
-			case 'get_azure_vm_count':
-				$this->get_vm_count("az");
-			break;
 			case 'get_info_box':
 				$this->get_info_box();
 			break;
@@ -299,29 +293,8 @@ var $rootdir;
 		}
 	}
 
-	//--------------------------------------------
-	/**
-	 * Get AWS EC2 Instance count
-	 *
-	 * @access public
-	 */
-	//--------------------------------------------
-	function get_vm_count($host) {
-		$active = 0;
-		$inactive = 0;
-		$disk_info_dump = shell_exec('python '.$this->controller->rootdir.'/server/aa_server/js/cloudvirtualmachinestats.py '.$host);
-		$disk_info = split("[\r|\n]", trim($disk_info_dump));
-		$arr = array();
 
-		if(!empty($disk_info)){
-			foreach($disk_info as $k => $v){
-				$t = split("[:]", $v);
-				array_push($arr, $t[1]);
-			}
-		}
-		echo json_encode($arr);
-		die();
-	}
+
 
 }
 ?>

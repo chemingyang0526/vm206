@@ -101,16 +101,29 @@ var $lang;
 	 * @return htmlobject_response
 	 */
 	//--------------------------------------------
-	function details() {
+	function details($netname=false) {
 		// $this->response->html->debug();
 		$form = $this->response->get_form($this->actions_name, 'details');
-		$name = $this->response->html->request()->get($this->identifier_name);
+		
+		if ($netname == false) {
+			$name = $this->response->html->request()->get($this->identifier_name);
+		} else {
+			$name = $netname;
+		}
+		
+		if ($netname != false) {
+			require_once('/usr/share/htvcenter/plugins/ip-mgmt/web/class/ip-mgmt.class.php');
+			$this->ip_mgmt = new ip_mgmt();
+		}
 		$data = $this->ip_mgmt->get_list($name);
 
 		$data[$name]['first']['ip_mgmt_network_1'] = $data[$name]['first']['ip_mgmt_address'];
 		$data[$name]['first']['ip_mgmt_network_2'] = $data[$name]['last']['ip_mgmt_address'];
+		$detailnet['range']['first'] = $data[$name]['first']['ip_mgmt_address'];
+		$detailnet['range']['last'] = $data[$name]['last']['ip_mgmt_address'];
 		unset($data[$name]['first']['ip_mgmt_address']);
 
+		$detailnet['details'] = $data[$name]['first'];
 		foreach($data[$name]['first'] as $key => $value) {
 			$box        = $this->response->html->box();
 			$box->label = $this->lang[$key];
@@ -146,6 +159,8 @@ var $lang;
 			);
 		}
 
+		$detailnet['ips'] = $body;
+
 		$table = $this->response->html->tablebuilder( 'ipmgmt_details', $this->response->get_array($this->actions_name, 'details'));
 		$table->sort      = 'ip_mgmt_id';
 		$table->css       = 'htmlobject_table';
@@ -160,11 +175,14 @@ var $lang;
 		$input->value = $name;
 		$input->type = 'hidden';
 
-
 		$form->add($input, 'name');
 		$form->add($table, 'table');
 
-		return $form;
+		if ($netname == false) {
+			return $form;
+		} else {
+			return $detailnet;
+		}
 	}
 
 

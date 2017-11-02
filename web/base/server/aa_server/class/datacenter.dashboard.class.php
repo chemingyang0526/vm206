@@ -185,9 +185,6 @@ var $lang = array();
 		$data = $this->getvms();
 		$t->add($data);
 
-		$data = $this->getnetworkips();
-		$t->add($data);
-
 		$year = date('Y');
 				$yearm1 = $year - 1;
 				$yearm2 = $year - 2;
@@ -588,8 +585,8 @@ $d = array();
 		foreach ($resource_list as $arr) {
 			$resource->get_instance($arr['resource_id']);
 
-			if ($resource->id <> 0) {
-				if ($resource->id == $resource->vhostid) {
+			if ($resource->ip <> 1) {
+				if ($resource->ip == $resource->htvcenterserver) {
 					$cpu_avail += intval($resource->cpunumber);
 					$mem_avail += intval($resource->memtotal) - intval($resource->memused);
 				} else {
@@ -2252,13 +2249,11 @@ function storagetaken() {
 	$totalarr = $this->gethumanvalue($total);
 	$usedarr = $this->gethumanvalue($used);
 
-	//$b['sfree']= '<b>'.$freearr[0].'</b> '.$freearr[1];
-	//$b['stotal']= $totalarr[0].' '.$totalarr[1];
-	//$b['sused']= $usedarr[0].' '.$usedarr[1];;
-	$b['sfree'] = $free;
-	$b['stotal'] = $total;
-	$b['sused'] = $used; 
+	$b['sfree']= '<b>'.$freearr[0].'</b> '.$freearr[1];
+	$b['stotal']= $totalarr[0].' '.$totalarr[1];
+	$b['sused']= $usedarr[0].' '.$usedarr[1];;
 	$b['spercent'] = $percent;
+	
 	return $b;
 }
 
@@ -2297,45 +2292,19 @@ function gethumanvalue($size) {
 
 }
 
-function getnetworkips() {
-	$file = $this->htvcenter->get('webdir')."/plugins/ip-mgmt/class/ip-mgmt.class.php";
-	require_once $file;
-	$this->ip_mgmt = new ip_mgmt();
-	$networks = $this->ip_mgmt->get_list();
-	$network_apps = array();
-
-	foreach ($networks as $name => $v) {
-		$ids = $this->ip_mgmt->get_ips_by_name($name);
-
-		foreach($ids as $k => $id) {
-			$data = $this->ip_mgmt->get_instance('id', $id);
-			$network_apps[$data['ip_mgmt_address']] = $data['ip_mgmt_appliance_id'];
-		}
-	}
-
-	$total = count($network_apps);
-	$used  = count(array_filter($network_apps));
-	$free = $total - $used;
-	$rtrn['networkips'] = json_encode([['total',$total],['used',$used],['free',$free]]);
-	return $rtrn;
-}
-
 function gethosts() {
 	$virtualization = new virtualization();
 	$virtlist = $virtualization->get_list();
 	$resource = new resource();
 	$hosts = array();
 	$rtrn = array();
-	$total_count = 0;
 
 	foreach ($virtlist as $idx => $v) {
 		if (strrpos($v['label'],' Host') !== false) {
 			$res_ids = $resource->get_instance_ids_by_virtualization_id($v['value']);
-			$total_count += count($res_ids);
-			array_push($hosts, [str_replace("KVM","OCH",$v['label']),count($res_ids)]);
+			array_push($hosts, [$v['label'],count($res_ids)]);
 		}
 	}
-	array_unshift($hosts, ['total',$total_count]);
 	$rtrn['hosts'] = json_encode($hosts);
 	return $rtrn;
 }
@@ -2345,27 +2314,15 @@ function getvms() {
 	$virtlist = $virtualization->get_list();
 	$resource = new resource();
 	$vms = array();
-	$arr = array();
 	$rtrn = array();
 
 	foreach ($virtlist as $idx => $v) {
 		if (strrpos($v['label'],' VM') !== false) {
 			$res_ids = $resource->get_instance_ids_by_virtualization_id($v['value']);
-			$label = str_replace("KVM","OCH",explode(" (",$v['label'])[0]);
-
-			if (isset($vms[$label])) {
-				$vms[$label] += count($res_ids);
-			} else {
-				$vms[$label] = count($res_ids);
-			}
+			array_push($vms, [$v['label'],count($res_ids)]);
 		}
 	}
-
-	foreach ($vms as $i => $v) {
-		array_push($arr, [$i, $v]);
-	}
-
-	$rtrn['vms'] = json_encode($arr);
+	$rtrn['vms'] = json_encode($vms);
 	return $rtrn;
 }
 

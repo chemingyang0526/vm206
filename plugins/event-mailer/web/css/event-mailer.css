@@ -29,3 +29,7 @@
 	width: 400px;
 	height: 300px;
 }
+
+.event-mailer #Tabelle td.func {
+	text-align: right;
+}

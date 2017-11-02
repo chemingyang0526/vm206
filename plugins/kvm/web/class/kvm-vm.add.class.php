@@ -280,7 +280,9 @@ var $lang = array();
 					$tables = $this->htvcenter->get('table');
 					$resource = new resource();
 					$id = (int)str_replace(".", "", str_pad(microtime(true), 15, "0"));
-					$ip = "0.0.0.0";
+					
+					$ip = rand(11, 1111); //"0.0.0.0";
+					
 					$mac = strtolower($form->get_request('mac'));
 					// send command to the htvcenter-server
 					$htvcenter = new htvcenter_server();
@@ -545,8 +547,8 @@ var $lang = array();
 		$nics[] = array("e1000", $this->lang['form_net_e1000']);
 		$nics[] = array("rtl8139", $this->lang['form_net_rtl8139']);
 
-		$keymaps[] = array("de", "de");
 		$keymaps[] = array("en-us", "en-us");
+		$keymaps[] = array("de", "de");
 		$keymaps[] = array("es", "es");
 		$keymaps[] = array("fr", "fr");
 		$keymaps[] = array("it", "it");
@@ -739,7 +741,7 @@ var $lang = array();
 				$this->resource->generate_mac();
 				$mac = $this->resource->mac;
 			}
-
+			
 			$d['net0']['label']                        = $this->lang['lang_net_0'];
 			$d['net0']['object']['type']               = 'htmlobject_input';
 			$d['net0']['object']['attrib']['type']     = 'checkbox';
@@ -763,6 +765,38 @@ var $lang = array();
 			$d['bridge']['object']['attrib']['name']    = 'bridge';
 			$d['bridge']['object']['attrib']['index']   = array(0,1);
 			$d['bridge']['object']['attrib']['options'] = $bridges;
+			
+			
+			// check ip-mgmt
+			#$ip_mgmt_list_per_user_arr[] = array("value" => -2, "label" => "Auto");
+			#$ip_mgmt_list_per_user_arr[] = array("value" => -1, "label" => "None");
+			//$ip_network_names = array(" -- ", "Select one IP Network");
+			/*if (!strcmp($show_ip_mgmt, "true")) {
+				if (file_exists($this->rootdir."/plugins/ip-mgmt/.running")) {
+				}
+			}*/
+			
+			/*require_once $this->rootdir."/plugins/ip-mgmt/class/ip-mgmt.class.php";
+			$ip_mgmt = new ip_mgmt();
+			$ip_network_name = $ip_mgmt->get_names("");*/
+			//echo "KVM - MAN";
+			//echo "<pre>" . print_r ($ip_network_name) . "</pre>";
+			//array_pop($ip_mgmt_list_per_user);
+			//foreach($ip_network_name as $list) {
+				//$ip_mgmt_id = $list['ip_mgmt_id'];
+				//$ip_mgmt_name = trim($list['ip_mgmt_name']);
+				//$ip_mgmt_address = trim($list['ip_mgmt_address']);
+				//$ip_network_names[] = array($list, $list);
+				//}
+			
+			/*$d['ip_network']['label']                       = "Network";
+			$d['ip_network']['required']                    = true;
+			$d['ip_network']['object']['type']              = 'htmlobject_select';
+			$d['ip_network']['object']['attrib']['name']    = 'Network';
+			$d['ip_network']['object']['attrib']['index']   = array(0,1);
+			$d['ip_network']['object']['attrib']['options'] = $ip_network_names;*/
+
+
 
 			$d['nic']['label']                         = $this->lang['form_netdevice'];
 			$d['nic']['required']                      = true;

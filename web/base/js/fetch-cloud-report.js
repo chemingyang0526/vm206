@@ -1,5 +1,14 @@
-
 function current_year_monthly_spent_by_resource(bindto, data) {
+
+    // console.log(data);
+    /* data = [
+        ['x', '2017-01-01', '2017-02-01', '2017-03-01', '2017-04-01', '2017-05-01', '2017-06-01', '2017-07-01', '2017-08-01'],
+        ['cpu',             300, 200, 250, 240, 260, 250, 200, 240],
+        ['storage',         200, 130, 190, 240, 140, 220, 130, 230],
+        ['memory',          300, 200, 210, 320, 250, 220, 200, 320],
+        ['virtualization',  200, 130, 150, 240, 130, 210, 130, 250],
+        ['networking',      130, 120, 150, 160, 170, 150, 120, 160],
+    ]; */
 
     var chart2 = c3.generate({
         bindto: bindto,
@@ -10,14 +19,13 @@ function current_year_monthly_spent_by_resource(bindto, data) {
             colors: {
                 cpu:            seriesColors[0],
                 storage:        seriesColors[1],
-                memory:         seriesColors[3],
-                virtualization: seriesColors[5],
+                memory:         seriesColors[2],
+                virtualization: seriesColors[3],
                 networking:     seriesColors[4]
             },
             groups: [
                 ['cpu','storage','memory','virtualization','networking']
-            ],
-            order: null,
+            ]
         },
         axis: {
             x:  {
@@ -41,7 +49,6 @@ function current_year_monthly_spent_by_resource(bindto, data) {
 
     return chart2;
 }
-
 
 function get_daily_data(year_str, month_str, day_str, type) {
     var url = '/cloud-fortis/user/index.php?report=yes';

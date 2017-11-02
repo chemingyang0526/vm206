@@ -67,6 +67,12 @@ var $lang = array(
 			Classes should be combined to "groups" these will be automatically displayed in the puppet-plugin.
 			The puppet-configuration repository is also available for external svn clients.
 			To check out the puppet-repo please run<br><br>:',
+		'create_node_title' => 'Create a node',
+		'create_node_content' => '<p>The name of your node must be the fqdn of your client. For example <code>hostname_pc.domainname.com/ca.local</code></p>
+			<p>You have to be in the same dns zone as the hypertask server or set your /etc/hosts file to add "ip_adress htcontroller" and modify the "certname" line in <code>/etc/puppet/puppet.conf</code></p>
+			<p>For example : certname: <code>hostname.dns_zone_hypertask.com.ca.local</code></p>
+			<p>You have to install the puppet client on your external client/node and set /etc/puppet/puppet.conf to contact the puppet server</p>',
+
 		'introduction_title1' => 'Assigning Applications to Appliances',
 		'introduction_content1' => '<ol><li>Go to the "Appliances" in the puppet-plugin menu</li>
 			<li>Select an Appliance to be configured via puppet</li>

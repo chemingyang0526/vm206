@@ -231,9 +231,13 @@ var $lang = array(
 	 * @return null
 	 */
 	//--------------------------------------------
-	function enable() {
+	function enable($id=false) {
 		$msg = array();
-		$appliances = $this->response->html->request()->get($this->identifier_name);
+		if($id) {
+			$appliances[] = $id;
+		} else {
+			$appliances = $this->response->html->request()->get($this->identifier_name);
+		}
 		if($appliances !== '') {
 			$appliance = new appliance();
 			foreach($appliances as $id) {
@@ -241,6 +245,14 @@ var $lang = array(
 				$msg[] = sprintf($this->lang['msg_enabled'], $id);
 			}
 		}
+
+		/*if ($id) {
+			return 'true!';
+		} else {
+			$this->response->redirect(
+				$this->response->get_url($this->actions_name, 'select', $this->message_param, implode('<br>', $msg))
+			);
+		}*/
 		$this->response->redirect(
 			$this->response->get_url($this->actions_name, 'select', $this->message_param, implode('<br>', $msg))
 		);
@@ -254,9 +266,14 @@ var $lang = array(
 	 * @return null
 	 */
 	//--------------------------------------------
-	function disable() {
+	function disable($id=false) {
+		
 		$msg = array();
-		$appliances = $this->response->html->request()->get($this->identifier_name);
+		if($id) {
+			$appliances[] = $id;
+		} else {
+			$appliances = $this->response->html->request()->get($this->identifier_name);
+		}
 		if($appliances !== '') {
 			$appliance = new appliance();
 			foreach($appliances as $id) {
@@ -264,6 +281,13 @@ var $lang = array(
 				$msg[] = sprintf($this->lang['msg_disabled'], $id);
 			}
 		}
+		/*if ($id) {
+			return 'false!';
+		} else {
+			$this->response->redirect(
+				$this->response->get_url($this->actions_name, 'select', $this->message_param, implode('<br>', $msg))
+			);
+		}*/
 		$this->response->redirect(
 			$this->response->get_url($this->actions_name, 'select', $this->message_param, implode('<br>', $msg))
 		);

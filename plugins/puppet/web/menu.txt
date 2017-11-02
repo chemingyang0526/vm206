@@ -21,3 +21,6 @@
 ...|Appliances|index.php?plugin=puppet|Apply Puppet Classes to Appliances
 ...|Configuration|index.php?plugin=puppet&puppet_action=config|Configure Puppet
 ...|About|index.php?plugin=puppet&controller=puppet-about|How to use
+#...|Puppet Report|index.php?plugin=puppet&controller=puppet-report|Puppet Report
+...|Personalize Node|index.php?plugin=puppet&controller=personalize-node|Personalize Node
+...|Node Class|index.php?plugin=puppet&controller=node-class|Node Class

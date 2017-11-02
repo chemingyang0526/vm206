@@ -19,7 +19,6 @@
 <link href="/cloud-fortis/css/vender/bootstrap/css/card.css" rel="stylesheet" type="text/css">
 <link href="/cloud-fortis/designplugins/datatables/media/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
 <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js" type="text/javascript"></script>
-
 <style>
 	#project_tab_ui { display: none; }
 	table.dataTable .thead-default th { background-color: rgb(255,255,255); }
@@ -100,20 +99,6 @@
 	</form>
 </div>
 
-<div id="aws-resources">
-	<p class="vm-header">AWS EC2 Instances</p>
-	<div id="aws-resources-instance" class="divTable">
-		<p id="load-aws-instance"><i class="fa fa-history fa-lg" aria-hidden="true"></i> Click here to load the EC2 instances from AWS</p>
-	</div>
-</div>
-
-<div id="azure-resources">
-	<p class="vm-header">Azure Virtual Machines</p>
-	<div id="azure-resources-vms" class="divTable">
-		<p id="load-azure-instance"><i class="fa fa-history fa-lg" aria-hidden="true"></i> Click here to load the VMS from Azure</p>
-	</div>
-</div>
-
 <div id="volumepopup" class="modal-dialog">
 	<div class="panel">
 		<!-- Classic Form Wizard -->
@@ -191,9 +176,9 @@ $(document).ready(function() {
 		var onclickHtml = '<ul class="appliance-pop-over-menu">';
 		if (d[10]){
 			if (d[10].indexOf('stop') !== -1){
-				onclickHtml = onclickHtml + '<li class="fa fa-stop"> '+d[10]+'</li>';
+				onclickHtml = onclickHtml + '<li class="fa fa-stop app-stop"> '+d[10]+'</li>';
 			} else {
-				onclickHtml = onclickHtml + '<li class="fa fa-play"> '+d[10]+'</li>';
+				onclickHtml = onclickHtml + '<li class="fa fa-play app-start"> '+d[10]+'</li>';
 			}
 		}
 		if (d[11]){
@@ -216,6 +201,7 @@ $(document).ready(function() {
 	}
 
 	var dt = $("#cloud_appliances_table").DataTable( {
+		"stateSave": true,
 		"columns": [
 				{ "visible": false },
 				null, null, null, null, null, null, null, null,
@@ -227,7 +213,7 @@ $(document).ready(function() {
 				{ "visible": false },
 				{ "visible": false },
 		],
-		"order": [], "bLengthChange": false, "pageLength": 10, "search": { "regex": true }, "bAutoWidth": true,
+		"order": [], "bLengthChange": false, "pageLength": 10, "search": { "regex": true }, "bAutoWidth": true, "destroy": true,
 		"fnDrawCallback": function( oSettings ) {
 			$(".toggle-graph a").popover({
 				html: true,
@@ -257,17 +243,48 @@ $(document).ready(function() {
 			}, 300);
 		});
 	});
+	
+	function refreshCPU() {
+		$.ajax({
+		  url: 'index.php?base=appliance&cpuload=1',
+		})
+		.done(function(d) {
+			var cpuLoad = jQuery.parseJSON(d);
+			var count = 0;
+			var table = $('#cloud_appliances_table').DataTable();
+			table.rows().every( function ( rowIdx, tableLoop, rowLoop ) {
+				var data = this.data();
+				data[7] = cpuLoad[data[0]];
+				this.data(data).draw();
+				count = count + 1;
+			});
+		})
+		.fail(function() {
+			alert("Failed to load");
+		});
+	}
+	
+	setInterval(refreshCPU,10000);
 
+	function getParameterByName(name, url) {
+		if (!url) url = window.location.href;
+		name = name.replace(/[\[\]]/g, "\\$&");
+		var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"), results = regex.exec(url);
+		if (!results) return null;
+		if (!results[2]) return '';
+		return decodeURIComponent(results[2].replace(/\+/g, " "));
+	}
+	
 	function noVNCPOPUP(url) {
-		//path = "{url}";
-		noVncWindow = window.open(url, "noVnc_{port}", "titlebar=no, location=no, scrollbars=yes, width=800, height=500, top=50");
+		//alert(url);
+		var id = getParameterByName('appliance_id', url) ;
+		var l = '/htvcenter/base/api.php?action=plugin&plugin=novnc&controller=novnc&novnc_action=console&appliance_id='+id;
+		noVncWindow = window.open(l, "noVnc_{port}", "titlebar=no, location=no, scrollbars=yes, width=800, height=500, top=50");
 		noVncWindow.focus();
 	}
-	$('a#novnc-popup').on('click', function(){
+	$('a.novnc-popup').click(function(){
 		var storagelink = $(this).attr('href');
 		noVNCPOPUP(storagelink);
- 		/*$('#novncpopup').load(storagelink);
-		$('#volumepopupvnc').show();*/
 		return false;
 	});
 	$('#volumepopupvncclose').click(function(){
@@ -303,13 +320,38 @@ $(document).ready(function() {
 		$('#volumepopupaddn').hide();
 	});
 	
+	function startServer(id){
+		var id = id;
+		var urlstring = 'index.php?base=appliance&resource_filter=&appliance_action=start&appliance_identifier[]='+id;
+		$('#storageformvmf').load(urlstring+" form#app-start-form", function(){
+			$('.lead').hide();
+			$('#actionvmf').html('<div class="start-stop-ction"><label>Action</label> <div class="alcontent"><i class="fa fa-play"></i> Start </div><br/></div>');
+			$('#storageformvmf select').selectpicker();
+			$('#storageformvmf select').hide();
+			$('#volumepopupvmf').show();
+		}); 
+	}
+	
+	function stopServer(id){
+		var id = id;
+		var urlstring = 'index.php?base=appliance&resource_filter=&appliance_action=stop&appliance_identifier[]='+id;
+		$('#storageformvmf').load(urlstring+" form#app-stop-form", function(){
+			$('.lead').hide();
+			$('#actionvmf').html('<div class="start-stop-ction"><label>Action:</label> <div class="alcontent"><i class="fa fa-stop"></i> Stop </div><br/></div>');
+			$('#storageformvmf select').selectpicker();
+			$('#storageformvmf select').hide();
+			$('#volumepopupvmf').show();
+		}); 
+	}
+	
 	function validateServerName(){
+		$(".name-error").remove();
 		var serverName = $("div#step1 #name").val();
 		if (serverName == ""){
-			alert("Server name can not be empty");
+			$("div#storageformaddn div#step1 div#name_box div.right").append("<span class='name-error'>Server name can not be empty</span>");
 			return(false);
 		} else if (serverName.indexOf(' ') >= 0) {
-			alert("Server name can not have space");
+			$("div#storageformaddn div#step1 div#name_box div.right").append("<span class='name-error'>Server name can not have space</span>");
 			return(false);
 		}
 		else {
@@ -350,6 +392,7 @@ $(document).ready(function() {
 		$('#storageform').load(url+" form", function(){
 			$('#storageform select').selectpicker();
 			$('#storageform select').hide();
+			$('#storageform form.form-horizontal').remove();
 			$('#storageform .selectpicker')
 			$('#volumepopup').show();
 		});
@@ -364,8 +407,7 @@ $(document).ready(function() {
 		return onclickHtml;
 	}
 	
-	$('#load-aws-instance').click(function(e){
-		$("#aws-resources-instance").html('<p id="load-aws-instance"><i class="fa fa-spinner fa-lg" aria-hidden="true"></i> loading</p>');
+	if($('#load-aws-instance').length){
 		$.ajax({
 		  url: 'index.php?base=appliance&awsec2=list',
 		})
@@ -392,11 +434,39 @@ $(document).ready(function() {
 		.fail(function() {
 			alert("Failed to load instances from AWS");
 		});
+	}
+	
+	$('#load-aws-instance').click(function(e){
+		$.ajax({
+		  url: 'index.php?base=appliance&awsec2=list',
+		})
+		.done(function(data) {
+			$("#aws-resources-instance").html(data);
+			var aws_dt = $("#aws_instance_table").DataTable( {
+				"columns": [
+						{ "visible": false }, null, null, null, null, null, { "visible": false }, { "visible": false }, { "visible": false },
+				],
+				"order": [], "bLengthChange": false, "pageLength": 10, "search": { "regex": true }, "bAutoWidth": true,
+				"fnDrawCallback": function( oSettings ) {
+					$(".aws-toggle-graph a").popover({
+						html: true,
+						placement: "bottom",
+						content: function() {
+							var tr = $(this).closest('tr');
+							var row = aws_dt.row( tr );
+							return formatAWSPopOver(row.data());
+						}
+					});
+				}
+			});
+		})
+		.fail(function() {
+			alert("Failed to load instances from AWS");
+		});
 		return false;
 	});
 	
-	$('#load-azure-instance').click(function(e){
-		$("#azure-resources-vms").html('<p id="load-azure-instance"><i class="fa fa-spinner fa-lg" aria-hidden="true"></i> loading</p>');
+	if($('#load-azure-instance').length){
 		$.ajax({
 		  url: 'index.php?base=appliance&azurevm=list',
 		})
@@ -414,7 +484,36 @@ $(document).ready(function() {
 						content: function() {
 							var tr = $(this).closest('tr');
 							var row = azure_dt.row( tr );
-							return formatAWSPopOver(row.data()); //$('#popover-content').html();
+							return formatAWSPopOver(row.data());
+						}
+					});
+				}
+			});
+		})
+		.fail(function() {
+			alert("Failed to load VMs from Azure");
+		});
+	}
+	
+	$('#load-azure-instance').click(function(e){
+		$.ajax({
+		  url: 'index.php?base=appliance&azurevm=list',
+		})
+		.done(function(data) {
+			$("#azure-resources-vms").html(data);
+			var azure_dt = $("#azure_vm_table").DataTable( {
+				"columns": [
+						{ "visible": false }, null, null, null, null, null, { "visible": false }, { "visible": false }, { "visible": false },
+				],
+				"order": [], "bLengthChange": false, "pageLength": 10, "search": { "regex": true }, "bAutoWidth": true,
+				"fnDrawCallback": function( oSettings ) {
+					$(".azure-toggle-graph a").popover({
+						html: true,
+						placement: "bottom",
+						content: function() {
+							var tr = $(this).closest('tr');
+							var row = azure_dt.row( tr );
+							return formatAWSPopOver(row.data());
 						}
 					});
 				}
@@ -426,4 +525,60 @@ $(document).ready(function() {
 		return false;
 	});
 	
+	function formatComposedPopOver (d) {
+		var composeID = $(d[0]).text();
+		var onclickHtml = '<ul class="compose-pop-over-menu">';
+		onclickHtml = onclickHtml + '<li class="fa fa-edit"><a href="index.php?base=aa_server&controller=compose&compose_action=editcompose&composeID='+d[0]+'"> Edit</a></li>';
+		onclickHtml = onclickHtml + '<li class="fa fa-trash-o"><a onclick="return confirm(\'Are you sure you want to delete this compose?\');" href="index.php?base=aa_server&controller=compose&compose_action=deletecompose&composeID='+d[0]+'"> Delete</a></li>';
+		onclickHtml = onclickHtml + '</ul>';
+		return onclickHtml;
+	}
+	
+	function formatComposeHost(d) {
+		var host = d[8];
+		if (host != "") {
+			return host;
+		} else {
+			return "Did not find information";
+		}
+	}
+	
+	if($('#load-composed-server').length){
+		$.ajax({
+		  url: 'index.php?base=appliance&compose=list',
+		})
+		.done(function(data) {
+			$("#composed-servers").html(data);
+			var composed_servers = $("#maestro_composed_table").DataTable( {
+				"columns": [
+					{ "visible": false },
+					null, null, null, null, null, null, null, { "visible": false },
+				],
+				"order": [], "bLengthChange": false, "pageLength": 10, "search": { "regex": true }, "bAutoWidth": true, "destroy": true,
+				"drawCallback": function( oSettings ) {
+					$(".toggle-graph a").popover({
+						html: true,
+						placement: "bottom",
+						content: function() {
+							var tr = $(this).closest('tr');
+							var row = composed_servers.row( tr );
+							return formatComposedPopOver(row.data()); //$('#popover-content').html();
+						}
+					});
+					$(".toggle-host a").popover({
+						html: true,
+						placement: "bottom",
+						content: function() {
+							var tr = $(this).closest('tr');
+							var row = composed_servers.row( tr );
+							return formatComposeHost(row.data()); //$('#popover-content').html();
+						}
+					});
+				}
+			});
+		})
+		.fail(function() {
+			alert("Failed to load Composed Servers");
+		});
+	}
 </script>

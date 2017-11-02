@@ -50,7 +50,7 @@
 }
 #addbuttons {
 	float: right;
-	margin: 0 30px 0 0;
+	margin: 0 0px 0 0;
 }
 #kvm_edit .row {
 	margin: 0 0 20px 0;
@@ -110,3 +110,33 @@
 	display: block;
 }
 
+#ip-add-0 {
+	float: left;
+	width: 100%;
+}
+
+#ip-add-0 div.right{
+	width: 220px;
+	border: 1px solid #e1e5ea;
+	padding: 5px;
+	margin-bottom: 15px;
+	float: left;
+}
+
+#ip-add-0 select{
+	background-color: #fff;
+	border: 0;
+	width: 210px;
+}
+
+#ip-add-0 select option {
+	padding: 5px 3px;
+}
+
+.hosterr .pad-ver {
+	margin-top: 15px;
+}
+
+.htmlobject_td .widget-body .text-left {
+	padding-top: 30px;
+}

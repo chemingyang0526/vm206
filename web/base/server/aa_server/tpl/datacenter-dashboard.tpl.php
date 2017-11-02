@@ -15,6 +15,10 @@
 -->
 <link type="text/css" href="{baseurl}/css/c3/c3.min.css" rel="stylesheet">
 <style>
+	.row {
+		margin-left: -12px;
+		margin-right: -12px;
+	}
 	#demo-set-btn {
 		display: none;
 	}
@@ -42,7 +46,7 @@
 		padding: 0 5px;
 	}
 	#eventsboxes span i {
-		margin-left: 12px;
+		margin-left: 15px;
 	}
 	.eventcount {
 		top: 0px;
@@ -80,64 +84,35 @@
 	}
 	hr { 
 		display: inline-block;
-		margin-top: 0.6em;
-		margin-bottom: 0.4em;
-		margin-left: 0.2em;
+		margin-top: 0.5em;
+		margin-bottom: 0.5em;
+		margin-left: 0.3em;
 		margin-right: 0;
 		border-style: solid;
-		border-width: 0px;
-		height: 3px;
+		border-width: 2px;
 		width: 24px;
 		float: right;
 	}
     hr.health-files {
-        background-color: rgb(72, 204, 132);
+        border-color: rgb(72, 204, 132);
     }
     hr.total, hr.health-files, hr.inactive {
-        background-color: #dfdfdf;
+        border-color: #dfdfdf;
     }
     hr.cloud-host, hr.active {
-        background-color: rgb(72, 204, 132) ;
+        border-color: #41bee9 ;
     }
-    hr.missing-files {
-        background-color: rgb(255, 99, 132);
+    hr.endangered-files, hr.och-host {
+        border-color: rgb(255, 99, 132);
     }
-    hr.endangered-files {
-        background-color: rgb(255, 205, 86);
-    }
-    hr.OCH.VM {
-        background-color: #41bee9;
+    hr.missing-files, hr.och-vm {
+        border-color: rgb(255, 205, 86);
     }
     hr.networking {
-        background-color: rgb(75, 192, 192);
+        border-color: rgb(75, 192, 192);
     }
-    hr.ESX.VM {
-        background-color: rgb(137, 197, 61);
-    }
-    hr.vSphere.VM {
-        background-color: rgb(153, 102, 255);
-    }
-    hr.Cloud.VM {
-        background-color: rgb(172,205,236);
-    }
-    hr.AWS.EC2 {
-        background-color: rgb(255, 159, 64);
-    }
-    hr.Azure.VM {
-        background-color: rgb(31,119,180);
-    }
-    .after-right {
-        clear: auto;
-    }
-    @media (min-width: 992px) and (max-width: 1199px) { 
-        .donuts-row {
-            height: 62.6rem;
-        }
-    }
-    @media (min-width: 1200px) { 
-        .after-right {
-            clear: both;
-        }
+    hr.nextthing {
+        border-color: rgb(153, 102, 255);
     }
 </style>
 <script src="{baseurl}/js/c3/d3.v3.min.js" type="text/javascript"></script>
@@ -168,9 +143,7 @@
 		purple: 'rgb(153, 102, 255)',
 		grey: 'rgb(201, 203, 207)',
 		teal: 'rgb(172,205,236)',
-		moss: 'rgb(167,182,27)',
-		darkblue: 'rgb(31,119,180)',
-		grass: 'rgb(137, 197, 61)'
+		moss: 'rgb(167,182,27)'
 	};
 
 	var seriesColors = [
@@ -182,9 +155,7 @@
 		chartColors.orange,
 		chartColors.purple,
 		chartColors.moss,
-		chartColors.teal,
-		chartColors.darkblue,
-		chartColors.grass
+		chartColors.teal
 	];
 
 	$(document).ready(function(){
@@ -205,18 +176,14 @@
 
 		var hosts = {hosts};
 		var vms = {vms};
-		var networkips = {networkips};
 
 		var memfree = parseInt({memavailable});
 		var memused = parseInt({memconsumed});
 		var memtotal = memfree + memused;
 
-		var stotal = parseInt({stotal});
-		var sused = parseInt({sused});
-		var sfree = parseInt({sfree});
-		// var stotal = parseFloat("{stotal}".split(" ")[0]).toFixed(1);
-		// var sused =  parseFloat("{sused}".split(" ")[0]).toFixed(1);
-		// var sfree = (stotal - sused).toFixed(1);
+		var stotal = parseFloat("{stotal}".split(" ")[0]).toFixed(1);
+		var sused =  parseFloat("{sused}".split(" ")[0]).toFixed(1);
+		var sfree = (stotal - sused).toFixed(1);
 
 		var cputotal = parseInt({cpuavailable});
 		var cpuload = parseInt({cpuconsumed});
@@ -231,10 +198,10 @@
 		var endangeredfiles = parseInt({endangeredfiles});
 		var missingfiles = parseInt({missingfiles});
 
-		make_c3('donut','Disk', [["total",stotal],["free",sfree],["used",sused]], "B", true);
-		make_c3('donut','Memory', [["total",memtotal],["free",memfree],["used",memused]], "MB", true);
+		make_c3('donut','Disk', [["total",stotal],["free",sfree],["used",sused]], "GB", true);
+		make_c3('donut','Memory', [["total",memtotal],["used",memused],["free",memfree]], "MB", true);
 		make_c3('donut','CPU', [["total",cputotal],["free",cpufree],["used",cpuload]], "", true);
-		make_c3('donut','Network', networkips, "", true);
+		make_c3('donut','Network', [["total",0],["free",0],["used",0]], "", true);
 
 		get_event_status();
 		get_cloud_charge_back();
@@ -242,55 +209,10 @@
 		make_c3('donut','storage',[["total", allfiles],["health files",healthfiles],["endangered files",endangeredfiles],["missing files", missingfiles]],"", 'right');
 
 		make_vmstable(vmactive, vminactive, vms);
+
 		datacenter_load();
 		setInterval(datacenter_load, 10000);
-		get_vm_count("aws", "AWS EC2", hosts);
-		get_vm_count("azure", "Azure VM", hosts);
 	});
-
-	function append_to_table(bind, label, count, active, inactive) {
-		var tds = $(bind).find('tr:last td');
-
-		var active_count = parseInt($("#vmactive").text());
-		var inactive_count = parseInt($("#vminactive").text());
-
-		active_count += active;
-		inactive_count += inactive;
-
-		$("#vmactive").text(active_count);
-		$("#vminactive").text(inactive_count);
-
-		if (tds.length == 4) {
-			$(bind).append("<tr><td>"+label+"<hr class='" + label + "'></td><td>"+count+"</td></tr>");
-		} else {
-			$(bind).find('tr:last').append("<td>"+label+"<hr class='" + label + "'></td><td>"+count+"</td>");
-		}
-	}
-
-	function get_vm_count(type, label, hosts) {
-		var deferred = $.ajax({
-			url: "api.php?action=get_" + type + "_vm_count",
-			cache: false,
-			async: true,
-			dataType: "html"
-		});
-
-		$.when(deferred).done(function (v) {
-			var data = JSON.parse(v);
-			var total = parseInt(data[0]);
-			var active = parseInt(data[1]);
-			if (isNaN(total)) { total = 0; }
-			if (isNaN(active)) { active = 0; } 
-			var inactive = total - active;
-
-			append_to_table("#vmstable tbody", label, total, active, inactive); // label = "AWS EC2"
-		
-			// add azure and aws vm count to hosts
-			hosts[0][1] = parseInt(hosts[0][1]) + total;
-			hosts.push([label, total])
-			make_c3('donut','server', hosts, "", 'right');
-		});
-	}
 
 	function get_event_status() {
 
@@ -334,21 +256,14 @@
 	}
 
 	function format_label(data) {
-
-		var units = ['TB','GB','MB','KB','B'];
+		var units = ['TB','GB','MB'];
 		var idx = units.indexOf(data[1]);
-		var val = data[0];
 
-		while (val > 1024 && idx > 0) {
-			val = val / 1024;
-			idx = idx - 1;
-		}
-
-		if (!data[1]) {
-			return data[0];
+		if (data[0] > 1024 && idx > 0) {
+			return parseFloat(data[0] / 1024).toFixed(1) + " " + units[idx - 1];
 		} else {
-			return val.toFixed(1) + " " + units[idx];
- 		}
+			return data[0] + " " + data[1];
+		}
 	}
 
 	function make_c3(type, binding, donutdata, unit, showlegend) {
@@ -381,17 +296,15 @@
 					used: seriesColors[1],
 					active: seriesColors[1],
 					load: seriesColors[1],
-					'Cloud Host': seriesColors[0],
-					'OCH Host': seriesColors[1],
+					'Cloud Host': seriesColors[1],
+					'OCH Host': seriesColors[4],
 					'OCH VM': seriesColors[3],
 					'health files': seriesColors[4],
-					'endangered files': seriesColors[3],
-					'missing files': seriesColors[2],
-					'Azure VM': seriesColors[9],
-					'AWS EC2': seriesColors[5],
-					'ESX Host': seriesColors[10]
+					'endangered files': seriesColors[2],
+					'missing files': seriesColors[3]
 					/* paused: seriesColors[2] */
 				},
+				onclick: function (d, i) { console.log("onclick", d, i); },
 				onmouseover: function (d, i) { 
 					for (var k = 0; k < donutdata.length; k++) {
 						if (donutdata[k][0] == d.name) {
@@ -454,19 +367,23 @@
 		charts.push(chart);
 	}
 
-	function make_vmstable(vmactive, vminactive, vms) {
-		var html = '<tr><td>Active<hr class="active"></td><td id="vmactive">'+vmactive+'</td><td>Inactive<hr class="inactive"></td><td id="vminactive">'+vminactive+'</td></tr>';
+	function parse_label(str) {
+		return str.replace("KVM", "OCH").replace(" (localboot)","").replace(" (networkboot)","");
+	}
 
+	function make_vmstable(vmactive, vminactive, vms) {
+		var html = '<tr><td>Active<hr class="active"></td><td>'+vmactive+'</td><td>Inactive<hr class="inactive"></td><td>'+vminactive+'</td></tr>';
+		
 		for (var i = 0; i < Math.floor((vms.length + 1) / 2); i++) {
-			var label = vms[i * 2][0];
+			var label = parse_label(vms[i * 2][0]);
 			html += '<tr><td>'+label+'<hr class="' + label + '"></td><td>' + vms[i * 2][1] + '</td>';
 			
 			if (i * 2 + 1 <= vms.length - 1) { 
-				label =  vms[i * 2 + 1][0];
+				label =  parse_label(vms[i * 2 + 1][0]);
 				html += '<td>'+label+'<hr class="' + label + '"></td><td>' + vms[i * 2 + 1][1] + '</td>';
-			} /* else {
+			} else {
 				html += '<td></td><td></td>';
-			} */
+			}
 			html += '</tr>';
 		}
 		$("#vmstable tbody").append(html);
@@ -585,7 +502,7 @@
 
 <div id="prenutanix">
 	<div class="row">
-		<div class="col-xs-12 col-sm-6 col-md-5 col-lg-4">
+		<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
 			<div class="panel">
 				<div class="panel-heading">
 					<h3 class="panel-title">Maestro Storage</h3>
@@ -594,9 +511,20 @@
 					<div class="panel-heading">
 					</div>
 					<div class="row">
-						<div class="col-lg-12">
+						<div class="col-lg-12 pad-no">
 							<div id="chartdiv-inventory-storage" class="c3-chart pad-no" style="height: 19.5rem;"></div>
 						</div>
+						<!--
+						<div class="col-ss-12 col-md-5 pad-no">
+							<table class="table table-bordered table-hover table-stripped" style="width: 100%;">
+								<tbody>
+									<tr><td>Health Files<hr class="health-files"></td><td>{healthfiles}</td></tr>
+									<tr><td>Endangered Files<hr class="endangered-files"></td><td>{endangeredfiles}</td></tr>
+									<tr><td>Missing Files<hr class="missing-files"></td><td>{missingfiles}</td></tr>
+								</tbody>
+							</table>
+						</div>
+						-->
 					</div>
 					<div style="display: none;">
 						<h4><i class="fa fa-cogs"></i> CPU & memory:</h4>
@@ -622,14 +550,136 @@
 					</div>
 				</div>
 			</div>
+
+			<div class="panel storagespanel" style="display: none;">
+				<h2 class="dash"><i class="fa fa-hdd-o"></i> Maestro Storage</h2>
+				<div id="storageareas">
+					<div class="onestorage">
+						<div class="row">
+							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+								<div class="esxileft leftstorageblock">
+									{sfree}<br>
+									<span>free (physical)</span>
+								</div>
+							</div>
+							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 esxright sizeroside">
+								<div class="totalinfor">
+									<b>Used:</b> {sused}<br>
+									<b>Total:</b> {stotal} <br>
+								</div>
+							</div>
+							<div class="progress hddprogress nutanixprogress">
+								<div style="width: {spercent}%;" aria-valuemax="100" aria-valuemin="0" aria-valuenow="60" role="progressbar" class="progress-bar">
+									<span class="sr-only">{spercent}% used</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel">
+				<div class="panel-heading">
+					<h3 class="panel-title">Datacenter Load</h3>
+				</div>
+				<div class="panel-body" style="height:27.6rem;">
+					<div class="row">
+						<div id="datacenter-loading" class="c3-chart pad-no" style="height: 26.6rem;"></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel">
+				<!-- Start: Event table -->
+				<div class="panel-heading">
+					<h3 class="panel-title">{events_headline}</h3>
+				</div>
+				<a>
+					<div id="eventsboxes" class="panel-body row" style="min-height: 27.6rem;">
+						<div id="warningeventbox" style="height: 7.5rem; margin: 1rem;">
+							<div class="col-xs-2 pad-no">
+								<span><i class="fa fa-envelope eventico fa-2x"></i></span>
+							</div>
+							<div class="col-xs-10 pad-no">
+								<span class="eventcount" id="events_active"></span>
+								<span class="eventword">messages</span>
+							</div>
+						</div>
+						<div id="erroreventbox" style="height: 7.5rem; margin: 1rem;">
+							<div class="col-xs-2 pad-no">
+								<span><i class="fa fa-exclamation-triangle eventico fa-2x"></i></span>
+							</div>
+							<div class="col-xs-10 pad-no">
+								<span class="eventcount" id="events_critical"></span>
+								<span class="eventword">errors</span>
+							</div>
+						</div>
+						<div id="messageeventbox" style="height: 7.5rem; margin: 1rem;">
+							<div class="col-xs-2 pad-no">
+								<span><i class="fa fa-bell eventico fa-2x"></i></span>
+							</div>
+							<div class="col-xs-10 pad-no">
+								<span class="eventcount" id="events_messages"></span>
+								<span class="eventword">all events</span>
+							</div>
+						</div>
+					</div>
+				</a>
+			</div>
+			<!--
+			<div class="panel" style="display:none;">
+				<h2 class="dash">
+					{load_headline}
+					<small>{load_current}</small>
+				</h2>
+				<table class="table">
+					<tr>
+						<td class="width0">{datacenter_load_overall}</td>
+						<td>
+							<div class="bar-01 chart-bar ">
+								<div class="bar">
+									<label>0.43</label>
+								</div>
+								
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>{appliance_load_overall}</td>
+						<td>
+							<div class="bar-02 chart-bar">
+								<div class="peak"></div>
+								<div class="bar">
+									<label>0.43</label>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>{storage_load_overall}</td>
+						<td>
+							<div class="bar-03 chart-bar">
+								<div class="peak"></div>
+								<div class="bar">
+									<label>0.43</label>
+								</div>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div
+			-->
 		</div>
 
-		<div class="col-xs-12 col-sm-6 col-md-7 col-lg-8 pull-right">
+		<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
+			<!--Network Line Chart-->
+			<!--===================================================-->
+			<!-- <div id="demo-panel-network" class="panel" style="min-height: 34.7rem;">  -->
 			<div class="panel">
 				<div class="panel-heading">
 					<h3 class="panel-title">Resource Consumption</h3>
 				</div>
-				<div class="panel-body row donuts-row">
+				<div class="panel-body row" style="min-height: 27.6rem;">
 					<div class="col-sm-12 col-md-6 col-lg-3 dashboard pull-left">
 						<div class="panel-heading">
 							<h3 class="panel-title">Services</h3>
@@ -671,99 +721,67 @@
 					</div>
 				</div>
 			</div>
-		</div>
-
-		<div class="col-xs-12 col-sm-6 col-md-5 col-lg-4 after-right">
-			<div class="panel ">
-				<div class="panel-heading">
-					<h3 class="panel-title">Datacenter Load</h3>
-				</div>
-				<div class="panel-body" style="height:27.6rem;">
-					<div class="row">
-						<div id="datacenter-loading" class="c3-chart pad-no" style="height: 26.6rem;"></div>
+			<!-- Start: Inventory overview -->
+			<div class="row">
+				<div class="col-sm-12 col-md-6 col-lg-6">
+					<div class="panel">
+						<div class="panel-heading">
+							<h3 class="panel-title">Host Summary</h3>
+						</div>
+						<div class="panel-body" style="min-height: 27.6rem;">
+							<div class="panel-heading">
+							</div>
+							<div class="row">
+								<div class="col-sm-12 col-md-12 pad-no">
+									<div id="chartdiv-inventory-server" class="c3-chart pad-no" style="height: 21.5rem;"></div>
+								</div>
+								<!--
+								<div class="col-sm-12 col-md-5 pad-no">
+									<table id="datacenter-tbl" class="table table-bordered table-hover table-stripped" style="width: 100%;">
+										<tbody>
+											<tr><td>Cloud Host<hr class="cloud-host"></td><td></td></tr>
+											<tr><td>OCH Host<hr class="och-host"></td><td></td></tr>
+											<tr><td>OCH VM<hr class="och-vm"></td><td></td></tr>
+										</tbody>
+									</table>
+								</div>
+								-->
+							</div>
+						</div>
 					</div>
 				</div>
-			</div>
-		</div>
 
-		<div class="col-xs-12 col-sm-6 col-md-5 col-lg-4">
-			<div class="panel ">
-				<div class="panel-heading">
-					<h3 class="panel-title">Host Summary</h3>
-				</div>
-				<div class="panel-body" style="min-height: 27.6rem;">
-					<div class="panel-heading">
-					</div>
-					<div class="row">
-						<div class="col-sm-12 col-md-12">
-							<div id="chartdiv-inventory-server" class="c3-chart pad-no" style="height: 21.5rem;"></div>
+				<div class="col-sm-12 col-md-6 col-lg-6">
+					<div class="panel">
+						<div class="panel-heading">
+							<h3 class="panel-title">VM Summary</h3>
+						</div>
+						<div class="panel-body" style="min-height: 27.6rem;">
+							<div class="panel-heading">
+							</div>
+							<div class="row">
+								<!--
+								<div class="col-sm-12 col-md-7 pad-no">
+									<div id="chartdiv-inventory-vm" class="c3-chart pad-no" style="height: 21.5rem;"></div>
+								</div>
+								-->
+								<div class="col-xs-12">
+									<table id="vmstable" class="table table-bordered table-hover table-stripped" style="width: 100%;">
+										<tbody>
+										<!--
+											<tr><td>Inactive<hr class="inactive"></td><td>{inactiveallvm}</td></tr>
+											<tr><td>Active<hr class="active"></td><td>{activeallvm}</td></tr> -->
+											<!-- <tr><td>Inactive<hr class="endangered-files"></td><td></td></tr> -->
+										</tbody>
+									</table>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-
-		<div class="col-xs-12 col-sm-6 col-md-7 col-lg-4">
-			<div class="panel">
-				<div class="panel-heading">
-					<h3 class="panel-title">VM Summary</h3>
-				</div>
-				<div class="panel-body" style="min-height: 27.6rem;">
-					<div class="panel-heading">
-					</div>
-					<div class="row">
-						<div class="col-xs-12">
-							<table id="vmstable" class="table table-bordered table-hover table-stripped" style="width: 100%;">
-								<tbody>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-xs-12 col-sm-6 col-md-5 col-lg-4">
-			<div class="panel">
-				<!-- Start: Event table -->
-				<div class="panel-heading">
-					<h3 class="panel-title">{events_headline}</h3>
-				</div>
-				<a>
-					<div id="eventsboxes" class="panel-body row" style="min-height: 27.6rem;">
-						<div id="warningeventbox" style="height: 7.5rem; margin: 1rem;">
-							<div class="col-xs-2 pad-no">
-								<span><i class="fa fa-envelope eventico fa-2x"></i></span>
-							</div>
-							<div class="col-xs-10 pad-no">
-								<span class="eventcount" id="events_active"></span>
-								<span class="eventword">messages</span>
-							</div>
-						</div>
-						<div id="erroreventbox" style="height: 7.5rem; margin: 1rem;">
-							<div class="col-xs-2 pad-no">
-								<span><i class="fa fa-exclamation-triangle eventico fa-2x"></i></span>
-							</div>
-							<div class="col-xs-10 pad-no">
-								<span class="eventcount" id="events_critical"></span>
-								<span class="eventword">errors</span>
-							</div>
-						</div>
-						<div id="messageeventbox" style="height: 7.5rem; margin: 1rem;">
-							<div class="col-xs-2 pad-no">
-								<span><i class="fa fa-bell eventico fa-2x"></i></span>
-							</div>
-							<div class="col-xs-10 pad-no">
-								<span class="eventcount" id="events_messages"></span>
-								<span class="eventword">all events</span>
-							</div>
-						</div>
-					</div>
-				</a>
-			</div>
-		</div>
-
-		<div class="col-xs-12 col-sm-12 col-md-7 col-lg-8">
+			<!--===================================================-->
+			<!--End network line chart-->
 			<div class="panel">
 				<div class="panel-heading">
 					<h3 class="panel-title">Cloud Charge Back</h3>
@@ -774,35 +792,23 @@
 				</div>
 			</div>
 		</div>
-
-		<div class="panel storagespanel" style="display: none;">
-			<h2 class="dash"><i class="fa fa-hdd-o"></i> Maestro Storage</h2>
-			<div id="storageareas">
-				<div class="onestorage">
-					<div class="row">
-						<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-							<div class="esxileft leftstorageblock">
-								{sfree}<br>
-								<span>free (physical)</span>
-							</div>
-						</div>
-						<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 esxright sizeroside">
-							<div class="totalinfor">
-								<b>Used:</b> {sused}<br>
-								<b>Total:</b> {stotal} <br>
-							</div>
-						</div>
-						<div class="progress hddprogress nutanixprogress">
-							<div style="width: {spercent}%;" aria-valuemax="100" aria-valuemin="0" aria-valuenow="60" role="progressbar" class="progress-bar">
-								<span class="sr-only">{spercent}% used</span>
-							</div>
-						</div>
-					</div>
-				</div>
+<!--
+		<div class="col-sm-12 col-md-6 col-lg-6">
+			<div class="panel">
+			<h2 class="dash">{load_headline}
+				<small>{load_last_hour}</small>
+				<span class="pull-right">
+					<a class="widget-action refresh-load-chart" href="#">
+						<span class="halflings-icon refresh"><i></i></span>
+					</a>
+				</span>
+			</h2>
+			<div id="chartdiv-load" style="height:220px; width:100%;"></div>
 			</div>
 		</div>
-	</div>
-</div>
+-->
+	</div> <!-- <div class="row"> -->
+</div> <!-- <div id="prenutanix"> -->
 
 <div id="nutanix">
 	<h2 id="closenutanix"><i class="fa fa-close"></i> CLOSE</h2>

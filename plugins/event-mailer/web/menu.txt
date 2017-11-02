@@ -18,4 +18,4 @@
 #	Target
 ..|Event Mailer
 ...|Setup|index.php?plugin=event-mailer|Event-Mailer
-...|About|index.php?plugin=event-mailer&controller=event-mailer-about|How to use
+#...|About|index.php?plugin=event-mailer&controller=event-mailer-about|How to use

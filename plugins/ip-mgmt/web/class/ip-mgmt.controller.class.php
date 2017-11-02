@@ -55,7 +55,7 @@ var $tpldir;
 * @var array
 */
 var $lang = array(
-	'ip_mgmt_manager' => 'IP Adress Manager',
+	'ip_mgmt_manager' => 'IP Address Manager',
 	'ip_mgmt_networks' => 'Networks',
 	'ip_mgmt_add' => 'Add a new network',
 	'ip_mgmt_appliances' => 'Appliances',

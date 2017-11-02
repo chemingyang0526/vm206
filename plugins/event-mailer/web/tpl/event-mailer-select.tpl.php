@@ -17,7 +17,7 @@
 <h2>{label}</h2>
 
 <div id="form">
-	<div style="width: 250px; float: right; margin: 0 0 20px 0;">{template}</div>
+	<div style="float: right; margin: 0 1% 20px 0;">{template}</div>
 	<div class="floatbreaker">&#160;</div>
 	<form action="{thisfile}" method="POST">
 		{form}

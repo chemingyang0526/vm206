@@ -84,6 +84,8 @@ var $lang = array();
 		$t->add($this->lang['introduction_content1'], 'introduction_content1');
 		$t->add($this->lang['requirements_title'], 'requirements_title');
 		$t->add($this->lang['requirements_list'], 'requirements_list');
+		$t->add($this->lang['create_node_title'], 'create_node_title');
+		$t->add($this->lang['create_node_content'], 'create_node_content');
 		$t->add($this->htvcenter->get('baseurl'), 'baseurl');
 		return $t;
 	}
