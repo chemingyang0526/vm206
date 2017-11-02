@@ -24,3 +24,6 @@ plugins/kvm/web/kvm-stat/*
 web/action/*
 diff
 diff-full
+plugins/cloud/cloud-fortis/web/tmp/
+plugins/puppet/web/puppet/.svn/wc.d
+plugins/template/web/.running
