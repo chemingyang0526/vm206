@@ -5,8 +5,6 @@ var vmz = ''
 var poolremid = '';
 var poolremidhost = '';
 
-
-$('.shortselect').selectpicker();
 $('#reportmonthdash').hide();
 $('#reportyeardash').hide();
 $('#reportuserdash').hide();
@@ -1364,6 +1362,13 @@ $('.msgBox .close').click(function(){
 
 $(document).ready(function() {
 
+$('select').each(function(){
+	if($(this).hasClass('selectpicker') == false) {
+		$(this).addClass('selectpicker');
+		$(this).hide();
+		$(this).selectpicker();
+	}
+});
 
 $('#OCH_edit').find('.migrate').click(function(e){
 	e.preventDefault();
@@ -2131,15 +2136,6 @@ $('#cloud_appliances tr').find('.pill').each(function(){
 // fortis order:
 
 var detailtable = '';
-
-$('#reportuser').selectpicker();
-$('#reportmonth').selectpicker();
-$('#reportyear').selectpicker();
-
-$('#reportuser').hide();
-$('#reportmonth').hide();
-$('#reportyear').hide();
-
 
 $('#orderreport').click(function(){
 	
@@ -3497,7 +3493,7 @@ $('#vmware_esx_ds_tab1 .storageboxx tr.odd').addClass('panel panel-bordered pane
 
 
 
-  var notpicker = false;
+  // var notpicker = false;
 
     //kvm clone popup:
 
@@ -4135,9 +4131,9 @@ $('#resource_tab0 .submit').click(function(e){
 	// resource add:
 	var resad = $('.resadd');
 	
-	if (typeof(resad) != 'undefined' && resad.length != 0) {
-		notpicker = true;
-	}
+	//if (typeof(resad) != 'undefined' && resad.length != 0) {
+	//	notpicker = true;
+	//}
 
 	
 		$('#buttons').show();
@@ -4312,18 +4308,6 @@ $('a.manage').addClass('btn-labeled fa fa-cog');
 $('a.remove').addClass('btn-labeled fa fa-close');
 $('#Tabellerr a.enable').addClass('btn-labeled fa fa-plus');	
 $('a.add').addClass('btn-labeled fa fa-plus');	
-
-if (notpicker != true) {
-	$('select').each(function(){
-		if($(this).hasClass('notselectpicker') == false) {
-			$(this).addClass('selectpicker');
-		}
-	});
-}
-//$('.selectpicker').selectpicker();
-
-
-
 
 	var tbldat = $('.htmlobject_td.head').html();
 	tbldat = tbldat +  $('.htmlobject_td.pageturn_head').html();

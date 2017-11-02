@@ -21,6 +21,9 @@
 	#compose_tab {
 		display: none;
 	}
+	.table-hover > tbody >tr:hover {
+		background-color: rgb(189,199,231);
+	}
 </style>
 
 <div id="prenutanix">
@@ -521,7 +524,7 @@ jQuery().ready(function() {
 	var dt = $("#maestro_composed_table").DataTable( {
 		"columns": [
 			{ "visible": false },
-			null, null, null, null, null, null, null,
+			null, null, null, null, null, null, { "orderable": false },
 		],
 		"order": [], "bLengthChange": false, "pageLength": 10, "search": { "regex": true }, "bAutoWidth": true, "destroy": true,
 		"drawCallback": function( oSettings ) {

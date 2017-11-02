@@ -1450,18 +1450,17 @@ td.network_manager_identifier input.checkbox {
 
 
 #storageform #puppet_groups .right, #storageformaddn #puppet_groups .right{
-	 float: right;
-    position: relative;
-    top: 10px;
-    width: 0;
+	float: right;
+	position: relative;
+	top: 10px;
+	width: 0;
 }
 
 @media screen and (-webkit-min-device-pixel-ratio:0) {    
 	#storageform #puppet_groups .right, #storageformaddn #puppet_groups .right {
-		 float: right;
-	    position: relative;
-	    top: -20px;
-	    width: 0;
+		float: right;
+		position: relative;
+		width: 0;
 	}
  
 }
@@ -4904,9 +4903,8 @@ a.add:hover {
 }
 
 #appliance_edit form a {
-	  left: 2px;
-    padding: 7px 12px !important;
-    position: relative;
+	left: 2px;
+	position: relative;
 }
 
 .pageturn_table a.disabled {
@@ -5185,10 +5183,6 @@ div.lead {
 	top: 25px;
 }
 
-#Tabelle .actions:hover, #Tabelle .pageturn_head:hover, #Tabelle .head:hover {
-	background-color: #fff !important;
-}
-
 #Tabelle .pageturn_head, #Tabelle .head {
 	border: none !important;
 }
@@ -5256,10 +5250,10 @@ input.submit {
 }
 
 label {
-	 float: left;
+    float: left;
     font-size: 13px !important;
     margin-right: 11px;
-    margin-top: 12px;
+    margin-top: 7px;
     min-width: 200px;
 }
 

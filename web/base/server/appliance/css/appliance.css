@@ -350,12 +350,12 @@ table#cloud_appliances_table tr td.active {
 }
 
 table#cloud_appliances_table tr td.active:hover {
-	background-color: #5591c6;
+	background-color: rgb(189,199,231);
 }
 
 #container table#cloud_appliances_table tbody tr.hoverbg:hover,
 #container table.dataTable tbody tr.hoverbg:hover{
-	background-color: #5591c6;
+	background-color: rgb(189,199,231);
 }
 
 #cloud_appliances_table tr.headrow, #cloud_appliances_table tr.headrow th{
@@ -394,6 +394,10 @@ div.card-header-top{
 	margin-bottom: 0px;
 	min-height: 30px;
 	padding-top: 5px;
+}
+
+table.dataTable th.sorting_disabled {
+	text-align: center;
 }
 
 #container table.dataTable tbody tr.hv-bg:hover {
@@ -435,9 +439,11 @@ ul.appliance-pop-over-menu {
 }
 
 ul.appliance-pop-over-menu li {
+	display: block;
 	list-style-type: none;
 	width: 100%;
-	padding: 0px 0px 10px 0;
+	padding: 10px 8px;
+	border: 1px solid #e4e9f0;
 }
 
 .en-app:before{

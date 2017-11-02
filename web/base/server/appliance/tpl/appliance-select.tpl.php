@@ -264,7 +264,7 @@ $(document).ready(function() {
 		});
 	}
 	
-	setInterval(refreshCPU,10000);
+	// setInterval(refreshCPU,10000);
 
 	function getParameterByName(name, url) {
 		if (!url) url = window.location.href;
@@ -552,7 +552,7 @@ $(document).ready(function() {
 			var composed_servers = $("#maestro_composed_table").DataTable( {
 				"columns": [
 					{ "visible": false },
-					null, null, null, null, null, null, null, { "visible": false },
+					null, null, null, null, null, null, {"orderable": false}, { "visible": false },
 				],
 				"order": [], "bLengthChange": false, "pageLength": 10, "search": { "regex": true }, "bAutoWidth": true, "destroy": true,
 				"drawCallback": function( oSettings ) {

@@ -4284,9 +4284,6 @@ hr {
 #container .table-striped > tbody > tr:nth-child(2n+1) {
   background-color: #f6f8fa;
 }
-#container .table-hover > tbody > tr:hover {
-  background-color: #f0f2f6;
-}
 /* FORM CONTROL  */
 /*======================================*/
 .form-control, input[type=text], input[type=password] {
@@ -4876,7 +4873,7 @@ a.list-group-item-dark:focus {
   margin-left: -9px;
 }
 .popover-content {
-  padding: 10px 15px 20px;
+  padding: 8px 12px;
 }
 /* BADGE */
 /*======================================*/
